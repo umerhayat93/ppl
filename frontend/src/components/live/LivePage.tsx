@@ -5,13 +5,21 @@ import BallFeed from './BallFeed'
 import Leaderboards from '../players/Leaderboards'
 import { Radio } from 'lucide-react'
 import type { Match, LiveState } from '../../types'
+import { fmtDate, fmtTime } from '../../utils'
 
 export default function LivePage() {
   const { live, matches } = useStore()
   const liveMatch = matches.find(m => m.status === 'live')
-  const lastMatch = [...matches]
+
+  // Last completed match (most recently finished)
+  const lastCompleted = [...matches]
     .filter(m => m.status === 'completed')
     .sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''))[0]
+
+  // Nearest upcoming match
+  const nextMatch = matches
+    .filter(m => m.status === 'upcoming' && m.date)
+    .sort((a, b) => new Date(`${a.date}T${a.time || '00:00'}`).getTime() - new Date(`${b.date}T${b.time || '00:00'}`).getTime())[0]
 
   return (
     <div className="fade-up">
@@ -27,14 +35,47 @@ export default function LivePage() {
           <BallFeed />
           <FullScorecard match={liveMatch} live={live} />
         </>
-      ) : lastMatch ? (
-        <LastMatchCard match={lastMatch} />
       ) : (
-        <div className="flex flex-col items-center justify-center py-20 text-center px-4">
-          <div className="text-5xl mb-4 opacity-30">🔴</div>
-          <p className="text-[#4a5568] text-sm">No live match right now</p>
-          <p className="text-[#4a5568]/60 text-xs mt-1">Check back when a match starts</p>
-        </div>
+        <>
+          {/* No live match — show last completed scorecard */}
+          {lastCompleted ? (
+            <CompletedScorecard match={lastCompleted} />
+          ) : (
+            <div className="flex flex-col items-center justify-center py-16 text-center px-4">
+              <div className="text-5xl mb-4 opacity-30">🔴</div>
+              <p className="text-[#4a5568] text-sm">No live match right now</p>
+              <p className="text-[#4a5568]/60 text-xs mt-1">Check back when a match starts</p>
+            </div>
+          )}
+
+          {/* Upcoming match */}
+          {nextMatch && (
+            <div className="mx-3 mb-3">
+              <div className="text-[11px] text-[#8892b0] tracking-widest uppercase font-semibold px-1 mb-2">📅 Next Match</div>
+              <div className="card-gold p-4">
+                <div className="text-[11px] text-emerald-400 tracking-widest uppercase font-semibold mb-3">
+                  M{nextMatch.matchNo} · {nextMatch.stage?.toUpperCase()} · T{nextMatch.overs || 10}
+                </div>
+                <div className="flex items-center justify-around mb-3">
+                  <div className="text-center">
+                    <div className="text-3xl mb-1">{nextMatch.team1?.emoji || '🏏'}</div>
+                    <div className="font-display text-sm text-white">{nextMatch.team1?.name}</div>
+                  </div>
+                  <div className="font-display text-2xl text-[#4a5568]">VS</div>
+                  <div className="text-center">
+                    <div className="text-3xl mb-1">{nextMatch.team2?.emoji || '🏏'}</div>
+                    <div className="font-display text-sm text-white">{nextMatch.team2?.name}</div>
+                  </div>
+                </div>
+                <div className="flex justify-center gap-4 text-xs text-[#4a5568]">
+                  <span>📅 {fmtDate(nextMatch.date)}</span>
+                  <span>⏰ {fmtTime(nextMatch.time)}</span>
+                  <span>📍 {nextMatch.venue || 'Pattan'}</span>
+                </div>
+              </div>
+            </div>
+          )}
+        </>
       )}
 
       <Leaderboards />
@@ -42,6 +83,7 @@ export default function LivePage() {
   )
 }
 
+// Full scorecard during live match
 function FullScorecard({ match, live }: { match: Match; live: LiveState }) {
   const batters = Object.values(live.batters || {}) as any[]
   const bowlers = Object.values(live.bowlers || {}) as any[]
@@ -65,13 +107,11 @@ function FullScorecard({ match, live }: { match: Match; live: LiveState }) {
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
-              <thead>
-                <tr className="border-b border-white/[0.04]">
-                  {['Batter', 'R', 'B', '4s', '6s', 'SR'].map((h, i) => (
-                    <th key={h} className={`py-2 px-3 text-[10px] text-[#4a5568] uppercase tracking-widest font-semibold ${i === 0 ? 'text-left' : 'text-center'}`}>{h}</th>
-                  ))}
-                </tr>
-              </thead>
+              <thead><tr className="border-b border-white/[0.04]">
+                {['Batter', 'R', 'B', '4s', '6s', 'SR'].map((h, i) => (
+                  <th key={h} className={`py-2 px-3 text-[10px] text-[#4a5568] uppercase tracking-widest font-semibold ${i === 0 ? 'text-left' : 'text-center'}`}>{h}</th>
+                ))}
+              </tr></thead>
               <tbody>
                 {batters.map((b: any) => {
                   const isStr = striker?.name === b.name && !b.out
@@ -96,7 +136,6 @@ function FullScorecard({ match, live }: { match: Match; live: LiveState }) {
           </div>
         </div>
       )}
-
       {bowlers.length > 0 && (
         <div className="card overflow-hidden">
           <div className="px-4 py-2.5 bg-red-500/5 border-b border-red-500/10">
@@ -104,13 +143,11 @@ function FullScorecard({ match, live }: { match: Match; live: LiveState }) {
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
-              <thead>
-                <tr className="border-b border-white/[0.04]">
-                  {['Bowler', 'O', 'R', 'W', 'Econ'].map((h, i) => (
-                    <th key={h} className={`py-2 px-3 text-[10px] text-[#4a5568] uppercase tracking-widest font-semibold ${i === 0 ? 'text-left' : 'text-center'}`}>{h}</th>
-                  ))}
-                </tr>
-              </thead>
+              <thead><tr className="border-b border-white/[0.04]">
+                {['Bowler', 'O', 'R', 'W', 'Econ'].map((h, i) => (
+                  <th key={h} className={`py-2 px-3 text-[10px] text-[#4a5568] uppercase tracking-widest font-semibold ${i === 0 ? 'text-left' : 'text-center'}`}>{h}</th>
+                ))}
+              </tr></thead>
               <tbody>
                 {bowlers.map((b: any) => {
                   const isCur = currentBowler?.name === b.name
@@ -135,43 +172,119 @@ function FullScorecard({ match, live }: { match: Match; live: LiveState }) {
   )
 }
 
-function LastMatchCard({ match }: { match: Match }) {
+// Scorecard for the last completed match — separate cards for each innings
+function CompletedScorecard({ match }: { match: Match }) {
   const h = (match.highlights || {}) as any
+  const inn1 = (match.innings1 || {}) as any
+  const inn1Batters = Object.values(inn1.batters || {}) as any[]
+  const inn1Bowlers = Object.values(inn1.bowlers || {}) as any[]
+
   return (
-    <div className="mx-3 mb-3 card-gold p-4">
-      <div className="text-[11px] text-[#8892b0] tracking-widest uppercase mb-2">Last Match Result</div>
-      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 text-center mb-3">
-        <div>
-          <div className="font-display text-sm text-white">{match.team1?.name}</div>
-          <div className="font-mono text-2xl text-[#f0c040] font-black">{match.score1 || '—'}</div>
+    <div className="mx-3 mb-3 space-y-3">
+      <div className="text-[11px] text-[#8892b0] tracking-widest uppercase font-semibold px-1">📋 Last Match Scorecard</div>
+
+      {/* Result banner */}
+      <div className="card-gold p-4">
+        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 text-center mb-3">
+          <div>
+            <div className="font-display text-sm text-white">{match.team1?.name}</div>
+            <div className="font-mono text-2xl text-[#f0c040] font-black">{match.score1 || '—'}</div>
+          </div>
+          <div className="font-display text-[#4a5568]">VS</div>
+          <div>
+            <div className="font-display text-sm text-white">{match.team2?.name}</div>
+            <div className="font-mono text-2xl text-emerald-400 font-black">{match.score2 || '—'}</div>
+          </div>
         </div>
-        <div className="font-display text-[#4a5568]">VS</div>
-        <div>
-          <div className="font-display text-sm text-white">{match.team2?.name}</div>
-          <div className="font-mono text-2xl text-emerald-400 font-black">{match.score2 || '—'}</div>
-        </div>
+        {match.result && (
+          <div className="text-center bg-emerald-500/10 border border-emerald-500/20 rounded-xl py-2 text-emerald-400 text-sm font-semibold">
+            🏆 {match.result}
+          </div>
+        )}
       </div>
-      {match.result && (
-        <div className="text-center bg-emerald-500/10 border border-emerald-500/20 rounded-xl py-2 text-emerald-400 text-sm font-semibold">
-          🏆 {match.result}
-        </div>
-      )}
+
+      {/* Top performers */}
       {(h.topBatter || h.topBowler) && (
-        <div className="grid grid-cols-2 gap-2 mt-3">
+        <div className="grid grid-cols-2 gap-2">
           {h.topBatter && (
-            <div className="bg-[#f0c040]/5 border border-[#f0c040]/15 rounded-xl p-3">
-              <div className="text-[10px] text-[#f0c040] uppercase tracking-widest mb-1">🏏 Top Bat</div>
+            <div className="card p-3">
+              <div className="text-[10px] text-[#f0c040] uppercase tracking-widest mb-1.5">🏏 Top Batter</div>
               <div className="font-semibold text-white text-sm">{h.topBatter.name}</div>
-              <div className="font-mono text-[#f0c040] font-black text-lg">{h.topBatter.runs}<span className="text-xs text-[#8892b0] font-normal ml-0.5">({h.topBatter.balls})</span></div>
+              <div className="font-mono text-[#f0c040] font-black text-xl">{h.topBatter.runs}<span className="text-xs text-[#8892b0] font-normal ml-1">({h.topBatter.balls}b)</span></div>
+              <div className="text-[10px] text-[#4a5568] mt-0.5">4s:{h.topBatter.fours || 0} · 6s:{h.topBatter.sixes || 0} · SR:{h.topBatter.sr}</div>
             </div>
           )}
           {h.topBowler && (
-            <div className="bg-red-500/5 border border-red-500/15 rounded-xl p-3">
-              <div className="text-[10px] text-red-400 uppercase tracking-widest mb-1">🎯 Top Bowl</div>
+            <div className="card p-3">
+              <div className="text-[10px] text-red-400 uppercase tracking-widest mb-1.5">🎯 Top Bowler</div>
               <div className="font-semibold text-white text-sm">{h.topBowler.name}</div>
-              <div className="font-mono text-red-400 font-black text-lg">{h.topBowler.wickets}/{h.topBowler.runs}</div>
+              <div className="font-mono text-red-400 font-black text-xl">{h.topBowler.wickets}W<span className="text-xs text-[#8892b0] font-normal ml-1">/{h.topBowler.runs}R</span></div>
+              <div className="text-[10px] text-[#4a5568] mt-0.5">Eco: {h.topBowler.eco}</div>
             </div>
           )}
+        </div>
+      )}
+
+      {/* 1st Innings batting */}
+      {inn1Batters.length > 0 && (
+        <div className="card overflow-hidden">
+          <div className="px-4 py-2.5 bg-[#f0c040]/5 border-b border-[#f0c040]/10">
+            <span className="text-[11px] text-[#f0c040] tracking-widest uppercase font-semibold">🏏 1st Innings — {match.team1?.name} {match.score1}</span>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs">
+              <thead><tr className="border-b border-white/[0.04]">
+                {['Batter','How Out','R','B','4s','6s','SR'].map((h,i)=>(
+                  <th key={h} className={`py-2 px-2 text-[10px] text-[#4a5568] uppercase tracking-widest ${i<=1?'text-left':'text-center'}`}>{h}</th>
+                ))}
+              </tr></thead>
+              <tbody>
+                {inn1Batters.filter((b:any)=>b.name).map((b:any) => {
+                  const sr = b.balls > 0 ? ((b.runs/b.balls)*100).toFixed(1) : '—'
+                  return (
+                    <tr key={b.name} className="border-b border-white/[0.02] last:border-0">
+                      <td className="py-2 px-2 font-semibold text-white">{b.name}</td>
+                      <td className="py-2 px-2 text-[#4a5568] text-[11px]">{b.out ? b.how || 'out' : 'not out'}</td>
+                      <td className="py-2 px-2 text-center font-mono text-[#f0c040] font-bold">{b.runs||0}</td>
+                      <td className="py-2 px-2 text-center text-[#8892b0]">{b.balls||0}</td>
+                      <td className="py-2 px-2 text-center text-[#8892b0]">{b.fours||0}</td>
+                      <td className="py-2 px-2 text-center text-[#8892b0]">{b.sixes||0}</td>
+                      <td className="py-2 px-2 text-center text-[#8892b0]">{sr}</td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* 1st Innings bowling */}
+      {inn1Bowlers.length > 0 && (
+        <div className="card overflow-hidden">
+          <div className="px-4 py-2.5 bg-red-500/5 border-b border-red-500/10">
+            <span className="text-[11px] text-red-400 tracking-widest uppercase font-semibold">🎯 Bowling — {match.team2?.name}</span>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs">
+              <thead><tr className="border-b border-white/[0.04]">
+                {['Bowler','O','R','W','Eco'].map((h,i)=>(
+                  <th key={h} className={`py-2 px-2 text-[10px] text-[#4a5568] uppercase tracking-widest ${i===0?'text-left':'text-center'}`}>{h}</th>
+                ))}
+              </tr></thead>
+              <tbody>
+                {inn1Bowlers.filter((b:any)=>b.name).map((b:any) => (
+                  <tr key={b.name} className="border-b border-white/[0.02] last:border-0">
+                    <td className="py-2 px-2 font-semibold text-white">{b.name}</td>
+                    <td className="py-2 px-2 text-center text-[#8892b0]">{Math.floor((b.ballsBowled||0)/6)}.{(b.ballsBowled||0)%6}</td>
+                    <td className="py-2 px-2 text-center text-[#8892b0]">{b.runsConceded||0}</td>
+                    <td className="py-2 px-2 text-center font-mono text-red-400 font-bold">{b.wickets||0}</td>
+                    <td className="py-2 px-2 text-center text-[#8892b0]">{b.economy?Number(b.economy).toFixed(2):'—'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>

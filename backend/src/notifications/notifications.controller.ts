@@ -7,7 +7,9 @@ export class NotificationsController {
   constructor(private svc: NotificationsService) {}
 
   @Get('vapid-public-key')
-  getVapidKey() { return this.svc.getVapidPublicKey(); }
+  getVapidKey() {
+    return this.svc.getVapidPublicKey();
+  }
 
   @Post('subscribe')
   subscribe(@Body() b: { endpoint: string; p256dh: string; auth: string }) {
@@ -25,7 +27,7 @@ export class NotificationsController {
     return this.svc.sendToAll(b.title, b.body, b.icon, b.url);
   }
 
-  // Legacy /api/notify endpoint (keep parity with old Flask app)
+  // Legacy /api/notify (backward compat)
   @Post()
   @UseGuards(AdminGuard)
   notify(@Body() b: { title: string; body: string; icon?: string }) {

@@ -18,11 +18,15 @@ export class NotificationsService {
     const privateKey = this.config.get<string>('VAPID_PRIVATE_KEY');
     const email      = this.config.get<string>('VAPID_EMAIL') || 'mailto:admin@ppl2026.com';
     if (publicKey && privateKey) {
-      webpush.setVapidDetails(email, publicKey, privateKey);
-      this.vapidConfigured = true;
-      this.logger.log('VAPID configured ✓');
+      try {
+        webpush.setVapidDetails(email, publicKey, privateKey);
+        this.vapidConfigured = true;
+        this.logger.log('VAPID push notifications configured ✓');
+      } catch (e: any) {
+        this.logger.warn('VAPID config failed: ' + e.message);
+      }
     } else {
-      this.logger.warn('VAPID keys not set — push notifications disabled');
+      this.logger.warn('VAPID keys not set — web push disabled. Set VAPID_PUBLIC_KEY and VAPID_PRIVATE_KEY in env vars.');
     }
   }
 
@@ -31,48 +35,83 @@ export class NotificationsService {
   }
 
   async subscribe(endpoint: string, p256dh: string, auth: string) {
-    return this.prisma.pushSubscription.upsert({
-      where:  { endpoint },
-      create: { endpoint, p256dh, auth },
-      update: { p256dh, auth },
-    });
+    try {
+      return await this.prisma.pushSubscription.upsert({
+        where:  { endpoint },
+        create: { endpoint, p256dh, auth },
+        update: { p256dh, auth },
+      });
+    } catch (e: any) {
+      this.logger.warn('Subscribe error: ' + e.message);
+      return null;
+    }
   }
 
   async unsubscribe(endpoint: string) {
-    try { await this.prisma.pushSubscription.delete({ where: { endpoint } }); } catch {}
+    try {
+      await this.prisma.pushSubscription.delete({ where: { endpoint } });
+    } catch {}
   }
 
   async sendToAll(title: string, body: string, icon = '🏏', url = '/') {
-    // Broadcast via WebSocket (instant, no VAPID needed)
+    // Always broadcast via WebSocket (in-app, instant)
     await this.gw.broadcastNotification(title, body, icon);
 
-    // Also send web push if VAPID configured
-    if (!this.vapidConfigured) return { sent: 0, wsOnly: true };
+    if (!this.vapidConfigured) {
+      this.logger.warn('Web push skipped — VAPID not configured');
+      return { sent: 0, total: 0, wsOnly: true };
+    }
 
     const subs = await this.prisma.pushSubscription.findMany();
+    if (!subs.length) return { sent: 0, total: 0 };
+
     let sent = 0;
     const dead: string[] = [];
+
+    const payload = JSON.stringify({
+      title,
+      body,
+      icon: '/icons/icon-192.png',
+      badge: '/icons/badge-72.png',
+      url,
+      data: { url },
+      // Android notification channel
+      vibrate: [200, 100, 200],
+      requireInteraction: false,
+    });
 
     await Promise.allSettled(
       subs.map(async (s) => {
         try {
           await webpush.sendNotification(
-            { endpoint: s.endpoint, keys: { p256dh: s.p256dh, auth: s.auth } },
-            JSON.stringify({ title, body, icon, url, badge: '/icons/badge-72.png' }),
+            {
+              endpoint: s.endpoint,
+              keys: { p256dh: s.p256dh, auth: s.auth },
+            },
+            payload,
+            {
+              urgency: 'high',
+              TTL: 3600,
+            },
           );
           sent++;
         } catch (e: any) {
-          if (e.statusCode === 410 || e.statusCode === 404) dead.push(s.endpoint);
-          else this.logger.warn('Push failed: ' + e.message);
+          if (e.statusCode === 410 || e.statusCode === 404) {
+            dead.push(s.endpoint); // Subscription expired
+          } else {
+            this.logger.warn(`Push failed for ${s.endpoint.slice(0, 30)}...: ${e.message}`);
+          }
         }
       }),
     );
 
-    // Remove dead subscriptions
+    // Clean up expired subscriptions
     if (dead.length) {
       await Promise.allSettled(dead.map(ep => this.unsubscribe(ep)));
+      this.logger.log(`Removed ${dead.length} expired subscriptions`);
     }
 
+    this.logger.log(`Push sent: ${sent}/${subs.length}`);
     return { sent, total: subs.length };
   }
 }
