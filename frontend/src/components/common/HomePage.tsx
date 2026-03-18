@@ -44,13 +44,13 @@ function HotPlayer() {
       const showBatter = !bowlerHot || (batterHot && (hotBatter.runs || 0) > (hotBowler.wickets || 0) * 15)
       return (
         <div className="mx-3 mb-3">
-          <div className="font-display text-base text-white tracking-wide px-1 mb-2">\u{1F525} Hot Player</div>
+          <div className="font-display text-base text-white tracking-wide px-1 mb-2">🔥 Hot Player</div>
           <div className="card-gold flex items-center gap-4 p-4">
             <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-3xl shadow-lg flex-shrink-0 ${showBatter ? "bg-gradient-to-br from-[#f0c040] to-[#c8960a]" : "bg-gradient-to-br from-red-600 to-red-900"}`}>
-              {showBatter ? "\u{1F3CF}" : "\u{1F3B3}"}
+              {showBatter ? "🏏" : "🎳"}
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-[10px] text-amber-400 tracking-widest uppercase font-semibold">{showBatter ? "\u26A1 Live \u2014 On Fire" : "\u{1F3AF} Live \u2014 Bowling Well"}</div>
+              <div className="text-[10px] text-amber-400 tracking-widest uppercase font-semibold">{showBatter ? "⚡ Live — On Fire" : "🎯 Live — Bowling Well"}</div>
               <div className="font-display text-lg text-white tracking-wide leading-tight">{showBatter ? hotBatter.name : hotBowler.name}</div>
               <div className="text-xs text-[#8892b0]">{liveMatch.team1?.name} vs {liveMatch.team2?.name}</div>
             </div>
@@ -77,13 +77,13 @@ function HotPlayer() {
   if (!top) return null
   return (
     <div className="mx-3 mb-3">
-      <div className="font-display text-base text-white tracking-wide px-1 mb-2">\u{1F3C6} Top Scorer</div>
+      <div className="font-display text-base text-white tracking-wide px-1 mb-2">🏆 Top Scorer</div>
       <div className="card-gold flex items-center gap-4 p-4">
-        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#ff6432] to-[#c83200] flex items-center justify-center text-3xl shadow-lg flex-shrink-0">{top.emoji || "\u{1F3CF}"}</div>
+        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#ff6432] to-[#c83200] flex items-center justify-center text-3xl shadow-lg flex-shrink-0">{top.emoji || "🏏"}</div>
         <div className="flex-1 min-w-0">
-          <div className="text-[10px] text-amber-400 tracking-widest uppercase font-semibold">\u{1F3CF} Tournament Top Bat</div>
+          <div className="text-[10px] text-amber-400 tracking-widest uppercase font-semibold">🏏 Tournament Top Bat</div>
           <div className="font-display text-lg text-white tracking-wide leading-tight">{top.name}</div>
-          <div className="text-xs text-[#8892b0]">{top.team?.name || "\u2014"}</div>
+          <div className="text-xs text-[#8892b0]">{top.team?.name || "—"}</div>
         </div>
         <div className="text-center flex-shrink-0">
           <div className="font-mono text-[#f0c040] font-black text-xl">{top.runs || 0}</div>
@@ -120,11 +120,11 @@ function UpcomingMatchPoster() {
         }
         <div className="px-4 py-3 relative">
           <div className="text-[11px] text-emerald-400 tracking-widest uppercase font-semibold mb-2 pl-4">
-            {isReady ? "\u26A1 Starting Soon" : "Up Next"} \u00B7 M{upcoming.matchNo} \u00B7 {upcoming.stage?.toUpperCase()}
+            {isReady ? "⚡ Starting Soon" : "Up Next"} · M{upcoming.matchNo} · {upcoming.stage?.toUpperCase()}
           </div>
           <div className="flex items-center justify-around">
             <div className="text-center">
-              <div className="text-3xl mb-1">{upcoming.team1?.emoji || "\u{1F3CF}"}</div>
+              <div className="text-3xl mb-1">{upcoming.team1?.emoji || "🏏"}</div>
               <div className="font-display text-sm text-white">{upcoming.team1?.name}</div>
             </div>
             <div className="text-center">
@@ -132,15 +132,15 @@ function UpcomingMatchPoster() {
               <div className="text-[10px] text-[#4a5568] mt-1">T{upcoming.overs || 10}</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl mb-1">{upcoming.team2?.emoji || "\u{1F3CF}"}</div>
+              <div className="text-3xl mb-1">{upcoming.team2?.emoji || "🏏"}</div>
               <div className="font-display text-sm text-white">{upcoming.team2?.name}</div>
             </div>
           </div>
           <div className="flex justify-center gap-4 mt-3 text-xs text-[#4a5568]">
-            <span>\u{1F4C5} {upcoming.date || "TBD"}</span>
+            <span>📅 {upcoming.date || "TBD"}</span>
             <span>\u23F0 {upcoming.time || "TBD"}</span>
           </div>
-          <div className="text-center mt-1 text-[11px] text-[#4a5568]">\u{1F4CD} Dildar Ahmed Cricket Ground</div>
+          <div className="text-center mt-1 text-[11px] text-[#4a5568]">📍 Dildar Ahmed Cricket Ground</div>
         </div>
       </div>
     </div>
@@ -165,12 +165,12 @@ export default function HomePage() {
         <div className="relative">
           <div className="inline-flex items-center gap-2 bg-[#f0c040]/10 border border-[#f0c040]/20 rounded-full px-3 py-1 mb-3">
             <span className="w-1.5 h-1.5 rounded-full bg-[#f0c040]" />
-            <span className="text-[10px] text-[#f0c040] font-semibold tracking-widest uppercase">Official App \u00B7 PPL 2026</span>
+            <span className="text-[10px] text-[#f0c040] font-semibold tracking-widest uppercase">Official App · PPL 2026</span>
           </div>
           <h1 className="font-display text-4xl text-white leading-[0.9] tracking-wide">
             Pattan<br /><span className="text-[#f0c040]">Premier</span><br />League
           </h1>
-          <p className="text-[#8892b0] text-sm mt-2">\u{1F4CD} Dildar Ahmed Cricket Ground \u00A0\u00B7\u00A0 <span className="text-[#ffd966]">2026</span></p>
+          <p className="text-[#8892b0] text-sm mt-2">📍 Dildar Ahmed Cricket Ground  ·  <span className="text-[#ffd966]">2026</span></p>
           <div className="grid grid-cols-4 gap-2 mt-4">
             {([["Teams", teams.length], ["Matches", matches.length], ["Players", players.length], ["Done", completed]] as [string, number][]).map(([l, v]) => (
               <div key={l} className="bg-white/[0.04] border border-[#f0c040]/10 rounded-xl p-2 text-center">
@@ -191,20 +191,20 @@ export default function HomePage() {
       <div className="px-3 mt-2">
         <div className="font-display text-base text-white tracking-wide px-1 mb-2">Quick Access</div>
         <div className="grid grid-cols-2 gap-2">
-          <QuickCard icon="\u{1F4C5}" label="Schedule"  sub="All fixtures"     onClick={() => setActiveTab("schedule")} />
-          <QuickCard icon="\u{1F3C6}" label="Standings" sub="Points table"     onClick={() => setActiveTab("points")} />
-          <QuickCard icon="\u{1F522}" label="Groups"    sub="Group tables"     onClick={() => setActiveTab("groups")} />
-          <QuickCard icon="\u{1F6E1}" label="Teams"     sub="Squads & more"    onClick={() => setActiveTab("teams")} />
-          <QuickCard icon="\u{1F464}" label="Players"   sub="Stats leaders"    onClick={() => setActiveTab("players")} />
-          <QuickCard icon="\u{1F4CA}" label="Polls"     sub="Vote now!"        onClick={() => setActiveTab("polls")} />
-          <QuickCard icon="\u{1F4F8}" label="Gallery"   sub="Match photos"     onClick={() => setActiveTab("gallery")} />
-          <QuickCard icon="\u{1F4CB}" label="Rules"     sub="Tournament rules" onClick={() => setActiveTab("rules")} />
+          <QuickCard icon="📅" label="Schedule"  sub="All fixtures"     onClick={() => setActiveTab("schedule")} />
+          <QuickCard icon="🏆" label="Standings" sub="Points table"     onClick={() => setActiveTab("points")} />
+          <QuickCard icon="🔢" label="Groups"    sub="Group tables"     onClick={() => setActiveTab("groups")} />
+          <QuickCard icon="🛡" label="Teams"     sub="Squads & more"    onClick={() => setActiveTab("teams")} />
+          <QuickCard icon="👤" label="Players"   sub="Stats leaders"    onClick={() => setActiveTab("players")} />
+          <QuickCard icon="📊" label="Polls"     sub="Vote now!"        onClick={() => setActiveTab("polls")} />
+          <QuickCard icon="📸" label="Gallery"   sub="Match photos"     onClick={() => setActiveTab("gallery")} />
+          <QuickCard icon="📋" label="Rules"     sub="Tournament rules" onClick={() => setActiveTab("rules")} />
         </div>
       </div>
 
       <div className="mt-6 px-4 flex items-center justify-between text-[10px] text-[#4a5568]">
         <span className="font-display text-[#c8960a] tracking-widest">PPL 2026</span>
-        <span>Pattan Premier League \u00B7 Since 2010</span>
+        <span>Pattan Premier League · Since 2010</span>
       </div>
     </div>
   )
