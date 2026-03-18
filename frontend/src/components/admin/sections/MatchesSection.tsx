@@ -5,9 +5,18 @@ import toast from 'react-hot-toast'
 import { Trash2, Pencil } from 'lucide-react'
 import { fmtDate, fmtTime, statusLabel } from '../../../utils'
 
-const STAGES   = [{v:'group',l:'Group'},{v:'prequarter',l:'Pre-QF'},{v:'quarter',l:'QF'},{v:'semi',l:'SF'},{v:'final',l:'Final'}]
+const STAGES   = [
+  {v:'group',      l:'Group Stage'},
+  {v:'prequarter', l:'Pre-Quarter Final'},
+  {v:'quarter',    l:'Quarter Final'},
+  {v:'semi',       l:'Semi Final'},
+  {v:'final',      l:'Final'},
+]
 const STATUSES = ['upcoming','live','completed','rain','delayed','postponed','rematch','cancelled']
 const INIT = { stage:'group', groupId:'', matchNo:'', team1Id:'', team2Id:'', date:'', time:'', year:2026, venue:'Dildar Ahmed Cricket Ground', status:'upcoming', result:'', score1:'', score2:'', overs:10 }
+
+// Group stage → filter by group. Knockout stages → ALL teams can play each other
+const GROUP_STAGES = ['group']
 
 export default function MatchesSection() {
   const { matches, teams, groups, setMatches } = useStore()
@@ -18,8 +27,16 @@ export default function MatchesSection() {
   const reload = async () => { const r: any = await api('/matches'); setMatches(r.data || r) }
   const set    = (k: string, v: any) => setForm((f: any) => ({ ...f, [k]: v }))
 
+  // When stage changes, clear groupId for knockout stages
+  const setStage = (stage: string) => {
+    const isGroupStage = GROUP_STAGES.includes(stage)
+    set('stage', stage)
+    if (!isGroupStage) set('groupId', '') // knockout → no group filter
+  }
+
   const save = async () => {
     if (!form.team1Id || !form.team2Id) { toast.error('Select both teams'); return }
+    if (form.team1Id === form.team2Id) { toast.error('Teams must be different'); return }
     try {
       if (editId) await api('/matches/' + editId, 'PUT', form)
       else        await api('/matches', 'POST', form)
@@ -41,8 +58,14 @@ export default function MatchesSection() {
     setShowForm(true)
   }
 
-  const needsResult = ['completed','rain','delayed','postponed','rematch','cancelled'].includes(form.status)
-  const filteredTeams = form.groupId ? teams.filter(t => t.groupId === form.groupId) : teams
+  const isGroupStage = GROUP_STAGES.includes(form.stage)
+  const needsResult  = ['completed','rain','delayed','postponed','rematch','cancelled'].includes(form.status)
+
+  // Group stage + group selected → filter teams by group
+  // Knockout stages → show ALL teams (inter-group matches)
+  const availableTeams = isGroupStage && form.groupId
+    ? teams.filter(t => t.groupId === form.groupId)
+    : teams
 
   return (
     <div className="space-y-3">
@@ -53,25 +76,35 @@ export default function MatchesSection() {
       {showForm && (
         <div className="space-y-2 card p-3">
           <div className="grid grid-cols-2 gap-2">
-            <select className="select-field" value={form.stage} onChange={e => set('stage', e.target.value)}>
+            <select className="select-field" value={form.stage} onChange={e => setStage(e.target.value)}>
               {STAGES.map(s => <option key={s.v} value={s.v}>{s.l}</option>)}
             </select>
             <input className="input-field" placeholder="Match # e.g. 01" value={form.matchNo} onChange={e => set('matchNo', e.target.value)} />
           </div>
-          <select className="select-field" value={form.groupId} onChange={e => set('groupId', e.target.value)}>
-            <option value="">— No Group —</option>
-            {groups.map(g => <option key={g.id} value={g.id}>{g.name}</option>)}
-          </select>
+
+          {/* Group selector — only shown for group stage */}
+          {isGroupStage ? (
+            <select className="select-field" value={form.groupId} onChange={e => set('groupId', e.target.value)}>
+              <option value="">— No Group —</option>
+              {groups.map(g => <option key={g.id} value={g.id}>{g.name}</option>)}
+            </select>
+          ) : (
+            <div className="text-[11px] text-cyan-400 bg-cyan-400/5 border border-cyan-400/20 rounded-xl px-3 py-2">
+              ⚔️ Knockout stage — all teams available (inter-group match)
+            </div>
+          )}
+
           <div className="grid grid-cols-2 gap-2">
             <select className="select-field" value={form.team1Id} onChange={e => set('team1Id', e.target.value)}>
               <option value="">Team 1</option>
-              {filteredTeams.map(t => <option key={t.id} value={t.id}>{t.emoji} {t.name}</option>)}
+              {availableTeams.map(t => <option key={t.id} value={t.id}>{t.emoji} {t.name}</option>)}
             </select>
             <select className="select-field" value={form.team2Id} onChange={e => set('team2Id', e.target.value)}>
               <option value="">Team 2</option>
-              {filteredTeams.map(t => <option key={t.id} value={t.id}>{t.emoji} {t.name}</option>)}
+              {availableTeams.filter(t => t.id !== form.team1Id).map(t => <option key={t.id} value={t.id}>{t.emoji} {t.name}</option>)}
             </select>
           </div>
+
           <div className="grid grid-cols-2 gap-2">
             <input className="input-field" type="date" value={form.date} onChange={e => set('date', e.target.value)} />
             <input className="input-field" type="time" value={form.time} onChange={e => set('time', e.target.value)} />
@@ -103,7 +136,7 @@ export default function MatchesSection() {
           <div key={m.id} className="flex items-center justify-between bg-white/[0.03] rounded-xl px-3 py-2 border border-white/[0.04]">
             <div className="min-w-0 flex-1">
               <div className="text-sm text-white font-semibold truncate">[{m.matchNo || '?'}] {m.team1?.name} vs {m.team2?.name}</div>
-              <div className="text-[11px] text-[#4a5568]">{fmtDate(m.date)} {fmtTime(m.time)} · {statusLabel[m.status] || m.status}</div>
+              <div className="text-[11px] text-[#4a5568]">{fmtDate(m.date)} {fmtTime(m.time)} · {statusLabel[m.status] || m.status} · {m.stage}</div>
             </div>
             <div className="flex gap-2 flex-shrink-0 ml-2">
               <button onClick={() => edit(m)} className="text-[#8892b0] hover:text-[#f0c040] active:scale-95"><Pencil size={13}/></button>
