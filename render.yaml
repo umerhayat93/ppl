@@ -5,7 +5,7 @@ services:
     rootDir: backend
     region: virginia
     plan: free
-    buildCommand: npm install && npm run prisma:generate && npm run prisma:migrate && npm run build
+    buildCommand: npm install && npm run prisma:generate && npm run prisma:migrate && npx @nestjs/cli build && echo "dist/main.js exists:" && ls dist/main.js
     startCommand: npm run start:prod
     healthCheckPath: /api/bootstrap
     envVars:
@@ -25,12 +25,17 @@ services:
         value: production
       - key: PORT
         value: "3001"
+      - key: VAPID_PUBLIC_KEY
+        value: BACuok9vE6EnsDx6nJcLFTtnxBesybaKzJ60wb1yiTmMQWxb7bTywhO73SKq9yDzsBIh0TYiUX42kACCMsZ-TDQ
+      - key: VAPID_PRIVATE_KEY
+        value: gKBkl6Tcabv3UYOCgzF1mrqmb7QOKCATyP4rF-LDnh4
+      - key: VAPID_EMAIL
+        value: mailto:admin@ppl2026.com
 
   - type: web
     name: ppl2026-frontend
     env: static
     rootDir: frontend
-    region: virginia
     buildCommand: npm install && npm run build
     staticPublishPath: ./dist
     envVars:

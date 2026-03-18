@@ -152,14 +152,16 @@ function FullScorecard({ match, live }: { match: Match; live: LiveState }) {
                 {bowlers.map((b: any) => {
                   const isCur = currentBowler?.name === b.name
                   const bd = isCur ? currentBowler : b
-                  const ov2 = `${Math.floor((bd.ballsBowled || 0) / 6)}.${(bd.ballsBowled || 0) % 6}`
+                  const balls = bd.ballsBowled || 0
+                  const ovsDisplay = `${Math.floor(balls / 6)}.${balls % 6}`
+                  const ecoDisplay = balls > 0 ? ((bd.runsConceded || 0) / (balls / 6)).toFixed(2) : '—'
                   return (
                     <tr key={b.name} className={`border-b border-white/[0.02] last:border-0 ${isCur ? 'bg-red-500/5' : ''}`}>
                       <td className="py-2.5 px-3 font-semibold text-white">{bd.name}{isCur ? ' ◀' : ''}</td>
-                      <td className="py-2.5 px-3 text-center text-[#8892b0]">{ov2}</td>
+                      <td className="py-2.5 px-3 text-center text-[#8892b0]">{ovsDisplay}</td>
                       <td className="py-2.5 px-3 text-center text-[#8892b0]">{bd.runsConceded || 0}</td>
                       <td className="py-2.5 px-3 text-center font-mono text-red-400 font-bold">{bd.wickets || 0}</td>
-                      <td className="py-2.5 px-3 text-center text-[#8892b0]">{bd.economy ? Number(bd.economy).toFixed(2) : '—'}</td>
+                      <td className="py-2.5 px-3 text-center text-[#8892b0]">{ecoDisplay}</td>
                     </tr>
                   )
                 })}
@@ -279,7 +281,7 @@ function CompletedScorecard({ match }: { match: Match }) {
                     <td className="py-2 px-2 text-center text-[#8892b0]">{Math.floor((b.ballsBowled||0)/6)}.{(b.ballsBowled||0)%6}</td>
                     <td className="py-2 px-2 text-center text-[#8892b0]">{b.runsConceded||0}</td>
                     <td className="py-2 px-2 text-center font-mono text-red-400 font-bold">{b.wickets||0}</td>
-                    <td className="py-2 px-2 text-center text-[#8892b0]">{b.economy?Number(b.economy).toFixed(2):'—'}</td>
+                    <td className="py-2 px-2 text-center text-[#8892b0]">{(b.ballsBowled||0)>0?((b.runsConceded||0)/((b.ballsBowled||0)/6)).toFixed(2):'—'}</td>
                   </tr>
                 ))}
               </tbody>
