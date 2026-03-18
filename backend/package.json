@@ -2,14 +2,16 @@
   "name": "ppl2026-backend",
   "version": "1.0.0",
   "scripts": {
-    "build": "nest build",
+    "build": "npx nest build",
     "start:prod": "node dist/main",
-    "start:dev": "nest start --watch",
+    "start:dev": "npx nest start --watch",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate deploy",
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@nestjs/cli": "^10.3.0",
+    "@nestjs/schematics": "^10.1.0",
     "@nestjs/common": "^10.3.0",
     "@nestjs/core": "^10.3.0",
     "@nestjs/platform-express": "^10.3.0",
@@ -29,16 +31,13 @@
     "reflect-metadata": "^0.2.1",
     "rxjs": "^7.8.1",
     "compression": "^1.7.4",
-    "helmet": "^7.1.0"
-  },
-  "devDependencies": {
-    "@nestjs/cli": "^10.3.0",
-    "@nestjs/schematics": "^10.1.0",
+    "helmet": "^7.1.0",
+    "typescript": "^5.3.3",
+    "ts-node": "^10.9.2",
     "@types/node": "^20.11.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/web-push": "^3.6.3",
-    "@types/compression": "^1.7.5",
-    "typescript": "^5.3.3",
-    "ts-node": "^10.9.2"
-  }
+    "@types/compression": "^1.7.5"
+  },
+  "devDependencies": {}
 }
