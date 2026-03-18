@@ -7,7 +7,7 @@ import { fmtDate, fmtTime, statusLabel } from '../../../utils'
 
 const STAGES   = [{v:'group',l:'Group'},{v:'prequarter',l:'Pre-QF'},{v:'quarter',l:'QF'},{v:'semi',l:'SF'},{v:'final',l:'Final'}]
 const STATUSES = ['upcoming','live','completed','rain','delayed','postponed','rematch','cancelled']
-const INIT = { stage:'group', groupId:'', matchNo:'', team1Id:'', team2Id:'', date:'', time:'', year:2026, venue:'Pattan Cricket Ground', status:'upcoming', result:'', score1:'', score2:'', overs:10 }
+const INIT = { stage:'group', groupId:'', matchNo:'', team1Id:'', team2Id:'', date:'', time:'', year:2026, venue:'Dildar Ahmed Cricket Ground', status:'upcoming', result:'', score1:'', score2:'', overs:10 }
 
 export default function MatchesSection() {
   const { matches, teams, groups, setMatches } = useStore()

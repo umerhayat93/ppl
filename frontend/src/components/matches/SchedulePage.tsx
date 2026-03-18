@@ -80,15 +80,15 @@ export default function SchedulePage() {
       {/* Search bar */}
       <div className="px-3 mb-3">
         <div className="relative">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#4a5568]" />
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
-            className="w-full bg-[#0f1628] border border-white/[0.08] rounded-xl pl-9 pr-9 py-2.5 text-sm text-white placeholder:text-[#4a5568] focus:outline-none focus:border-[#f0c040]/30 transition-all"
+            className="w-full bg-white border border-gray-200 rounded-xl pl-9 pr-9 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#f0c040] focus:ring-2 focus:ring-[#f0c040]/20 transition-all shadow-sm"
             placeholder="Search team name..."
             value={search}
             onChange={e => setSearch(e.target.value)}
           />
           {search && (
-            <button onClick={() => setSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#4a5568] hover:text-white">
+            <button onClick={() => setSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700">
               <X size={14} />
             </button>
           )}

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { Toaster } from 'react-hot-toast'
 import { useStore } from './store'
 import { api } from './api/client'
@@ -29,11 +29,32 @@ export default function App() {
 
   useSocket()
 
-  useEffect(() => {
-    api('/bootstrap').then((r: any) => {
+  const fetchBootstrap = useCallback(async () => {
+    try {
+      const r: any = await api('/bootstrap')
       setBootstrap(r.data ?? r)
-    }).catch(console.error)
+    } catch {}
   }, [])
+
+  // Initial fetch — immediately on mount
+  useEffect(() => { fetchBootstrap() }, [])
+
+  // Re-fetch when tab becomes visible (instant update after backgrounding)
+  useEffect(() => {
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') fetchBootstrap()
+    }
+    document.addEventListener('visibilitychange', onVisible)
+    return () => document.removeEventListener('visibilitychange', onVisible)
+  }, [fetchBootstrap])
+
+  // Poll every 10 seconds while visible — ensures data is never more than 10s stale
+  useEffect(() => {
+    const id = setInterval(() => {
+      if (document.visibilityState === 'visible') fetchBootstrap()
+    }, 10_000)
+    return () => clearInterval(id)
+  }, [fetchBootstrap])
 
   const PAGE_MAP: Record<string, JSX.Element> = {
     home:       <HomePage />,
@@ -74,11 +95,9 @@ export default function App() {
         position="top-center"
         toastOptions={{
           style: {
-            background: '#0f1628',
-            color: '#e8eaf0',
+            background: '#0f1628', color: '#e8eaf0',
             border: '1px solid rgba(240,192,64,0.15)',
-            borderRadius: '12px',
-            fontSize: '13px'
+            borderRadius: '12px', fontSize: '13px',
           },
           success: { iconTheme: { primary: '#f0c040', secondary: '#040810' } },
           error:   { iconTheme: { primary: '#ff3b5c', secondary: '#040810' } },

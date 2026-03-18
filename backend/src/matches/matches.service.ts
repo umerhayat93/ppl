@@ -23,7 +23,7 @@ export class MatchesService {
       data: {
         stage: d.stage||'group', groupId: d.groupId||null, matchNo: d.matchNo||'',
         team1Id: d.team1Id, team2Id: d.team2Id, date: d.date||'', time: d.time||'',
-        year: d.year||2026, venue: d.venue||'Pattan Cricket Ground',
+        year: d.year||2026, venue: d.venue||'Dildar Ahmed Cricket Ground',
         status: d.status||'upcoming', overs: d.overs||10,
       },
       include: this.include,
