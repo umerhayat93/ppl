@@ -1,0 +1,31 @@
+import { useState } from 'react'
+import { useStore } from '../../../store'
+import { api } from '../../../api/client'
+import toast from 'react-hot-toast'
+import { Trash2, Pencil } from 'lucide-react'
+const COLORS = ['gold','blue','green','red','purple','teal']
+export default function GroupsSection() {
+  const { groups, setGroups } = useStore()
+  const [name, setName] = useState(''); const [color, setColor] = useState('gold'); const [editId, setEditId] = useState('')
+  const reload = async () => { const r:any=await api('/groups'); setGroups(r.data||r) }
+  const save = async () => {
+    if(!name.trim()){toast.error('Name required');return}
+    try{ await api('/groups', editId?'PUT':'POST', editId?undefined:undefined); if(editId) await api(`/groups/${editId}`,'PUT',{name,color}); else await api('/groups','POST',{name,color}); setName('');setColor('gold');setEditId('');await reload();toast.success(editId?'Updated':'Added') }catch(e:any){toast.error(e.message)}
+  }
+  const del = async (id:string) => { if(!confirm('Delete?'))return; try{await api(`/groups/${id}`,'DELETE');await reload()}catch(e:any){toast.error(e.message)} }
+  const edit = (g:any) => { setEditId(g.id);setName(g.name);setColor(g.color) }
+  return (
+    <div className="space-y-3">
+      <div className="space-y-1.5 max-h-40 overflow-y-auto">
+        {groups.map(g=><div key={g.id} className="flex items-center justify-between bg-white/[0.03] rounded-xl px-3 py-2 border border-white/[0.04]">
+          <span className="text-sm text-white font-semibold">{g.name} <span className="text-[11px] text-[#4a5568]">({g.color})</span></span>
+          <div className="flex gap-2"><button onClick={()=>edit(g)} className="text-[#8892b0] hover:text-[#f0c040] active:scale-95"><Pencil size={13}/></button><button onClick={()=>del(g.id)} className="text-red-400 active:scale-95"><Trash2 size={13}/></button></div>
+        </div>)}
+      </div>
+      <input className="input-field" placeholder="Group name" value={name} onChange={e=>setName(e.target.value)} />
+      <select className="select-field" value={color} onChange={e=>setColor(e.target.value)}>{COLORS.map(c=><option key={c} value={c}>{c}</option>)}</select>
+      <button onClick={save} className="btn-gold w-full">{editId?'UPDATE GROUP':'+ ADD GROUP'}</button>
+      {editId&&<button onClick={()=>{setEditId('');setName('');setColor('gold')}} className="btn-outline w-full">Cancel</button>}
+    </div>
+  )
+}
