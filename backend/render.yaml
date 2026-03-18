@@ -1,0 +1,51 @@
+services:
+  - type: web
+    name: ppl2026-backend
+    env: node
+    rootDir: backend
+    region: virginia
+    plan: free
+    buildCommand: npm install && npm run prisma:generate && npm run prisma:migrate && npm run build
+    startCommand: npm run start:prod
+    healthCheckPath: /api/bootstrap
+    envVars:
+      - key: DATABASE_URL
+        value: postgresql://ppl_postgresql_umer_user:T8LuUsk1ufPrGklaeoc48RI7U2sVchWw@dpg-d6t2g3fkijhs73ernu90-a.virginia-postgres.render.com/ppl_postgresql_umer
+      - key: REDIS_URL
+        value: redis://red-d6t2jo1aae7s73dl4lf0:6379
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ADMIN_USER
+        value: ppl2026
+      - key: ADMIN_PASS
+        value: ppl@2620
+      - key: FRONTEND_URL
+        value: https://ppl2026-frontend.onrender.com
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "3001"
+
+  - type: web
+    name: ppl2026-frontend
+    env: static
+    rootDir: frontend
+    region: virginia
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://ppl2026-backend.onrender.com
+      - key: VITE_WS_URL
+        value: https://ppl2026-backend.onrender.com
+    headers:
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+      - path: /*
+        name: Cache-Control
+        value: public, max-age=0, must-revalidate
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
