@@ -2,7 +2,7 @@
   "name": "ppl2026-backend",
   "version": "1.0.0",
   "scripts": {
-    "build": "npx nest build",
+    "build": "tsc -p tsconfig.json",
     "start:prod": "node dist/main",
     "start:dev": "npx nest start --watch",
     "prisma:generate": "prisma generate",
