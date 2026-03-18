@@ -16,8 +16,7 @@ const TABS = [
 ]
 
 export default function NavTabs() {
-  const { activeTab, setActiveTab, matches } = useStore()
-  const isLive = matches.some(m => m.status === 'live')
+  const { activeTab, setActiveTab } = useStore()
 
   return (
     <nav className="bg-[#0a0f1e] border-b border-[#f0c040]/10 overflow-x-auto no-scrollbar">
@@ -26,13 +25,10 @@ export default function NavTabs() {
           <button
             key={t.id}
             onClick={() => setActiveTab(t.id)}
-            className={`nav-tab flex items-center gap-1.5 relative ${activeTab === t.id ? 'nav-tab-active' : ''}`}
+            className={`nav-tab flex items-center gap-1.5 ${activeTab === t.id ? 'nav-tab-active' : ''}`}
           >
             <span className="text-sm leading-none">{t.icon}</span>
             <span>{t.label}</span>
-            {t.id === 'live' && isLive && (
-              <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-red-400 live-blip" />
-            )}
           </button>
         ))}
       </div>

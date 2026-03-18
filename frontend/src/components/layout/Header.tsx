@@ -1,5 +1,4 @@
 import { Shield } from 'lucide-react'
-import { useStore } from '../../store'
 import { useState, useEffect } from 'react'
 
 export default function Header({ onAdminClick }: { onAdminClick: () => void }) {
@@ -24,16 +23,9 @@ export default function Header({ onAdminClick }: { onAdminClick: () => void }) {
           <div className="text-[9px] text-[#4a5568] tracking-[0.3em] uppercase leading-none mt-0.5">Pattan Premier League</div>
         </div>
       </div>
-
       <div className="flex items-center gap-2">
-        <div
-          className={`w-2 h-2 rounded-full transition-colors ${online ? 'bg-emerald-400' : 'bg-red-400'}`}
-          title={online ? 'Online' : 'Offline'}
-        />
-        <button
-          onClick={onAdminClick}
-          className="w-9 h-9 rounded-xl bg-[#0f1628] border border-white/[0.06] flex items-center justify-center text-[#8892b0] hover:border-[#f0c040]/30 hover:text-[#f0c040] transition-all"
-        >
+        <div className={`w-2 h-2 rounded-full transition-colors ${online ? 'bg-emerald-400' : 'bg-red-400'}`} title={online ? 'Online' : 'Offline'} />
+        <button onClick={onAdminClick} className="w-9 h-9 rounded-xl bg-[#0f1628] border border-white/[0.06] flex items-center justify-center text-[#8892b0] hover:border-[#f0c040]/30 hover:text-[#f0c040] transition-all">
           <Shield size={16} />
         </button>
       </div>
