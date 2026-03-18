@@ -12,7 +12,7 @@ services:
       - key: DATABASE_URL
         value: postgresql://ppl_postgresql_umer_user:T8LuUsk1ufPrGklaeoc48RI7U2sVchWw@dpg-d6t2g3fkijhs73ernu90-a.virginia-postgres.render.com/ppl_postgresql_umer
       - key: REDIS_URL
-        value: redis://red-d6t2jo1aae7s73dl4lf0:6379
+        value: redis://red-d6t4fl9aae7s73dm5iq0:6379
       - key: JWT_SECRET
         generateValue: true
       - key: ADMIN_USER
