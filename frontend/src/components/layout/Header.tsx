@@ -13,19 +13,49 @@ export default function Header({ onAdminClick }: { onAdminClick: () => void }) {
   }, [])
 
   return (
-    <header className="sticky top-0 z-50 bg-[#040810]/95 backdrop-blur-xl border-b border-[#f0c040]/10 h-14 flex items-center justify-between px-4">
+    <header className="sticky top-0 z-50 h-14 flex items-center justify-between px-4"
+      style={{
+        background: 'rgba(13,5,32,0.96)',
+        backdropFilter: 'blur(20px)',
+        borderBottom: '1px solid rgba(147,51,234,0.15)',
+        boxShadow: '0 1px 20px rgba(147,51,234,0.1)',
+      }}>
+
+      {/* Brand — PSL logo + text */}
       <div className="flex items-center gap-3">
-        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#ffd966] to-[#c8960a] flex items-center justify-center shadow-lg shadow-[#f0c040]/20 flex-shrink-0">
-          <span className="font-display text-[#040810] text-base leading-none">PPL</span>
-        </div>
+        <img
+          src="/icons/icon-192.png"
+          alt="PSL"
+          className="w-9 h-9 rounded-xl object-cover"
+          style={{ boxShadow: '0 0 12px rgba(147,51,234,0.4)' }}
+        />
         <div>
-          <div className="font-display text-[#f0c040] text-lg tracking-wider leading-none">PPL 2026</div>
-          <div className="text-[9px] text-[#4a5568] tracking-[0.3em] uppercase leading-none mt-0.5">Pattan Premier League</div>
+          <div className="font-display leading-none tracking-wider" style={{
+            fontSize: '1.15rem',
+            background: 'linear-gradient(135deg, #d4a017, #f0c040)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+          }}>
+            PPL 2026
+          </div>
+          <div className="text-[9px] tracking-[0.25em] uppercase leading-none mt-0.5" style={{ color: '#7c5fa0' }}>
+            Pattan Premier League
+          </div>
         </div>
       </div>
+
+      {/* Right */}
       <div className="flex items-center gap-2">
-        <div className={`w-2 h-2 rounded-full transition-colors ${online ? 'bg-emerald-400' : 'bg-red-400'}`} title={online ? 'Online' : 'Offline'} />
-        <button onClick={onAdminClick} className="w-9 h-9 rounded-xl bg-[#0f1628] border border-white/[0.06] flex items-center justify-center text-[#8892b0] hover:border-[#f0c040]/30 hover:text-[#f0c040] transition-all">
+        <div className={`w-2 h-2 rounded-full transition-colors ${online ? 'bg-emerald-400' : 'bg-red-400'}`}
+          style={online ? { boxShadow: '0 0 6px rgba(52,211,153,0.6)' } : {}}
+          title={online ? 'Online' : 'Offline'} />
+        <button onClick={onAdminClick}
+          className="w-9 h-9 rounded-xl flex items-center justify-center transition-all active:scale-95"
+          style={{
+            background: 'rgba(147,51,234,0.1)',
+            border: '1px solid rgba(147,51,234,0.2)',
+            color: '#9333ea',
+          }}>
           <Shield size={16} />
         </button>
       </div>
