@@ -341,11 +341,11 @@ function UpcomingMatchPoster() {
 // ── Sponsor Page Modal ────────────────────────────────────────────
 function SponsorPage({ onClose }: { onClose: () => void }) {
   return (
-    <div className="fixed inset-0 z-[100] overflow-y-auto"
+    <div className="fixed inset-0 z-[100] flex flex-col"
       style={{ background: 'linear-gradient(160deg, #0d0520 0%, #1a0540 50%, #0d0520 100%)' }}>
 
-      {/* Header */}
-      <div className="sticky top-0 z-10 flex items-center justify-between px-4 py-3"
+      {/* Header — fixed at top */}
+      <div className="flex-shrink-0 flex items-center justify-between px-4 py-3"
         style={{ background: 'rgba(13,5,32,0.95)', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(147,51,234,0.15)' }}>
         <button onClick={onClose} className="flex items-center gap-2 text-sm" style={{ color: '#7c5fa0' }}>
           ← Back
@@ -354,7 +354,9 @@ function SponsorPage({ onClose }: { onClose: () => void }) {
         <div className="w-12" />
       </div>
 
-      <div className="px-4 pb-12">
+      {/* Scrollable content — full remaining height */}
+      <div className="flex-1 overflow-y-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
+      <div className="px-4 pb-16">
 
         {/* Hero banner */}
         <div className="relative rounded-3xl overflow-hidden mt-4 mb-5" style={{
@@ -506,36 +508,31 @@ function SponsorPage({ onClose }: { onClose: () => void }) {
         </div>
 
       </div>
+      </div>
     </div>
   )
 }
 
-// ── TV-style sponsor badge — hovers bottom-right of hero ──────────
+// ── TV-style floating sponsor badge ──────────────────────────────
 function SponsorBadge({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="flex items-center gap-2 px-3 py-1.5 rounded-xl active:scale-95 transition-all float-live"
+      className="flex items-center gap-2 px-3 py-2 rounded-xl active:scale-95 transition-all float-live"
       style={{
-        background: 'rgba(13,5,32,0.85)',
-        backdropFilter: 'blur(8px)',
-        border: '1px solid rgba(212,160,23,0.35)',
-        boxShadow: '0 2px 12px rgba(0,0,0,0.4), 0 0 0 1px rgba(212,160,23,0.1)',
+        background: 'rgba(13,5,32,0.82)',
+        backdropFilter: 'blur(10px)',
+        border: '1px solid rgba(212,160,23,0.4)',
+        boxShadow: '0 4px 20px rgba(0,0,0,0.5), 0 0 12px rgba(212,160,23,0.15)',
       }}>
-      {/* Hospital cross icon */}
-      <div className="w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0"
-        style={{ background: 'linear-gradient(135deg, #1e3a5f, #2563eb)' }}>
-        <span className="text-[10px] leading-none">🏥</span>
+      <div className="w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0"
+        style={{ background: 'linear-gradient(135deg, #1e3a5f, #2563eb)', border: '1px solid rgba(37,99,235,0.5)' }}>
+        <span className="text-[11px] leading-none">🏥</span>
       </div>
       <div className="text-left">
-        <div className="text-[8px] uppercase tracking-widest leading-none mb-0.5" style={{ color: '#7c5fa0' }}>
-          Dev by
-        </div>
-        <div className="text-[10px] font-bold leading-none" style={{ color: '#d4a017' }}>
-          KM&amp;S Complex
-        </div>
+        <div className="font-semibold leading-none" style={{ fontSize: '10px', color: '#ffffff' }}>Developed by</div>
+        <div className="font-bold leading-none mt-0.5" style={{ fontSize: '10px', color: '#d4a017' }}>KM&amp;S Complex</div>
       </div>
-      <div className="text-[8px] ml-1" style={{ color: '#4a3060' }}>▶</div>
     </button>
   )
 }
@@ -543,6 +540,12 @@ function SponsorBadge({ onClick }: { onClick: () => void }) {
 export default function HomePage() {
   const { teams, matches, players, live, setActiveTab } = useStore()
   const [showSponsor, setShowSponsor] = React.useState(false)
+
+  // Expose sponsor toggle globally so LiveCard badge can trigger it
+  React.useEffect(() => {
+    (window as any).__showSponsor = () => setShowSponsor(true)
+    return () => { delete (window as any).__showSponsor }
+  }, [])
   const liveMatch = matches.find(m => m.status === 'live')
   const completed = matches.filter(m => m.status === 'completed').length
 
@@ -601,7 +604,7 @@ export default function HomePage() {
           ))}
         </div>
 
-        {/* TV-style sponsor badge — bottom right of hero */}
+        {/* TV-style floating sponsor badge — bottom right of hero */}
         <div className="absolute bottom-3 right-3">
           <SponsorBadge onClick={() => setShowSponsor(true)} />
         </div>
