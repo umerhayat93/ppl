@@ -337,13 +337,219 @@ function UpcomingMatchPoster() {
   )
 }
 
+
+// ── Sponsor Page Modal ────────────────────────────────────────────
+function SponsorPage({ onClose }: { onClose: () => void }) {
+  return (
+    <div className="fixed inset-0 z-[100] overflow-y-auto"
+      style={{ background: 'linear-gradient(160deg, #0d0520 0%, #1a0540 50%, #0d0520 100%)' }}>
+
+      {/* Header */}
+      <div className="sticky top-0 z-10 flex items-center justify-between px-4 py-3"
+        style={{ background: 'rgba(13,5,32,0.95)', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(147,51,234,0.15)' }}>
+        <button onClick={onClose} className="flex items-center gap-2 text-sm" style={{ color: '#7c5fa0' }}>
+          ← Back
+        </button>
+        <span className="font-display text-sm tracking-wider" style={{ color: '#d4a017' }}>Official Sponsor</span>
+        <div className="w-12" />
+      </div>
+
+      <div className="px-4 pb-12">
+
+        {/* Hero banner */}
+        <div className="relative rounded-3xl overflow-hidden mt-4 mb-5" style={{
+          background: 'linear-gradient(135deg, #0a1628 0%, #0d2040 50%, #0a1628 100%)',
+          border: '2px solid rgba(212,160,23,0.3)',
+          boxShadow: '0 0 60px rgba(212,160,23,0.1)',
+        }}>
+          {/* Background glow */}
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full blur-3xl"
+              style={{ background: 'radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%)' }} />
+            <div className="absolute top-0 left-0 right-0 h-[2px]"
+              style={{ background: 'linear-gradient(90deg, transparent, #d4a017, transparent)' }} />
+          </div>
+          <div className="relative px-6 py-8 text-center">
+            {/* Hospital icon */}
+            <div className="w-20 h-20 rounded-2xl flex items-center justify-center text-5xl mx-auto mb-4"
+              style={{ background: 'linear-gradient(135deg, #1e3a5f, #2563eb)', border: '2px solid rgba(37,99,235,0.4)', boxShadow: '0 0 24px rgba(37,99,235,0.3)' }}>
+              🏥
+            </div>
+            <div className="font-display text-xl tracking-wide mb-1" style={{
+              background: 'linear-gradient(135deg, #d4a017, #f0c040)',
+              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+            }}>
+              Kohistan Medical &
+            </div>
+            <div className="font-display text-xl tracking-wide mb-2" style={{
+              background: 'linear-gradient(135deg, #d4a017, #f0c040)',
+              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+            }}>
+              Surgical Complex
+            </div>
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-3" style={{
+              background: 'linear-gradient(135deg, #1e3a5f, #2563eb)',
+              border: '1px solid rgba(37,99,235,0.4)',
+            }}>
+              <span className="text-sm">💳</span>
+              <span className="text-sm font-semibold tracking-wide" style={{ color: '#93c5fd' }}>Sehat Card Plus</span>
+            </div>
+            <p className="text-sm" style={{ color: '#7c5fa0' }}>Pattan, Kohistan Lower, KPK</p>
+          </div>
+        </div>
+
+        {/* Official Sponsor badge */}
+        <div className="flex justify-center mb-5">
+          <div className="flex items-center gap-2 px-5 py-2 rounded-full" style={{
+            background: 'rgba(212,160,23,0.08)',
+            border: '1px solid rgba(212,160,23,0.25)',
+          }}>
+            <span>🏆</span>
+            <span className="text-xs font-bold tracking-widest uppercase" style={{ color: '#d4a017' }}>
+              Official App Developer · PPL 2026
+            </span>
+          </div>
+        </div>
+
+        {/* About section */}
+        <div className="rounded-2xl p-5 mb-4" style={{ background: '#160a2e', border: '1px solid rgba(147,51,234,0.15)' }}>
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-lg">🌟</span>
+            <span className="font-display text-base tracking-wide" style={{ color: '#f0e6ff' }}>About the Hospital</span>
+          </div>
+          <p className="text-sm leading-relaxed mb-3" style={{ color: '#a78bcf' }}>
+            Kohistan Medical &amp; Surgical Complex is one of the leading healthcare facilities in Lower Kohistan, proudly serving the communities of Pattan and surrounding areas in Khyber Pakhtunkhwa.
+          </p>
+          <p className="text-sm leading-relaxed mb-3" style={{ color: '#a78bcf' }}>
+            With a strong commitment to accessible healthcare, the complex offers a comprehensive range of medical and surgical services — from general consultations to specialized treatments — ensuring quality care is available to all residents of the region.
+          </p>
+          <p className="text-sm leading-relaxed" style={{ color: '#a78bcf' }}>
+            As an authorized <span style={{ color: '#93c5fd', fontWeight: 600 }}>Sehat Card Plus</span> facility, patients can access government-backed health insurance coverage, making essential treatments free or subsidized for eligible families across Kohistan.
+          </p>
+        </div>
+
+        {/* Services */}
+        <div className="rounded-2xl p-5 mb-4" style={{ background: '#160a2e', border: '1px solid rgba(147,51,234,0.15)' }}>
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-lg">⚕️</span>
+            <span className="font-display text-base tracking-wide" style={{ color: '#f0e6ff' }}>Services</span>
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            {[
+              ['🏥','General Medicine'],
+              ['🔪','Surgical Care'],
+              ['💊','Pharmacy'],
+              ['💳','Sehat Card Plus'],
+              ['🤱','Maternity Care'],
+              ['🚑','Emergency Services'],
+              ['🩺','Specialist Clinics'],
+              ['🧪','Diagnostics & Lab'],
+            ].map(([icon, label]) => (
+              <div key={label} className="flex items-center gap-2 px-3 py-2.5 rounded-xl" style={{ background: 'rgba(147,51,234,0.06)', border: '1px solid rgba(147,51,234,0.1)' }}>
+                <span className="text-base flex-shrink-0">{icon}</span>
+                <span className="text-xs font-semibold" style={{ color: '#c4a8e8' }}>{label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* PPL Team */}
+        <div className="rounded-2xl p-5 mb-4" style={{
+          background: 'linear-gradient(135deg, #1a0a2e, #2d1060)',
+          border: '1px solid rgba(147,51,234,0.3)',
+          boxShadow: '0 0 20px rgba(147,51,234,0.08)',
+        }}>
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-lg">🏏</span>
+            <span className="font-display text-base tracking-wide" style={{ color: '#f0e6ff' }}>PPL Team</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-4xl flex-shrink-0"
+              style={{ background: 'linear-gradient(135deg, #6b21a8, #9333ea)', border: '2px solid rgba(147,51,234,0.4)', boxShadow: '0 0 16px rgba(147,51,234,0.3)' }}>
+              👑
+            </div>
+            <div>
+              <div className="font-display text-lg tracking-wide" style={{ color: '#d4a017' }}>Kohistan Kay Sultans</div>
+              <div className="text-xs mt-1" style={{ color: '#7c5fa0' }}>Competing in Pattan Premier League 2026</div>
+              <div className="text-xs mt-1" style={{ color: '#9333ea' }}>Under the banner of Kohistan Medical & Surgical Complex</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Location */}
+        <div className="rounded-2xl p-5 mb-4" style={{ background: '#160a2e', border: '1px solid rgba(147,51,234,0.15)' }}>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+              style={{ background: 'rgba(212,160,23,0.1)', border: '1px solid rgba(212,160,23,0.2)' }}>
+              <span className="text-lg">📍</span>
+            </div>
+            <div>
+              <div className="font-semibold text-sm" style={{ color: '#f0e6ff' }}>Location</div>
+              <div className="text-xs mt-0.5" style={{ color: '#7c5fa0' }}>Pattan, Kohistan Lower, Khyber Pakhtunkhwa, Pakistan</div>
+            </div>
+          </div>
+        </div>
+
+        {/* App developed by */}
+        <div className="rounded-2xl p-4 text-center" style={{
+          background: 'rgba(212,160,23,0.05)',
+          border: '1px solid rgba(212,160,23,0.15)',
+        }}>
+          <p className="text-[11px] tracking-widest uppercase font-semibold mb-1" style={{ color: '#7c5fa0' }}>PPL 2026 Official App</p>
+          <p className="text-xs" style={{ color: '#d4a017' }}>
+            Developed &amp; sponsored by the owner of
+          </p>
+          <p className="text-sm font-bold mt-0.5" style={{ color: '#f0e6ff' }}>
+            Kohistan Medical &amp; Surgical Complex
+          </p>
+          <p className="text-xs mt-0.5" style={{ color: '#a78bcf' }}>(Sehat Card Plus) · Pattan Kohistan Lower</p>
+        </div>
+
+      </div>
+    </div>
+  )
+}
+
+// ── TV-style sponsor badge — hovers bottom-right of hero ──────────
+function SponsorBadge({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className="flex items-center gap-2 px-3 py-1.5 rounded-xl active:scale-95 transition-all float-live"
+      style={{
+        background: 'rgba(13,5,32,0.85)',
+        backdropFilter: 'blur(8px)',
+        border: '1px solid rgba(212,160,23,0.35)',
+        boxShadow: '0 2px 12px rgba(0,0,0,0.4), 0 0 0 1px rgba(212,160,23,0.1)',
+      }}>
+      {/* Hospital cross icon */}
+      <div className="w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0"
+        style={{ background: 'linear-gradient(135deg, #1e3a5f, #2563eb)' }}>
+        <span className="text-[10px] leading-none">🏥</span>
+      </div>
+      <div className="text-left">
+        <div className="text-[8px] uppercase tracking-widest leading-none mb-0.5" style={{ color: '#7c5fa0' }}>
+          Dev by
+        </div>
+        <div className="text-[10px] font-bold leading-none" style={{ color: '#d4a017' }}>
+          KM&amp;S Complex
+        </div>
+      </div>
+      <div className="text-[8px] ml-1" style={{ color: '#4a3060' }}>▶</div>
+    </button>
+  )
+}
+
 export default function HomePage() {
   const { teams, matches, players, live, setActiveTab } = useStore()
+  const [showSponsor, setShowSponsor] = React.useState(false)
   const liveMatch = matches.find(m => m.status === 'live')
   const completed = matches.filter(m => m.status === 'completed').length
 
   return (
     <div className="fade-up pb-6">
+      {showSponsor && <SponsorPage onClose={() => setShowSponsor(false)} />}
+
       {/* ── Hero with PSL logo + fire theme ── */}
       <div className="relative overflow-hidden px-4 py-6" style={{
         background: 'linear-gradient(160deg, #0d0520 0%, #1a0540 50%, #0d0520 100%)',
@@ -393,6 +599,11 @@ export default function HomePage() {
               <div className="text-[9px] uppercase tracking-widest mt-0.5" style={{ color: '#7c5fa0' }}>{l}</div>
             </div>
           ))}
+        </div>
+
+        {/* TV-style sponsor badge — bottom right of hero */}
+        <div className="absolute bottom-3 right-3">
+          <SponsorBadge onClick={() => setShowSponsor(true)} />
         </div>
       </div>
 
