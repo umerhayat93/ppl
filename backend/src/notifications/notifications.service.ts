@@ -16,7 +16,7 @@ export class NotificationsService {
   ) {
     const publicKey  = this.config.get<string>('VAPID_PUBLIC_KEY');
     const privateKey = this.config.get<string>('VAPID_PRIVATE_KEY');
-    const email      = this.config.get<string>('VAPID_EMAIL') || 'mailto:admin@ppl2026.com';
+    const email      = this.config.get<string>('VAPID_EMAIL') || 'mailto:malakumer8@gmail.com';
     if (publicKey && privateKey) {
       try {
         webpush.setVapidDetails(email, publicKey, privateKey);

@@ -30,7 +30,7 @@ services:
       - key: VAPID_PRIVATE_KEY
         value: gKBkl6Tcabv3UYOCgzF1mrqmb7QOKCATyP4rF-LDnh4
       - key: VAPID_EMAIL
-        value: mailto:admin@ppl2026.com
+        value: mailto:malakumer8@gmail.com
 
   - type: web
     name: ppl2026-frontend
