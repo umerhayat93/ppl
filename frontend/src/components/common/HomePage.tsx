@@ -520,18 +520,18 @@ function SponsorBadge({ onClick }: { onClick: () => void }) {
       onClick={onClick}
       className="flex items-center gap-2 px-3 py-2 rounded-xl active:scale-95 transition-all float-live"
       style={{
-        background: 'rgba(13,5,32,0.82)',
+        background: 'rgba(13,5,32,0.85)',
         backdropFilter: 'blur(10px)',
         border: '1px solid rgba(212,160,23,0.4)',
         boxShadow: '0 4px 20px rgba(0,0,0,0.5), 0 0 12px rgba(212,160,23,0.15)',
       }}>
-      <div className="w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0"
-        style={{ background: 'linear-gradient(135deg, #1e3a5f, #2563eb)', border: '1px solid rgba(37,99,235,0.5)' }}>
-        <span className="text-[11px] leading-none">🏥</span>
+      <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
+        style={{ background: 'linear-gradient(135deg, #1e3a5f, #2563eb)', border: '1px solid rgba(37,99,235,0.5)', boxShadow: '0 0 8px rgba(37,99,235,0.3)' }}>
+        <span className="text-sm leading-none">🏥</span>
       </div>
       <div className="text-left">
-        <div className="font-semibold leading-none" style={{ fontSize: '10px', color: '#ffffff' }}>Developed by</div>
-        <div className="font-bold leading-none mt-0.5" style={{ fontSize: '10px', color: '#d4a017' }}>KM&amp;S Complex</div>
+        <div className="font-bold leading-none" style={{ fontSize: '11px', color: '#d4a017' }}>KM&amp;S Complex</div>
+        <div className="leading-none mt-0.5" style={{ fontSize: '9px', color: '#7c93c8' }}>Sehat Card Plus</div>
       </div>
     </button>
   )
@@ -566,11 +566,13 @@ export default function HomePage() {
           style={{ background: 'radial-gradient(circle, rgba(212,160,23,0.08) 0%, transparent 70%)', animationDelay: '1s' }} />
 
         <div className="relative flex items-start gap-4">
-          {/* PSL Logo in hero */}
+          {/* PSL Logo */}
           <div className="flex-shrink-0">
             <img src="/icons/icon-192.png" alt="PSL" className="w-20 h-20 rounded-2xl object-cover splash-flame"
               style={{ boxShadow: '0 0 24px rgba(147,51,234,0.5), 0 0 48px rgba(249,115,22,0.2)' }} />
           </div>
+
+          {/* Title */}
           <div className="flex-1 min-w-0">
             <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 mb-2"
               style={{ background: 'rgba(212,160,23,0.1)', border: '1px solid rgba(212,160,23,0.2)' }}>
@@ -586,6 +588,33 @@ export default function HomePage() {
               }}>Premier</span><br />League
             </h1>
             <p className="text-sm mt-2" style={{ color: '#7c5fa0' }}>📍 Dildar Ahmed Cricket Ground · <span style={{ color: '#d4a017' }}>2026</span></p>
+          </div>
+
+          {/* Sponsor — top right corner of hero, animated text + hovering badge */}
+          <div className="flex-shrink-0 flex flex-col items-center gap-1.5 mt-1">
+            {/* Animated typewriter text */}
+            <div className="text-center" style={{ maxWidth: '90px' }}>
+              <span className="font-semibold" style={{
+                fontSize: '9px',
+                color: '#ffffff',
+                display: 'block',
+                lineHeight: 1.3,
+                animation: 'sponsorType 3s ease both',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+              }}>PPL App</span>
+              <span className="font-semibold" style={{
+                fontSize: '9px',
+                color: '#ffffff',
+                display: 'block',
+                lineHeight: 1.3,
+                animation: 'sponsorType 3s ease 0.4s both',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+              }}>developed by</span>
+            </div>
+            {/* Hovering badge */}
+            <SponsorBadge onClick={() => setShowSponsor(true)} />
           </div>
         </div>
 
@@ -604,10 +633,7 @@ export default function HomePage() {
           ))}
         </div>
 
-        {/* TV-style floating sponsor badge — bottom right of hero */}
-        <div className="absolute bottom-3 right-3">
-          <SponsorBadge onClick={() => setShowSponsor(true)} />
-        </div>
+
       </div>
 
       {/* Layout: Live → Hot Player → Upcoming → Ads */}

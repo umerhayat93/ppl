@@ -68,31 +68,13 @@ export default function LiveCard() {
       background: 'linear-gradient(135deg, #160a2e, #1e0f3d)',
       border: '1px solid rgba(212,160,23,0.25)',
     }}>
-      {/* Header — match info | sponsor badge | LIVE */}
-      <div className="px-4 py-2.5 flex items-center justify-between gap-2" style={{ background: 'rgba(212,160,23,0.06)', borderBottom: '1px solid rgba(212,160,23,0.1)' }}>
-        <div className="flex items-center gap-2 flex-shrink-0">
+      {/* Header */}
+      <div className="px-4 py-2.5 flex items-center justify-between" style={{ background: 'rgba(212,160,23,0.06)', borderBottom: '1px solid rgba(212,160,23,0.1)' }}>
+        <div className="flex items-center gap-2">
           <Activity size={13} style={{ color: '#d4a017' }} />
           <span className="text-[11px] tracking-widest uppercase" style={{ color: '#7c5fa0' }}>M{liveMatch.matchNo} · Inn {live.innings} · T{mo}</span>
         </div>
-        {/* Sponsor badge — center of header */}
-        <button
-          onClick={() => (window as any).__showSponsor?.()}
-          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg active:scale-95 transition-all flex-shrink-0"
-          style={{
-            background: 'rgba(13,5,32,0.7)',
-            border: '1px solid rgba(212,160,23,0.3)',
-            boxShadow: '0 0 8px rgba(212,160,23,0.1)',
-          }}>
-          <div className="w-4 h-4 rounded flex items-center justify-center flex-shrink-0"
-            style={{ background: 'linear-gradient(135deg, #1e3a5f, #2563eb)' }}>
-            <span className="text-[8px] leading-none">🏥</span>
-          </div>
-          <div className="text-left">
-            <div className="text-white font-semibold leading-none" style={{ fontSize: '9px' }}>Developed by</div>
-            <div className="font-bold leading-none mt-0.5" style={{ fontSize: '9px', color: '#d4a017' }}>KM&amp;S Complex</div>
-          </div>
-        </button>
-        <span className="badge-live live-blip text-[10px] flex-shrink-0">
+        <span className="badge-live live-blip text-[10px]">
           <span className="w-1.5 h-1.5 rounded-full bg-red-400 inline-block" />LIVE
         </span>
       </div>

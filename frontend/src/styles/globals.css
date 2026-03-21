@@ -136,6 +136,16 @@
 .float-live     { animation: floatLive 2s ease-in-out infinite; }
 .score-flash    { animation: scoreFlash 0.5s ease both; }
 
+@keyframes sponsorType {
+  0%   { width: 0; opacity: 0; }
+  10%  { opacity: 1; }
+  100% { width: 100%; opacity: 1; }
+}
+@keyframes sponsorFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 /* ── Ball dots ──────────────────────────────────────────────────── */
 .ball-W  { background:rgba(255,59,92,.2);  color:#ff3b5c; border:1px solid rgba(255,59,92,.4); }
 .ball-6  { background:rgba(249,115,22,.2); color:#f97316; border:1px solid rgba(249,115,22,.4); }
