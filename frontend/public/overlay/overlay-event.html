@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body { margin:0; background:transparent; }
+
+.event {
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  font-size:140px;
+  font-weight:bold;
+  opacity:0;
+}
+
+.show {
+  animation: boom 1.5s ease;
+}
+
+@keyframes boom {
+  0% { transform: scale(0.3) translate(-50%, -50%); opacity: 0; }
+  40% { transform: scale(1.3) translate(-50%, -50%); opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.six { color: lime; }
+.four { color: cyan; }
+.wicket { color: red; }
+</style>
+</head>
+
+<body>
+
+<div id="event" class="event"></div>
+
+<script>
+const socket = new WebSocket("wss://ppl2026-backend.onrender.com");
+
+let lastBall = null;
+
+socket.onmessage = (event) => {
+  const data = JSON.parse(event.data);
+
+  if (data.type !== "live_update") return;
+
+  const balls = data.payload.lastBalls;
+  const current = balls[balls.length - 1];
+
+  if (current === lastBall) return;
+  lastBall = current;
+
+  trigger(current);
+};
+
+function trigger(ball) {
+  const el = document.getElementById("event");
+
+  if (ball === "6") {
+    el.innerText = "SIX!";
+    el.className = "event show six";
+  } else if (ball === "4") {
+    el.innerText = "FOUR!";
+    el.className = "event show four";
+  } else if (ball === "W") {
+    el.innerText = "WICKET!";
+    el.className = "event show wicket";
+  }
+
+  setTimeout(() => el.className = "event", 1500);
+}
+</script>
+
+</body>
+</html>
