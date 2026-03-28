@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>PPL Broadcast Overlay</title>
+
+<style>
+body {
+  margin: 0;
+  background: transparent;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+}
+
+/* MAIN BAR */
+.bar {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 90px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  background: linear-gradient(90deg, #0f2027, #203a43, #2c5364);
+  color: white;
+  padding: 0 20px;
+}
+
+/* LEFT SCORE */
+.left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.score {
+  font-size: 34px;
+  font-weight: bold;
+  color: #00ffcc;
+}
+
+.overs {
+  font-size: 16px;
+}
+
+/* CENTER BATSMEN */
+.center {
+  text-align: center;
+}
+
+.batsman {
+  font-size: 16px;
+}
+
+.striker {
+  color: #00ffcc;
+  font-weight: bold;
+}
+
+/* RIGHT SIDE */
+.right {
+  text-align: right;
+  font-size: 14px;
+}
+
+/* BALLS */
+.balls {
+  display: flex;
+  gap: 6px;
+  margin-top: 5px;
+}
+
+.ball {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+.ball.four { background: blue; }
+.ball.six { background: green; }
+.ball.wicket { background: red; }
+
+/* BIG EVENT ANIMATION */
+.event {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 120px;
+  font-weight: bold;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.event.show {
+  animation: pop 1.5s ease;
+}
+
+@keyframes pop {
+  0% { transform: scale(0.3) translate(-50%, -50%); opacity: 0; }
+  30% { transform: scale(1.2) translate(-50%, -50%); opacity: 1; }
+  100% { transform: scale(1) translate(-50%, -50%); opacity: 0; }
+}
+
+.six { color: lime; }
+.four { color: cyan; }
+.wicket { color: red; }
+
+</style>
+</head>
+
+<body>
+
+<!-- BIG EVENT -->
+<div id="event" class="event"></div>
+
+<!-- MAIN BAR -->
+<div class="bar">
+
+  <!-- LEFT -->
+  <div class="left">
+    <div id="teams">Team A vs Team B</div>
+    <div class="score" id="score">0/0</div>
+    <div class="overs" id="overs">(0.0)</div>
+  </div>
+
+  <!-- CENTER -->
+  <div class="center">
+    <div id="striker" class="batsman striker"></div>
+    <div id="nonstriker" class="batsman"></div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right">
+    <div id="bowler"></div>
+    <div class="balls" id="balls"></div>
+  </div>
+
+</div>
+
+<script>
+let prevLastBall = null;
+
+async function updateScore() {
+  const res = await fetch('https://ppl2026-backend.onrender.com/api/live');
+  const json = await res.json();
+  const d = json.data;
+
+  if (!d) return;
+
+  // TEAMS
+  document.getElementById("teams").innerText =
+    d.battingFirst + " vs " + d.bowlingFirst;
+
+  // SCORE
+  document.getElementById("score").innerText =
+    `${d.runs}/${d.wickets}`;
+
+  // OVERS
+  const overs = Math.floor(d.balls / 6) + "." + (d.balls % 6);
+  document.getElementById("overs").innerText = `(${overs})`;
+
+  // BATSMEN
+  document.getElementById("striker").innerText =
+    `${d.striker.name} ${d.striker.runs} (${d.striker.balls})`;
+
+  document.getElementById("nonstriker").innerText =
+    `${d.nonstriker.name} ${d.nonstriker.runs} (${d.nonstriker.balls})`;
+
+  // BOWLER
+  const b = d.currentBowler;
+  document.getElementById("bowler").innerText =
+    `${b.name}  ${Math.floor(b.ballsBowled/6)}.${b.ballsBowled%6} - ${b.runsConceded}/${b.wickets}`;
+
+  // BALLS
+  const ballsDiv = document.getElementById("balls");
+  ballsDiv.innerHTML = "";
+
+  const last6 = d.lastBalls.slice(-6);
+
+  last6.forEach(ball => {
+    const el = document.createElement("div");
+    el.classList.add("ball");
+
+    if (ball === "4") el.classList.add("four");
+    if (ball === "6") el.classList.add("six");
+    if (ball === "W") el.classList.add("wicket");
+
+    el.innerText = ball;
+    ballsDiv.appendChild(el);
+  });
+
+  // EVENT DETECTION
+  const currentBall = d.lastBalls[d.lastBalls.length - 1];
+
+  if (currentBall !== prevLastBall) {
+    triggerEvent(currentBall);
+    prevLastBall = currentBall;
+  }
+}
+
+function triggerEvent(ball) {
+  const el = document.getElementById("event");
+
+  if (ball === "6") {
+    el.innerText = "SIX!";
+    el.className = "event show six";
+  }
+  else if (ball === "4") {
+    el.innerText = "FOUR!";
+    el.className = "event show four";
+  }
+  else if (ball === "W") {
+    el.innerText = "WICKET!";
+    el.className = "event show wicket";
+  }
+
+  setTimeout(() => {
+    el.className = "event";
+  }, 1500);
+}
+
+setInterval(updateScore, 1000);
+updateScore();
+</script>
+
+</body>
+  </html>
