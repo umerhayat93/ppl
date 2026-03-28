@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>PPL Live Overlay</title>
+<title>PPL Broadcast Overlay</title>
 
 <style>
 body {
@@ -16,56 +16,62 @@ body {
 /* MAIN BAR */
 .overlay {
   position: absolute;
-  bottom: 30px;
-  left: 30px;
-  right: 30px;
+  bottom: 0;
+  width: 100%;
+  padding: 15px 25px;
+  background: linear-gradient(to right, #0f0f0f, #1c1c1c);
+}
 
+/* TOP ROW */
+.top-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  background: linear-gradient(135deg, rgba(0,0,0,0.85), rgba(20,20,20,0.9));
-  padding: 18px 28px;
-  border-radius: 18px;
-  backdrop-filter: blur(10px);
-
-  box-shadow: 0 0 25px rgba(0,0,0,0.6);
 }
 
-/* TEAMS */
-.teams {
+/* LOGO */
+.logo {
   font-size: 20px;
-  font-weight: 600;
-  letter-spacing: 1px;
+  font-weight: bold;
+  color: #00ffcc;
 }
 
-/* SCORE */
-.center {
+/* SCORE TAB */
+.score-tab {
   text-align: center;
 }
 
 .score {
   font-size: 42px;
   font-weight: bold;
-  transition: 0.3s;
 }
 
-.score.flash {
-  color: #00ffcc;
-  transform: scale(1.2);
+.teams {
+  font-size: 18px;
 }
 
 .overs {
-  font-size: 16px;
+  font-size: 14px;
   opacity: 0.7;
 }
 
-/* PLAYERS */
-.players {
+/* RIGHT PANEL */
+.right-panel {
+  text-align: right;
+  font-size: 14px;
+}
+
+/* SECOND ROW */
+.second-row {
   display: flex;
-  flex-direction: column;
-  font-size: 15px;
-  gap: 3px;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+/* BATTERS */
+.batters {
+  display: flex;
+  gap: 20px;
 }
 
 .striker {
@@ -73,45 +79,51 @@ body {
   font-weight: bold;
 }
 
-/* BOWLER */
-.bowler {
-  text-align: right;
-  font-size: 14px;
-}
-
 /* BALLS */
 .balls {
-  position: absolute;
-  bottom: 110px;
-  left: 50%;
-  transform: translateX(-50%);
+  margin-top: 10px;
   display: flex;
-  gap: 10px;
+  gap: 8px;
 }
 
 .ball {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
-  background: #222;
+  background: #333;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: bold;
-  font-size: 14px;
-  transition: 0.3s;
 }
 
-/* COLORS */
 .ball.four { background: #007bff; }
 .ball.six { background: #00c853; }
-.ball.wicket { background: #d50000; }
-.ball.extra { background: orange; }
+.ball.wicket { background: red; }
 
-/* ANIMATION */
-.ball.new {
-  transform: scale(1.4);
-  box-shadow: 0 0 15px white;
+/* FULL SCREEN EVENTS */
+.fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-size: 60px;
+  font-weight: bold;
+  z-index: 999;
+}
+
+.six { background: black; color: #00ff00; }
+.four { background: black; color: #00bfff; }
+.wicket { background: black; color: red; }
+
+/* BATTER CARD */
+.card {
+  font-size: 22px;
+  margin-top: 15px;
 }
 </style>
 
@@ -119,108 +131,130 @@ body {
 
 <body>
 
+<!-- FULLSCREEN EVENTS -->
+<div id="sixScreen" class="fullscreen six">SIX! 🚀<div>PPL</div></div>
+<div id="fourScreen" class="fullscreen four">FOUR! ⚡<div>PPL</div></div>
+<div id="wicketScreen" class="fullscreen wicket">
+  WICKET! 💀
+  <div class="card" id="wicketCard"></div>
+</div>
+
+<!-- MAIN OVERLAY -->
 <div class="overlay">
 
-  <div class="teams">
-    <span id="teamA">TEAM A</span> vs <span id="teamB">TEAM B</span>
+  <!-- TOP -->
+  <div class="top-row">
+    <div class="logo">PPL</div>
+
+    <div class="score-tab">
+      <div class="teams" id="teams">A vs B</div>
+      <div class="score" id="score">0/0</div>
+      <div class="overs" id="overs">(0.0)</div>
+    </div>
+
+    <div class="right-panel">
+      <div id="rr">RR: 0.0</div>
+      <div id="bowler">Bowler</div>
+    </div>
   </div>
 
-  <div class="center">
-    <div class="score" id="score">0/0</div>
-    <div class="overs" id="overs">(0.0)</div>
+  <!-- SECOND -->
+  <div class="second-row">
+    <div class="batters">
+      <div id="striker" class="striker">* Batter</div>
+      <div id="nonstriker">Batter</div>
+    </div>
   </div>
 
-  <div class="players">
-    <div id="striker" class="striker">Striker</div>
-    <div id="nonstriker">Non-Striker</div>
-  </div>
-
-  <div class="bowler">
-    <div id="bowlerName">Bowler</div>
-    <div id="bowlerStats"></div>
-  </div>
+  <!-- BALLS -->
+  <div class="balls" id="balls"></div>
 
 </div>
 
-<div class="balls" id="balls"></div>
-
 <script>
-let lastScore = "";
-let lastBallCount = 0;
+let lastBall = "";
 
-async function updateScore() {
-  try {
+function showEvent(type, batter=null) {
+  const el = document.getElementById(type + "Screen");
+  el.style.display = "flex";
+
+  if(type === "wicket" && batter){
+    document.getElementById("wicketCard").innerText =
+      `${batter.name} ${batter.runs} (${batter.balls}) SR:${((batter.runs/batter.balls)*100).toFixed(1)}`;
+  }
+
+  setTimeout(()=> el.style.display="none", 3000);
+}
+
+async function updateScore(){
+  try{
     const res = await fetch('https://ppl2026-backend.onrender.com/api/live');
     const json = await res.json();
-    const data = json.data;
-
-    if (!data) return;
+    const d = json.data;
+    if(!d) return;
 
     // TEAMS
-    document.getElementById("teamA").innerText = data.battingFirst || "Team A";
-    document.getElementById("teamB").innerText = data.bowlingFirst || "Team B";
+    document.getElementById("teams").innerText =
+      d.battingFirst + " vs " + d.bowlingFirst;
 
     // SCORE
-    const currentScore = `${data.runs}/${data.wickets}`;
-    const scoreEl = document.getElementById("score");
+    document.getElementById("score").innerText =
+      `${d.runs}/${d.wickets}`;
 
-    if (currentScore !== lastScore) {
-      scoreEl.classList.add("flash");
-      setTimeout(() => scoreEl.classList.remove("flash"), 300);
-      lastScore = currentScore;
-    }
-
-    scoreEl.innerText = currentScore;
-
-    // OVERS
-    const overs = Math.floor(data.balls / 6) + "." + (data.balls % 6);
+    const overs = Math.floor(d.balls/6)+"."+(d.balls%6);
     document.getElementById("overs").innerText = `(${overs})`;
 
-    // PLAYERS
+    // BATTERS
     document.getElementById("striker").innerText =
-      `${data.striker.name} ${data.striker.runs} (${data.striker.balls})`;
+      `* ${d.striker.name} ${d.striker.runs}(${d.striker.balls})`;
 
     document.getElementById("nonstriker").innerText =
-      `${data.nonstriker.name} ${data.nonstriker.runs} (${data.nonstriker.balls})`;
+      `${d.nonstriker.name} ${d.nonstriker.runs}(${d.nonstriker.balls})`;
+
+    // RR (simple)
+    document.getElementById("rr").innerText =
+      "RR: " + (d.runs / (d.balls/6 || 1)).toFixed(2);
 
     // BOWLER
-    const b = data.currentBowler;
-    document.getElementById("bowlerName").innerText = b.name;
-
-    document.getElementById("bowlerStats").innerText =
-      `${Math.floor(b.ballsBowled / 6)}.${b.ballsBowled % 6} - ${b.runsConceded} - ${b.wickets}`;
+    const b = d.currentBowler;
+    document.getElementById("bowler").innerText =
+      `${b.name} ${Math.floor(b.ballsBowled/6)}.${b.ballsBowled%6}-${b.runsConceded}-${b.wickets}`;
 
     // BALLS
     const ballsDiv = document.getElementById("balls");
-    ballsDiv.innerHTML = "";
+    ballsDiv.innerHTML="";
 
-    const last6 = data.lastBalls.slice(-6);
+    const last6 = d.lastBalls.slice(-6);
 
-    last6.forEach((ball, i) => {
+    last6.forEach(ball=>{
       const el = document.createElement("div");
       el.classList.add("ball");
 
-      if (ball === "4") el.classList.add("four");
-      else if (ball === "6") el.classList.add("six");
-      else if (ball === "W") el.classList.add("wicket");
-      else if (ball === "NB" || ball === "WD") el.classList.add("extra");
-
-      // highlight newest ball
-      if (i === last6.length - 1 && data.balls !== lastBallCount) {
-        el.classList.add("new");
-        lastBallCount = data.balls;
-      }
+      if(ball==="4") el.classList.add("four");
+      if(ball==="6") el.classList.add("six");
+      if(ball==="W") el.classList.add("wicket");
 
       el.innerText = ball;
       ballsDiv.appendChild(el);
     });
 
-  } catch (err) {
-    console.log("Error:", err);
+    // EVENTS
+    const latest = last6[last6.length-1];
+
+    if(latest !== lastBall){
+      if(latest==="6") showEvent("six");
+      if(latest==="4") showEvent("four");
+      if(latest==="W") showEvent("wicket", d.striker);
+
+      lastBall = latest;
+    }
+
+  }catch(e){
+    console.log(e);
   }
 }
 
-setInterval(updateScore, 1000);
+setInterval(updateScore,1000);
 updateScore();
 </script>
 
