@@ -1,262 +1,611 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>PPL Broadcast Overlay</title>
-
+<title>PPL 2026 Broadcast Overlay</title>
 <style>
-body {
-  margin: 0;
-  background: transparent;
-  font-family: 'Segoe UI', sans-serif;
-  color: white;
-  overflow: hidden;
-}
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* MAIN BAR */
-.overlay {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  padding: 15px 25px;
-  background: linear-gradient(to right, #0f0f0f, #1c1c1c);
-}
+  html, body {
+    width: 1920px; height: 1080px;
+    background: transparent;
+    overflow: hidden;
+    font-family: 'Arial Narrow', 'Roboto Condensed', Arial, sans-serif;
+  }
 
-/* TOP ROW */
-.top-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+  /* ═══════════════════════════════════════════════
+     BOTTOM SCOREBAR — exactly like PSL broadcast
+  ═══════════════════════════════════════════════ */
+  #bar {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 88px;
+    display: flex;
+    flex-direction: column;
+  }
 
-/* LOGO */
-.logo {
-  font-size: 20px;
-  font-weight: bold;
-  color: #00ffcc;
-}
+  /* ── ROW 1: main score ── */
+  .r1 {
+    height: 52px;
+    display: flex;
+    align-items: stretch;
+  }
 
-/* SCORE TAB */
-.score-tab {
-  text-align: center;
-}
+  /* Gold logo block — left */
+  .logo-blk {
+    width: 96px;
+    flex-shrink: 0;
+    background: linear-gradient(145deg, #d4a017 0%, #f0c040 45%, #c8960a 100%);
+    display: flex; align-items: center; justify-content: center;
+    clip-path: polygon(0 0, 82% 0, 100% 100%, 0 100%);
+    padding-right: 14px;
+    z-index: 2;
+  }
+  .logo-blk img {
+    width: 46px; height: 46px;
+    object-fit: contain; border-radius: 6px;
+    filter: drop-shadow(0 1px 3px rgba(0,0,0,0.5));
+  }
 
-.score {
-  font-size: 42px;
-  font-weight: bold;
-}
+  /* Team abbreviations — dark brown */
+  .teams-blk {
+    background: linear-gradient(90deg, #1a1005, #251808);
+    display: flex; align-items: center;
+    padding: 0 10px 0 6px;
+    flex-shrink: 0;
+  }
+  .t-bowl { font-size: 15px; font-weight: 900; color: #cccccc; letter-spacing: 1px; text-transform: uppercase; }
+  .t-vs   { font-size: 13px; font-weight: 400; color: #888888; margin: 0 5px; }
+  .t-bat  { font-size: 15px; font-weight: 900; color: #f0e000; letter-spacing: 1px; text-transform: uppercase; }
 
-.teams {
-  font-size: 18px;
-}
+  /* LIME GREEN score block */
+  .score-blk {
+    background: #c8f000;
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 18px;
+    flex-shrink: 0;
+    clip-path: polygon(4px 0, 100% 0, calc(100% - 4px) 100%, 0 100%);
+  }
+  .score-num {
+    font-family: 'Arial Black', 'Arial Narrow', Arial, sans-serif;
+    font-size: 38px; font-weight: 900;
+    color: #000000; letter-spacing: -1px;
+    line-height: 1; white-space: nowrap;
+  }
 
-.overs {
-  font-size: 14px;
-  opacity: 0.7;
-}
+  /* Overs block */
+  .overs-blk {
+    background: linear-gradient(90deg, #251808, #1a1005);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 0 14px; flex-shrink: 0; gap: 1px;
+  }
+  .ov-num { font-size: 22px; font-weight: 900; color: #ffffff; line-height: 1; }
+  .ov-lbl { font-size: 9px; color: #888888; text-transform: uppercase; letter-spacing: 1.5px; }
 
-/* RIGHT PANEL */
-.right-panel {
-  text-align: right;
-  font-size: 14px;
-}
+  /* Innings circle */
+  .inn-dot {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: #333333; border: 2px solid #666666;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 900; color: #ffffff;
+    flex-shrink: 0; margin: 0 8px;
+  }
 
-/* SECOND ROW */
-.second-row {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 8px;
-}
+  /* Separator */
+  .sep {
+    width: 2px; background: #3a2800; flex-shrink: 0;
+    margin: 6px 0;
+  }
 
-/* BATTERS */
-.batters {
-  display: flex;
-  gap: 20px;
-}
+  /* ── RIGHT SECTION — darker, reddish ── */
+  .right-blk {
+    flex: 1;
+    background: linear-gradient(90deg, #1a0800, #220d00);
+    display: flex; align-items: stretch;
+  }
 
-.striker {
-  color: #00ffcc;
-  font-weight: bold;
-}
+  .req-blk {
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: flex-start;
+    padding: 0 16px; flex-shrink: 0;
+    border-left: 1px solid #3a1500;
+    min-width: 88px;
+  }
+  .req-lbl { font-size: 9px; font-weight: 700; color: #bbbbbb; text-transform: uppercase; letter-spacing: 1.5px; }
+  .req-num { font-size: 24px; font-weight: 900; color: #ff7700; line-height: 1; font-family: 'Arial Black', Arial, sans-serif; }
 
-/* BALLS */
-.balls {
-  margin-top: 10px;
-  display: flex;
-  gap: 8px;
-}
+  .bowl-blk {
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: flex-start;
+    padding: 0 14px; flex-shrink: 0;
+    border-left: 1px solid #3a1500;
+  }
+  .bowl-row { display: flex; align-items: center; gap: 6px; }
+  .ball-icon {
+    width: 16px; height: 16px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #cc2200 0%, #770000 100%);
+    border: 1px solid #ff4422; flex-shrink: 0;
+  }
+  .bowl-name { font-size: 14px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px; }
+  .bowl-fig  { font-size: 13px; font-weight: 700; color: #ffaa44; margin-top: 1px; }
 
-.ball {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: #333;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+  /* Bowler over score: 0-0 0.3 */
+  .bowl-score-blk {
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    padding: 0 14px; flex-shrink: 0;
+    border-left: 1px solid #3a1500;
+  }
+  .bs-runs { font-size: 20px; font-weight: 900; color: #ffffff; line-height: 1; }
+  .bs-ov   { font-size: 12px; color: #aaaaaa; margin-top: 1px; }
 
-.ball.four { background: #007bff; }
-.ball.six { background: #00c853; }
-.ball.wicket { background: red; }
+  /* Right team logo */
+  .rt-logo {
+    width: 72px; flex-shrink: 0;
+    background: linear-gradient(135deg, #ff6600, #cc4400);
+    display: flex; align-items: center; justify-content: center;
+    clip-path: polygon(18% 0, 100% 0, 100% 100%, 0 100%);
+    padding-left: 14px;
+  }
+  .rt-logo img { width: 46px; height: 46px; object-fit: contain; border-radius: 6px; }
 
-/* FULL SCREEN EVENTS */
-.fullscreen {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: none;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  font-size: 60px;
-  font-weight: bold;
-  z-index: 999;
-}
+  /* ── ROW 2: batters + this over ── */
+  .r2 {
+    height: 36px;
+    display: flex; align-items: stretch;
+  }
 
-.six { background: black; color: #00ff00; }
-.four { background: black; color: #00bfff; }
-.wicket { background: black; color: red; }
+  /* Dark left batter area */
+  .bat-area {
+    flex: 0 0 auto;
+    background: linear-gradient(90deg, #100c04, #1a1208);
+    display: flex; align-items: center;
+    padding: 0 16px 0 8px;
+    gap: 0; border-top: 1px solid #2a1e00;
+    min-width: 520px;
+  }
+  .batter-item {
+    display: flex; align-items: baseline; gap: 6px;
+    padding: 0 12px;
+    border-right: 1px solid #3a2800;
+  }
+  .batter-item:first-child { padding-left: 4px; }
+  .bat-name { font-size: 12px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px; }
+  .bat-name.striker { color: #f0e000; }
+  .bat-name.striker::before { content: '★ '; font-size: 10px; }
+  .bat-runs { font-size: 16px; font-weight: 900; color: #ffffff; font-family: 'Arial Black', Arial, sans-serif; }
+  .bat-balls { font-size: 12px; font-weight: 400; color: #aaaaaa; }
+  .bat-sep { color: #666; font-size: 16px; padding: 0 4px; }
 
-/* BATTER CARD */
-.card {
-  font-size: 22px;
-  margin-top: 15px;
-}
+  /* This over area */
+  .over-area {
+    flex: 1;
+    background: linear-gradient(90deg, #1a0800, #220d00);
+    display: flex; align-items: center;
+    padding: 0 14px;
+    border-top: 1px solid #3a1500;
+    gap: 10px;
+  }
+  .over-lbl { font-size: 9px; font-weight: 700; color: #aaaaaa; text-transform: uppercase; letter-spacing: 1.5px; white-space: nowrap; }
+  .over-balls { display: flex; gap: 5px; align-items: center; }
+  .oball {
+    width: 24px; height: 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 900;
+    flex-shrink: 0;
+  }
+  .oball.empty  { background: transparent; border: 2px solid #666666; color: transparent; }
+  .oball.dot    { background: #555555; border: 2px solid #888888; color: #ffffff; }
+  .oball.single { background: #1a6622; border: 2px solid #44aa44; color: #ffffff; }
+  .oball.two    { background: #1a6622; border: 2px solid #44aa44; color: #ffffff; }
+  .oball.three  { background: #1a6622; border: 2px solid #44aa44; color: #ffffff; }
+  .oball.four   { background: #0044cc; border: 2px solid #4488ff; color: #ffffff; }
+  .oball.six    { background: #cc6600; border: 2px solid #ff9922; color: #ffffff; }
+  .oball.wide   { background: #664400; border: 2px solid #aa7700; color: #f0e000; font-size: 9px; }
+  .oball.noball { background: #664400; border: 2px solid #aa7700; color: #f0e000; font-size: 8px; }
+  .oball.wicket { background: #cc0000; border: 2px solid #ff4444; color: #ffffff; }
+
+  /* ══════════════════════════════════════════════
+     FULLSCREEN EVENT ALERTS — SIX / FOUR / WICKET
+  ══════════════════════════════════════════════ */
+  .alert {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center; justify-content: center;
+    flex-direction: column;
+    z-index: 999;
+    animation: alertIn 0.3s ease;
+  }
+  @keyframes alertIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+
+  #alert-six {
+    background: radial-gradient(ellipse at center, #0a3a00 0%, #000000 70%);
+  }
+  #alert-four {
+    background: radial-gradient(ellipse at center, #000a3a 0%, #000000 70%);
+  }
+  #alert-wicket {
+    background: radial-gradient(ellipse at center, #3a0000 0%, #000000 70%);
+  }
+
+  .alert-word {
+    font-family: 'Arial Black', Arial, sans-serif;
+    font-size: 120px; font-weight: 900;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    line-height: 1;
+    filter: drop-shadow(0 0 40px currentColor);
+  }
+  #alert-six    .alert-word { color: #00ff44; }
+  #alert-four   .alert-word { color: #0099ff; }
+  #alert-wicket .alert-word { color: #ff2200; }
+
+  .alert-sub {
+    font-size: 32px; font-weight: 700;
+    color: #ffffff; margin-top: 12px;
+    letter-spacing: 8px; text-transform: uppercase;
+    opacity: 0.8;
+  }
+
+  .alert-logo {
+    margin-top: 24px;
+    font-family: 'Arial Black', Arial, sans-serif;
+    font-size: 24px; font-weight: 900;
+    letter-spacing: 12px; text-transform: uppercase;
+  }
+  #alert-six    .alert-logo { color: #88ff88; }
+  #alert-four   .alert-logo { color: #88ccff; }
+  #alert-wicket .alert-logo { color: #ff8888; }
+
+  .alert-player {
+    font-size: 22px; color: #dddddd; margin-top: 6px;
+    font-weight: 700; letter-spacing: 2px;
+  }
+
+  /* ══════════════════════════════════════════════
+     PPL LOGO — top left (like PSL logo on stream)
+  ══════════════════════════════════════════════ */
+  #ppl-watermark {
+    position: fixed;
+    top: 18px; left: 18px;
+    display: flex; align-items: center; gap: 10px;
+    z-index: 100;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.7));
+  }
+  #ppl-watermark img { width: 64px; height: 64px; object-fit: contain; border-radius: 10px; }
+  .wm-text { display: flex; flex-direction: column; }
+  .wm-top { font-size: 10px; color: #d4a017; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; }
+  .wm-main { font-family: 'Arial Black', Arial, sans-serif; font-size: 26px; font-weight: 900; color: #ffffff; line-height: 1; letter-spacing: 2px; }
+
+  /* NO LIVE indicator */
+  #no-live {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 16px;
+    z-index: 200;
+  }
+  #no-live h2 { font-size: 32px; color: #888; font-weight: 900; letter-spacing: 4px; text-transform: uppercase; }
+  #no-live p  { font-size: 14px; color: #555; letter-spacing: 2px; }
 </style>
-
 </head>
-
 <body>
 
-<!-- FULLSCREEN EVENTS -->
-<div id="sixScreen" class="fullscreen six">SIX! 🚀<div>PPL</div></div>
-<div id="fourScreen" class="fullscreen four">FOUR! ⚡<div>PPL</div></div>
-<div id="wicketScreen" class="fullscreen wicket">
-  WICKET! 💀
-  <div class="card" id="wicketCard"></div>
+<!-- PPL Watermark top-left -->
+<div id="ppl-watermark">
+  <img src="https://ppl2026-frontend.onrender.com/icons/icon-192.png" alt="PPL" onerror="this.style.display='none'">
+  <div class="wm-text">
+    <span class="wm-top">Official</span>
+    <span class="wm-main">PPL 2026</span>
+  </div>
 </div>
 
-<!-- MAIN OVERLAY -->
-<div class="overlay">
+<!-- No Live Match screen -->
+<div id="no-live">
+  <h2>⏳ Waiting for Live Match</h2>
+  <p>Overlay will appear when scoring begins</p>
+</div>
 
-  <!-- TOP -->
-  <div class="top-row">
-    <div class="logo">PPL</div>
+<!-- ═══ SIX ALERT ═══ -->
+<div class="alert" id="alert-six">
+  <div class="alert-word">SIX!</div>
+  <div class="alert-sub">🚀 Maximum!</div>
+  <div class="alert-logo">PPL 2026</div>
+  <div class="alert-player" id="six-player"></div>
+</div>
 
-    <div class="score-tab">
-      <div class="teams" id="teams">A vs B</div>
-      <div class="score" id="score">0/0</div>
-      <div class="overs" id="overs">(0.0)</div>
+<!-- ═══ FOUR ALERT ═══ -->
+<div class="alert" id="alert-four">
+  <div class="alert-word">FOUR!</div>
+  <div class="alert-sub">⚡ Boundary!</div>
+  <div class="alert-logo">PPL 2026</div>
+  <div class="alert-player" id="four-player"></div>
+</div>
+
+<!-- ═══ WICKET ALERT ═══ -->
+<div class="alert" id="alert-wicket">
+  <div class="alert-word">WICKET!</div>
+  <div class="alert-sub">💀 OUT!</div>
+  <div class="alert-logo">PPL 2026</div>
+  <div class="alert-player" id="wkt-player"></div>
+</div>
+
+<!-- ═══════════════════════════════════
+     MAIN SCOREBAR — bottom of screen
+═══════════════════════════════════ -->
+<div id="bar" style="display:none;">
+
+  <!-- ROW 1: teams | score | overs | required | bowler -->
+  <div class="r1">
+
+    <!-- Gold logo -->
+    <div class="logo-blk">
+      <img src="https://ppl2026-frontend.onrender.com/icons/icon-192.png" alt="PPL" onerror="this.style.background='#9333ea';this.style.display='flex'">
     </div>
 
-    <div class="right-panel">
-      <div id="rr">RR: 0.0</div>
-      <div id="bowler">Bowler</div>
+    <!-- Teams -->
+    <div class="teams-blk">
+      <span class="t-bowl" id="t1">BAT</span>
+      <span class="t-vs">v</span>
+      <span class="t-bat" id="t2">FIELD</span>
+    </div>
+
+    <!-- Lime green score -->
+    <div class="score-blk">
+      <span class="score-num" id="score">0-0</span>
+    </div>
+
+    <!-- Overs -->
+    <div class="overs-blk">
+      <span class="ov-num" id="overs">0.0</span>
+      <span class="ov-lbl">Overs</span>
+    </div>
+
+    <!-- Innings dot -->
+    <div class="inn-dot" id="inn-dot">1</div>
+
+    <div class="sep"></div>
+
+    <!-- RIGHT: required + bowler -->
+    <div class="right-blk">
+
+      <!-- Required RR -->
+      <div class="req-blk">
+        <span class="req-lbl" id="req-lbl">CRR</span>
+        <span class="req-num" id="req-num">0.00</span>
+      </div>
+
+      <!-- Bowler -->
+      <div class="bowl-blk">
+        <div class="bowl-row">
+          <div class="ball-icon"></div>
+          <span class="bowl-name" id="bowl-name">—</span>
+        </div>
+        <span class="bowl-fig" id="bowl-fig">0-0-0-0</span>
+      </div>
+
+      <!-- Bowler this spell score -->
+      <div class="bowl-score-blk">
+        <span class="bs-runs" id="bowl-score">0-0</span>
+        <span class="bs-ov" id="bowl-ov">0.0</span>
+      </div>
+
     </div>
   </div>
 
-  <!-- SECOND -->
-  <div class="second-row">
-    <div class="batters">
-      <div id="striker" class="striker">* Batter</div>
-      <div id="nonstriker">Batter</div>
-    </div>
-  </div>
+  <!-- ROW 2: batters | this over balls -->
+  <div class="r2">
 
-  <!-- BALLS -->
-  <div class="balls" id="balls"></div>
+    <div class="bat-area">
+      <!-- Striker -->
+      <div class="batter-item">
+        <span class="bat-name striker" id="striker-name">BATTER</span>
+        <span class="bat-runs" id="striker-runs">0</span>
+        <span class="bat-balls" id="striker-balls">(0)</span>
+      </div>
+
+      <span class="bat-sep">/</span>
+
+      <!-- Non striker -->
+      <div class="batter-item">
+        <span class="bat-name" id="ns-name">BATTER</span>
+        <span class="bat-runs" id="ns-runs">0</span>
+        <span class="bat-balls" id="ns-balls">(0)</span>
+      </div>
+    </div>
+
+    <div class="over-area">
+      <span class="over-lbl">This Over</span>
+      <div class="over-balls" id="over-balls">
+        <!-- filled by JS -->
+      </div>
+    </div>
+
+  </div>
 
 </div>
 
 <script>
-let lastBall = "";
+  const API = 'https://ppl2026-backend.onrender.com/api/live';
+  let prevLastBall = null;
+  let alertTimer   = null;
 
-function showEvent(type, batter=null) {
-  const el = document.getElementById(type + "Screen");
-  el.style.display = "flex";
-
-  if(type === "wicket" && batter){
-    document.getElementById("wicketCard").innerText =
-      `${batter.name} ${batter.runs} (${batter.balls}) SR:${((batter.runs/batter.balls)*100).toFixed(1)}`;
+  /* ── Abbreviate team name ── */
+  function abbr(name) {
+    if (!name) return '???';
+    const words = name.trim().split(/\s+/);
+    if (words.length === 1) return name.substring(0, 3).toUpperCase();
+    return words.map(w => w[0]).join('').substring(0, 4).toUpperCase();
   }
 
-  setTimeout(()=> el.style.display="none", 3000);
-}
+  /* ── Ball class for THIS OVER dots ── */
+  function ballClass(b) {
+    if (b === 'W')  return 'wicket';
+    if (b === '6')  return 'six';
+    if (b === '4')  return 'four';
+    if (b === '3')  return 'three';
+    if (b === '2')  return 'two';
+    if (b === '1')  return 'single';
+    if (b === 'Wd') return 'wide';
+    if (b === 'NB') return 'noball';
+    if (b === '•' || b === '0') return 'dot';
+    return 'dot';
+  }
 
-async function updateScore(){
-  try{
-    const res = await fetch('https://ppl2026-backend.onrender.com/api/live');
-    const json = await res.json();
-    const d = json.data;
-    if(!d) return;
+  function ballLabel(b) {
+    if (b === '•') return '0';
+    if (b === 'Wd') return 'Wd';
+    if (b === 'NB') return 'NB';
+    return b;
+  }
 
-    // TEAMS
-    document.getElementById("teams").innerText =
-      d.battingFirst + " vs " + d.bowlingFirst;
-
-    // SCORE
-    document.getElementById("score").innerText =
-      `${d.runs}/${d.wickets}`;
-
-    const overs = Math.floor(d.balls/6)+"."+(d.balls%6);
-    document.getElementById("overs").innerText = `(${overs})`;
-
-    // BATTERS
-    document.getElementById("striker").innerText =
-      `* ${d.striker.name} ${d.striker.runs}(${d.striker.balls})`;
-
-    document.getElementById("nonstriker").innerText =
-      `${d.nonstriker.name} ${d.nonstriker.runs}(${d.nonstriker.balls})`;
-
-    // RR (simple)
-    document.getElementById("rr").innerText =
-      "RR: " + (d.runs / (d.balls/6 || 1)).toFixed(2);
-
-    // BOWLER
-    const b = d.currentBowler;
-    document.getElementById("bowler").innerText =
-      `${b.name} ${Math.floor(b.ballsBowled/6)}.${b.ballsBowled%6}-${b.runsConceded}-${b.wickets}`;
-
-    // BALLS
-    const ballsDiv = document.getElementById("balls");
-    ballsDiv.innerHTML="";
-
-    const last6 = d.lastBalls.slice(-6);
-
-    last6.forEach(ball=>{
-      const el = document.createElement("div");
-      el.classList.add("ball");
-
-      if(ball==="4") el.classList.add("four");
-      if(ball==="6") el.classList.add("six");
-      if(ball==="W") el.classList.add("wicket");
-
-      el.innerText = ball;
-      ballsDiv.appendChild(el);
+  /* ── Show fullscreen alert ── */
+  function showAlert(id, playerText) {
+    // Clear any previous
+    ['alert-six','alert-four','alert-wicket'].forEach(a => {
+      document.getElementById(a).style.display = 'none';
     });
+    if (alertTimer) clearTimeout(alertTimer);
 
-    // EVENTS
-    const latest = last6[last6.length-1];
+    const el = document.getElementById(id);
+    el.style.display = 'flex';
 
-    if(latest !== lastBall){
-      if(latest==="6") showEvent("six");
-      if(latest==="4") showEvent("four");
-      if(latest==="W") showEvent("wicket", d.striker);
-
-      lastBall = latest;
+    if (playerText) {
+      const pid = id === 'alert-six' ? 'six-player'
+                : id === 'alert-four' ? 'four-player'
+                : 'wkt-player';
+      document.getElementById(pid).textContent = playerText;
     }
 
-  }catch(e){
-    console.log(e);
+    alertTimer = setTimeout(() => { el.style.display = 'none'; }, 3000);
   }
-}
 
-setInterval(updateScore,1000);
-updateScore();
+  /* ── Main update loop ── */
+  async function update() {
+    try {
+      const res  = await fetch(API, { cache: 'no-store' });
+      const json = await res.json();
+      const d    = json.data ?? json;
+
+      if (!d || !d.matchId) {
+        document.getElementById('bar').style.display     = 'none';
+        document.getElementById('no-live').style.display = 'flex';
+        return;
+      }
+
+      document.getElementById('bar').style.display     = 'flex';
+      document.getElementById('no-live').style.display = 'none';
+
+      /* Teams — batting team is highlighted yellow */
+      const battingNow  = d.innings === 2 ? d.bowlingFirst : d.battingFirst;
+      const fieldingNow = d.innings === 2 ? d.battingFirst : d.bowlingFirst;
+      document.getElementById('t1').textContent = abbr(fieldingNow);
+      document.getElementById('t2').textContent = abbr(battingNow);
+
+      /* Score */
+      document.getElementById('score').textContent =
+        `${d.runs}-${d.wickets}`;
+
+      /* Overs */
+      const ov = Math.floor(d.balls / 6);
+      const bl = d.balls % 6;
+      document.getElementById('overs').textContent = `${ov}.${bl}`;
+
+      /* Innings */
+      document.getElementById('inn-dot').textContent = d.innings === 2 ? '2' : '1';
+
+      /* CRR or Required */
+      const crr = d.balls > 0 ? (d.runs / (d.balls / 6)).toFixed(2) : '0.00';
+      if (d.innings === 2 && d.target) {
+        const needed  = d.target - d.runs;
+        const remBalls = (10 - ov) * 6 - (bl || 0); // rough
+        const rrr = remBalls > 0 ? ((needed / (remBalls / 6))).toFixed(2) : '—';
+        document.getElementById('req-lbl').textContent = 'REQUIRED';
+        document.getElementById('req-num').textContent = rrr;
+      } else {
+        document.getElementById('req-lbl').textContent = 'CRR';
+        document.getElementById('req-num').textContent = crr;
+      }
+
+      /* Bowler */
+      const b = d.currentBowler;
+      if (b && b.name) {
+        const bov = Math.floor((b.ballsBowled || 0) / 6);
+        const bbl = (b.ballsBowled || 0) % 6;
+        document.getElementById('bowl-name').textContent  = b.name.split(' ').pop().toUpperCase();
+        document.getElementById('bowl-fig').textContent   =
+          `${bov}.${bbl} - ${b.runsConceded || 0} - ${b.wickets || 0}`;
+        document.getElementById('bowl-score').textContent =
+          `${b.runsConceded || 0}-${b.wickets || 0}`;
+        document.getElementById('bowl-ov').textContent    = `${bov}.${bbl}`;
+      }
+
+      /* Striker */
+      const st = d.striker;
+      if (st && st.name) {
+        document.getElementById('striker-name').textContent = st.name.toUpperCase();
+        document.getElementById('striker-runs').textContent = st.runs || 0;
+        document.getElementById('striker-balls').textContent = `(${st.balls || 0})`;
+      }
+
+      /* Non striker */
+      const ns = d.nonstriker;
+      if (ns && ns.name) {
+        document.getElementById('ns-name').textContent  = ns.name.toUpperCase();
+        document.getElementById('ns-runs').textContent  = ns.runs || 0;
+        document.getElementById('ns-balls').textContent = `(${ns.balls || 0})`;
+      }
+
+      /* This over balls — current over only */
+      const allBalls  = d.lastBalls || [];
+      const curOverStart = ov * 6;
+      const curBalls  = allBalls.slice(curOverStart);
+      const totalSlots = 7; // show 7 slots like PSL
+
+      const ballsDiv = document.getElementById('over-balls');
+      ballsDiv.innerHTML = '';
+
+      for (let i = 0; i < totalSlots; i++) {
+        const div = document.createElement('div');
+        div.className = 'oball';
+        if (i < curBalls.length) {
+          div.classList.add(ballClass(curBalls[i]));
+          div.textContent = ballLabel(curBalls[i]);
+        } else {
+          div.classList.add('empty');
+        }
+        ballsDiv.appendChild(div);
+      }
+
+      /* ── Event alerts ── */
+      const latestBall = allBalls[allBalls.length - 1];
+      if (latestBall !== prevLastBall && prevLastBall !== null) {
+        if (latestBall === '6') {
+          const p = st?.name ? `${st.name} — ${st.runs} (${st.balls})` : '';
+          showAlert('alert-six', p);
+        } else if (latestBall === '4') {
+          const p = st?.name ? `${st.name} — ${st.runs} (${st.balls})` : '';
+          showAlert('alert-four', p);
+        } else if (latestBall === 'W') {
+          showAlert('alert-wicket', '');
+        }
+      }
+      prevLastBall = latestBall;
+
+    } catch (e) {
+      console.error('[PPL Overlay]', e);
+    }
+  }
+
+  // Poll every second
+  update();
+  setInterval(update, 1000);
 </script>
-
 </body>
 </html>
