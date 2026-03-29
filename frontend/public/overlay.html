@@ -2,103 +2,233 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>PPL 2026 Broadcast Overlay</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   html, body {
-    width: 1920px; height: 1080px;
+    width: 100vw;
+    height: 100vh;
     background: transparent;
     overflow: hidden;
     font-family: 'Arial Narrow', 'Roboto Condensed', Arial, sans-serif;
   }
 
-  /* ═══════════════════════════════════════════════
-     BOTTOM SCOREBAR — exactly like PSL broadcast
-  ═══════════════════════════════════════════════ */
+  /* ═══════════════════════════════════
+     PPL WATERMARK — top left
+  ═══════════════════════════════════ */
+  #watermark {
+    position: fixed;
+    top: 2vh; left: 2vw;
+    display: flex; align-items: center; gap: 1vw;
+    z-index: 50;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.8));
+  }
+  #watermark img {
+    width: 7vw; max-width: 72px;
+    height: 7vw; max-height: 72px;
+    object-fit: contain; border-radius: 1vw;
+  }
+  .wm-text { line-height: 1; }
+  .wm-tag  { font-size: 1vw; color: #d4a017; font-weight: 700; letter-spacing: 0.3vw; text-transform: uppercase; }
+  .wm-name { font-family: 'Arial Black', Arial, sans-serif; font-size: 2.5vw; font-weight: 900; color: #fff; letter-spacing: 0.1vw; }
+
+  /* ═══════════════════════════════════
+     NO LIVE SCREEN
+  ═══════════════════════════════════ */
+  #no-live {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.88);
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 1.5vh; z-index: 200;
+  }
+  #no-live h2 { font-size: 3vw; color: #666; font-weight: 900; letter-spacing: 0.4vw; text-transform: uppercase; }
+  #no-live p  { font-size: 1.2vw; color: #444; letter-spacing: 0.2vw; }
+
+  /* ═══════════════════════════════════
+     CIRCULAR CENTER ALERTS
+     (Six / Four / Wicket)
+     Does NOT cover full screen
+  ═══════════════════════════════════ */
+  .alert {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    width: 36vw; height: 36vw;
+    max-width: 420px; max-height: 420px;
+    border-radius: 50%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    z-index: 999;
+    pointer-events: none;
+    transition: none;
+  }
+  .alert.show {
+    animation: alertPop 3.2s ease forwards;
+  }
+  @keyframes alertPop {
+    0%   { transform: translate(-50%,-50%) scale(0);   opacity: 0; }
+    12%  { transform: translate(-50%,-50%) scale(1.12); opacity: 1; }
+    20%  { transform: translate(-50%,-50%) scale(0.96); opacity: 1; }
+    28%  { transform: translate(-50%,-50%) scale(1.04); opacity: 1; }
+    35%  { transform: translate(-50%,-50%) scale(1);    opacity: 1; }
+    80%  { transform: translate(-50%,-50%) scale(1);    opacity: 1; }
+    100% { transform: translate(-50%,-50%) scale(0.8);  opacity: 0; }
+  }
+
+  #alert-six {
+    background: radial-gradient(circle at center, #004400 0%, #001800 55%, rgba(0,30,0,0.92) 100%);
+    border: 0.4vw solid #00dd44;
+    box-shadow: 0 0 6vw rgba(0,220,60,0.6), 0 0 1vw rgba(0,220,60,0.4) inset;
+  }
+  #alert-four {
+    background: radial-gradient(circle at center, #000044 0%, #000018 55%, rgba(0,0,30,0.92) 100%);
+    border: 0.4vw solid #0088ff;
+    box-shadow: 0 0 6vw rgba(0,136,255,0.6), 0 0 1vw rgba(0,136,255,0.4) inset;
+  }
+  #alert-wicket {
+    background: radial-gradient(circle at center, #440000 0%, #180000 55%, rgba(30,0,0,0.92) 100%);
+    border: 0.4vw solid #ff2200;
+    box-shadow: 0 0 6vw rgba(255,34,0,0.6), 0 0 1vw rgba(255,34,0,0.4) inset;
+  }
+
+  .alert-logo {
+    width: 8vw; height: 8vw;
+    max-width: 80px; max-height: 80px;
+    object-fit: contain; border-radius: 1vw;
+    margin-bottom: 0.6vw;
+    filter: drop-shadow(0 0 1vw rgba(255,255,255,0.4));
+  }
+
+  .alert-word {
+    font-family: 'Arial Black', Arial, sans-serif;
+    font-size: 5.5vw; font-weight: 900;
+    text-transform: uppercase; letter-spacing: 0.2vw;
+    line-height: 1;
+    animation: textPulse 0.6s ease infinite alternate;
+  }
+  @keyframes textPulse {
+    from { filter: brightness(1); }
+    to   { filter: brightness(1.4) drop-shadow(0 0 0.8vw currentColor); }
+  }
+  #alert-six    .alert-word { color: #00ff55; }
+  #alert-four   .alert-word { color: #44aaff; }
+  #alert-wicket .alert-word { color: #ff4422; }
+
+  .alert-sub {
+    font-size: 1.6vw; font-weight: 700; color: #ffffff;
+    margin-top: 0.4vw; letter-spacing: 0.4vw;
+    text-transform: uppercase; opacity: 0.85;
+  }
+  .alert-player {
+    font-size: 1.3vw; color: #dddddd;
+    margin-top: 0.5vw; font-weight: 600;
+    letter-spacing: 0.15vw; text-align: center;
+    max-width: 80%; line-height: 1.3;
+  }
+  .alert-ppl {
+    font-family: 'Arial Black', Arial, sans-serif;
+    font-size: 1.2vw; font-weight: 900;
+    letter-spacing: 0.5vw; text-transform: uppercase;
+    margin-top: 0.8vw; opacity: 0.7;
+  }
+  #alert-six    .alert-ppl { color: #88ffaa; }
+  #alert-four   .alert-ppl { color: #88ccff; }
+  #alert-wicket .alert-ppl { color: #ff8866; }
+
+  /* ═══════════════════════════════════
+     SCOREBAR — bottom, full width,
+     viewport-relative sizing
+  ═══════════════════════════════════ */
   #bar {
-    position: absolute;
+    position: fixed;
     bottom: 0; left: 0; right: 0;
-    height: 88px;
-    display: flex;
+    height: 16vh;
+    min-height: 90px; max-height: 120px;
+    display: none;
     flex-direction: column;
   }
 
-  /* ── ROW 1: main score ── */
+  /* ── ROW 1 ── */
   .r1 {
-    height: 52px;
-    display: flex;
-    align-items: stretch;
+    flex: 1;
+    display: flex; align-items: stretch;
   }
 
-  /* Gold logo block — left */
+  /* Gold logo strip */
   .logo-blk {
-    width: 96px;
-    flex-shrink: 0;
+    flex: 0 0 9vw;
     background: linear-gradient(145deg, #d4a017 0%, #f0c040 45%, #c8960a 100%);
     display: flex; align-items: center; justify-content: center;
-    clip-path: polygon(0 0, 82% 0, 100% 100%, 0 100%);
-    padding-right: 14px;
+    clip-path: polygon(0 0, 84% 0, 100% 100%, 0 100%);
+    padding-right: 1.5vw;
     z-index: 2;
   }
   .logo-blk img {
-    width: 46px; height: 46px;
-    object-fit: contain; border-radius: 6px;
-    filter: drop-shadow(0 1px 3px rgba(0,0,0,0.5));
+    width: 5.5vw; height: 5.5vw;
+    max-width: 58px; max-height: 58px;
+    object-fit: contain; border-radius: 0.5vw;
+    filter: drop-shadow(0 1px 4px rgba(0,0,0,0.5));
   }
 
-  /* Team abbreviations — dark brown */
+  /* Teams */
   .teams-blk {
+    flex: 0 0 auto;
     background: linear-gradient(90deg, #1a1005, #251808);
     display: flex; align-items: center;
-    padding: 0 10px 0 6px;
-    flex-shrink: 0;
+    padding: 0 1.2vw 0 0.6vw; gap: 0.4vw;
   }
-  .t-bowl { font-size: 15px; font-weight: 900; color: #cccccc; letter-spacing: 1px; text-transform: uppercase; }
-  .t-vs   { font-size: 13px; font-weight: 400; color: #888888; margin: 0 5px; }
-  .t-bat  { font-size: 15px; font-weight: 900; color: #f0e000; letter-spacing: 1px; text-transform: uppercase; }
+  .t-bowl { font-size: 1.4vw; font-weight: 900; color: #cccccc; letter-spacing: 0.08vw; text-transform: uppercase; white-space: nowrap; }
+  .t-vs   { font-size: 1.2vw; font-weight: 400; color: #777777; }
+  .t-bat  { font-size: 1.4vw; font-weight: 900; color: #f0e000; letter-spacing: 0.08vw; text-transform: uppercase; white-space: nowrap; }
 
-  /* LIME GREEN score block */
+  /* LIME GREEN score */
   .score-blk {
+    flex: 0 0 auto;
     background: #c8f000;
     display: flex; align-items: center; justify-content: center;
-    padding: 0 18px;
-    flex-shrink: 0;
-    clip-path: polygon(4px 0, 100% 0, calc(100% - 4px) 100%, 0 100%);
+    padding: 0 2vw;
+    clip-path: polygon(0.3vw 0, 100% 0, calc(100% - 0.3vw) 100%, 0 100%);
   }
   .score-num {
-    font-family: 'Arial Black', 'Arial Narrow', Arial, sans-serif;
-    font-size: 38px; font-weight: 900;
-    color: #000000; letter-spacing: -1px;
+    font-family: 'Arial Black', Arial, sans-serif;
+    font-size: 4.5vw; font-weight: 900;
+    color: #000000; letter-spacing: -0.1vw;
     line-height: 1; white-space: nowrap;
   }
 
-  /* Overs block */
+  /* Overs */
   .overs-blk {
+    flex: 0 0 auto;
     background: linear-gradient(90deg, #251808, #1a1005);
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    padding: 0 14px; flex-shrink: 0; gap: 1px;
+    padding: 0 1.4vw; gap: 0.1vw;
   }
-  .ov-num { font-size: 22px; font-weight: 900; color: #ffffff; line-height: 1; }
-  .ov-lbl { font-size: 9px; color: #888888; text-transform: uppercase; letter-spacing: 1.5px; }
+  .ov-num { font-size: 2.2vw; font-weight: 900; color: #ffffff; line-height: 1; }
+  .ov-lbl { font-size: 0.75vw; color: #888888; text-transform: uppercase; letter-spacing: 0.15vw; }
 
-  /* Innings circle */
+  /* Innings */
   .inn-dot {
-    width: 30px; height: 30px; border-radius: 50%;
-    background: #333333; border: 2px solid #666666;
+    flex: 0 0 auto;
+    width: 3vw; height: 3vw;
+    max-width: 32px; max-height: 32px;
+    border-radius: 50%;
+    background: #333333; border: 0.15vw solid #666666;
     display: flex; align-items: center; justify-content: center;
-    font-size: 13px; font-weight: 900; color: #ffffff;
-    flex-shrink: 0; margin: 0 8px;
+    font-size: 1.3vw; font-weight: 900; color: #ffffff;
+    margin: 0 0.6vw;
+    align-self: center;
   }
 
-  /* Separator */
   .sep {
-    width: 2px; background: #3a2800; flex-shrink: 0;
-    margin: 6px 0;
+    flex: 0 0 2px;
+    background: #3a2800;
+    margin: 0.6vh 0;
   }
 
-  /* ── RIGHT SECTION — darker, reddish ── */
+  /* Right dark section */
   .right-blk {
     flex: 1;
     background: linear-gradient(90deg, #1a0800, #220d00);
@@ -106,387 +236,282 @@
   }
 
   .req-blk {
+    flex: 0 0 auto;
     display: flex; flex-direction: column;
     justify-content: center; align-items: flex-start;
-    padding: 0 16px; flex-shrink: 0;
+    padding: 0 1.5vw;
     border-left: 1px solid #3a1500;
-    min-width: 88px;
+    min-width: 8vw;
   }
-  .req-lbl { font-size: 9px; font-weight: 700; color: #bbbbbb; text-transform: uppercase; letter-spacing: 1.5px; }
-  .req-num { font-size: 24px; font-weight: 900; color: #ff7700; line-height: 1; font-family: 'Arial Black', Arial, sans-serif; }
+  .req-lbl { font-size: 0.75vw; font-weight: 700; color: #bbbbbb; text-transform: uppercase; letter-spacing: 0.15vw; }
+  .req-num { font-size: 2.4vw; font-weight: 900; color: #ff7700; line-height: 1; font-family: 'Arial Black', Arial, sans-serif; }
 
   .bowl-blk {
+    flex: 0 0 auto;
     display: flex; flex-direction: column;
     justify-content: center; align-items: flex-start;
-    padding: 0 14px; flex-shrink: 0;
+    padding: 0 1.5vw;
     border-left: 1px solid #3a1500;
+    min-width: 14vw;
   }
-  .bowl-row { display: flex; align-items: center; gap: 6px; }
-  .ball-icon {
-    width: 16px; height: 16px; border-radius: 50%;
+  .bowl-row { display: flex; align-items: center; gap: 0.5vw; }
+  .ball-ico {
+    width: 1.4vw; height: 1.4vw;
+    border-radius: 50%;
     background: radial-gradient(circle at 35% 35%, #cc2200 0%, #770000 100%);
-    border: 1px solid #ff4422; flex-shrink: 0;
+    border: 1px solid #ff4422;
+    flex-shrink: 0;
   }
-  .bowl-name { font-size: 14px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px; }
-  .bowl-fig  { font-size: 13px; font-weight: 700; color: #ffaa44; margin-top: 1px; }
+  .bowl-name { font-size: 1.35vw; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05vw; white-space: nowrap; }
+  .bowl-fig  { font-size: 1.1vw; font-weight: 600; color: #ffaa44; margin-top: 0.15vw; white-space: nowrap; }
 
-  /* Bowler over score: 0-0 0.3 */
   .bowl-score-blk {
+    flex: 0 0 auto;
     display: flex; flex-direction: column;
     justify-content: center; align-items: center;
-    padding: 0 14px; flex-shrink: 0;
+    padding: 0 1.4vw;
     border-left: 1px solid #3a1500;
   }
-  .bs-runs { font-size: 20px; font-weight: 900; color: #ffffff; line-height: 1; }
-  .bs-ov   { font-size: 12px; color: #aaaaaa; margin-top: 1px; }
+  .bs-runs { font-size: 2vw; font-weight: 900; color: #ffffff; line-height: 1; }
+  .bs-ov   { font-size: 1vw; color: #aaaaaa; margin-top: 0.1vw; }
 
-  /* Right team logo */
-  .rt-logo {
-    width: 72px; flex-shrink: 0;
-    background: linear-gradient(135deg, #ff6600, #cc4400);
+  /* Right team logo (bowling team) */
+  .rt-logo-blk {
+    flex: 0 0 8vw;
+    background: linear-gradient(135deg, #9333ea, #6b21a8);
     display: flex; align-items: center; justify-content: center;
-    clip-path: polygon(18% 0, 100% 0, 100% 100%, 0 100%);
-    padding-left: 14px;
+    clip-path: polygon(16% 0, 100% 0, 100% 100%, 0 100%);
+    padding-left: 1.2vw;
+    margin-left: auto;
   }
-  .rt-logo img { width: 46px; height: 46px; object-fit: contain; border-radius: 6px; }
+  .rt-logo-blk img {
+    width: 4.5vw; height: 4.5vw;
+    max-width: 50px; max-height: 50px;
+    object-fit: contain; border-radius: 0.5vw;
+  }
 
   /* ── ROW 2: batters + this over ── */
   .r2 {
-    height: 36px;
+    flex: 0 0 38%;
     display: flex; align-items: stretch;
   }
 
-  /* Dark left batter area */
   .bat-area {
     flex: 0 0 auto;
     background: linear-gradient(90deg, #100c04, #1a1208);
     display: flex; align-items: center;
-    padding: 0 16px 0 8px;
-    gap: 0; border-top: 1px solid #2a1e00;
-    min-width: 520px;
+    padding: 0 1vw;
+    border-top: 1px solid #2a1e00;
+    gap: 0;
+    min-width: 44vw;
   }
-  .batter-item {
-    display: flex; align-items: baseline; gap: 6px;
-    padding: 0 12px;
+  .bat-item {
+    display: flex; align-items: baseline; gap: 0.5vw;
+    padding: 0 1.2vw;
     border-right: 1px solid #3a2800;
+    white-space: nowrap;
   }
-  .batter-item:first-child { padding-left: 4px; }
-  .bat-name { font-size: 12px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px; }
-  .bat-name.striker { color: #f0e000; }
-  .bat-name.striker::before { content: '★ '; font-size: 10px; }
-  .bat-runs { font-size: 16px; font-weight: 900; color: #ffffff; font-family: 'Arial Black', Arial, sans-serif; }
-  .bat-balls { font-size: 12px; font-weight: 400; color: #aaaaaa; }
-  .bat-sep { color: #666; font-size: 16px; padding: 0 4px; }
+  .bat-item:first-child { padding-left: 0.5vw; }
+  .bat-n { font-size: 1.1vw; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05vw; }
+  .bat-n.on { color: #f0e000; }
+  .bat-n.on::before { content: '★ '; font-size: 0.9vw; }
+  .bat-r { font-size: 1.5vw; font-weight: 900; color: #ffffff; font-family: 'Arial Black', Arial, sans-serif; }
+  .bat-b { font-size: 1vw; color: #aaaaaa; }
+  .bat-slash { color: #555; font-size: 1.4vw; padding: 0 0.3vw; }
 
-  /* This over area */
   .over-area {
     flex: 1;
     background: linear-gradient(90deg, #1a0800, #220d00);
     display: flex; align-items: center;
-    padding: 0 14px;
+    padding: 0 1.2vw;
     border-top: 1px solid #3a1500;
-    gap: 10px;
+    gap: 0.8vw;
   }
-  .over-lbl { font-size: 9px; font-weight: 700; color: #aaaaaa; text-transform: uppercase; letter-spacing: 1.5px; white-space: nowrap; }
-  .over-balls { display: flex; gap: 5px; align-items: center; }
+  .over-lbl { font-size: 0.75vw; font-weight: 700; color: #aaaaaa; text-transform: uppercase; letter-spacing: 0.15vw; white-space: nowrap; }
+  .over-balls { display: flex; gap: 0.5vw; align-items: center; }
+
   .oball {
-    width: 24px; height: 24px; border-radius: 50%;
+    width: 2.4vw; height: 2.4vw;
+    max-width: 28px; max-height: 28px;
+    border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-size: 11px; font-weight: 900;
+    font-size: 0.95vw; font-weight: 900;
     flex-shrink: 0;
   }
-  .oball.empty  { background: transparent; border: 2px solid #666666; color: transparent; }
-  .oball.dot    { background: #555555; border: 2px solid #888888; color: #ffffff; }
-  .oball.single { background: #1a6622; border: 2px solid #44aa44; color: #ffffff; }
-  .oball.two    { background: #1a6622; border: 2px solid #44aa44; color: #ffffff; }
-  .oball.three  { background: #1a6622; border: 2px solid #44aa44; color: #ffffff; }
-  .oball.four   { background: #0044cc; border: 2px solid #4488ff; color: #ffffff; }
-  .oball.six    { background: #cc6600; border: 2px solid #ff9922; color: #ffffff; }
-  .oball.wide   { background: #664400; border: 2px solid #aa7700; color: #f0e000; font-size: 9px; }
-  .oball.noball { background: #664400; border: 2px solid #aa7700; color: #f0e000; font-size: 8px; }
-  .oball.wicket { background: #cc0000; border: 2px solid #ff4444; color: #ffffff; }
-
-  /* ══════════════════════════════════════════════
-     FULLSCREEN EVENT ALERTS — SIX / FOUR / WICKET
-  ══════════════════════════════════════════════ */
-  .alert {
-    position: fixed;
-    inset: 0;
-    display: none;
-    align-items: center; justify-content: center;
-    flex-direction: column;
-    z-index: 999;
-    animation: alertIn 0.3s ease;
-  }
-  @keyframes alertIn {
-    from { transform: scale(0.8); opacity: 0; }
-    to   { transform: scale(1);   opacity: 1; }
-  }
-
-  #alert-six {
-    background: radial-gradient(ellipse at center, #0a3a00 0%, #000000 70%);
-  }
-  #alert-four {
-    background: radial-gradient(ellipse at center, #000a3a 0%, #000000 70%);
-  }
-  #alert-wicket {
-    background: radial-gradient(ellipse at center, #3a0000 0%, #000000 70%);
-  }
-
-  .alert-word {
-    font-family: 'Arial Black', Arial, sans-serif;
-    font-size: 120px; font-weight: 900;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    line-height: 1;
-    filter: drop-shadow(0 0 40px currentColor);
-  }
-  #alert-six    .alert-word { color: #00ff44; }
-  #alert-four   .alert-word { color: #0099ff; }
-  #alert-wicket .alert-word { color: #ff2200; }
-
-  .alert-sub {
-    font-size: 32px; font-weight: 700;
-    color: #ffffff; margin-top: 12px;
-    letter-spacing: 8px; text-transform: uppercase;
-    opacity: 0.8;
-  }
-
-  .alert-logo {
-    margin-top: 24px;
-    font-family: 'Arial Black', Arial, sans-serif;
-    font-size: 24px; font-weight: 900;
-    letter-spacing: 12px; text-transform: uppercase;
-  }
-  #alert-six    .alert-logo { color: #88ff88; }
-  #alert-four   .alert-logo { color: #88ccff; }
-  #alert-wicket .alert-logo { color: #ff8888; }
-
-  .alert-player {
-    font-size: 22px; color: #dddddd; margin-top: 6px;
-    font-weight: 700; letter-spacing: 2px;
-  }
-
-  /* ══════════════════════════════════════════════
-     PPL LOGO — top left (like PSL logo on stream)
-  ══════════════════════════════════════════════ */
-  #ppl-watermark {
-    position: fixed;
-    top: 18px; left: 18px;
-    display: flex; align-items: center; gap: 10px;
-    z-index: 100;
-    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.7));
-  }
-  #ppl-watermark img { width: 64px; height: 64px; object-fit: contain; border-radius: 10px; }
-  .wm-text { display: flex; flex-direction: column; }
-  .wm-top { font-size: 10px; color: #d4a017; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; }
-  .wm-main { font-family: 'Arial Black', Arial, sans-serif; font-size: 26px; font-weight: 900; color: #ffffff; line-height: 1; letter-spacing: 2px; }
-
-  /* NO LIVE indicator */
-  #no-live {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.85);
-    display: flex; align-items: center; justify-content: center;
-    flex-direction: column; gap: 16px;
-    z-index: 200;
-  }
-  #no-live h2 { font-size: 32px; color: #888; font-weight: 900; letter-spacing: 4px; text-transform: uppercase; }
-  #no-live p  { font-size: 14px; color: #555; letter-spacing: 2px; }
+  .ob-empty  { background: transparent; border: 0.15vw solid #555; }
+  .ob-dot    { background: #555; border: 0.15vw solid #888; color: #fff; }
+  .ob-run    { background: #1a6622; border: 0.15vw solid #44aa44; color: #fff; }
+  .ob-four   { background: #0044cc; border: 0.15vw solid #4488ff; color: #fff; }
+  .ob-six    { background: #cc6600; border: 0.15vw solid #ff9922; color: #fff; }
+  .ob-wide   { background: #664400; border: 0.15vw solid #aa7700; color: #f0e000; font-size: 0.7vw; }
+  .ob-nb     { background: #664400; border: 0.15vw solid #aa7700; color: #f0e000; font-size: 0.65vw; }
+  .ob-wicket { background: #cc0000; border: 0.15vw solid #ff4444; color: #fff; }
 </style>
 </head>
 <body>
 
-<!-- PPL Watermark top-left -->
-<div id="ppl-watermark">
-  <img src="https://ppl2026-frontend.onrender.com/icons/icon-192.png" alt="PPL" onerror="this.style.display='none'">
+<!-- PPL watermark top-left -->
+<div id="watermark">
+  <img src="https://ppl2026-frontend.onrender.com/icons/icon-192.png" alt="PPL"
+       onerror="this.style.display='none'">
   <div class="wm-text">
-    <span class="wm-top">Official</span>
-    <span class="wm-main">PPL 2026</span>
+    <div class="wm-tag">Official</div>
+    <div class="wm-name">PPL 2026</div>
   </div>
 </div>
 
-<!-- No Live Match screen -->
+<!-- No live match -->
 <div id="no-live">
   <h2>⏳ Waiting for Live Match</h2>
-  <p>Overlay will appear when scoring begins</p>
+  <p>Overlay activates when scoring begins</p>
 </div>
 
-<!-- ═══ SIX ALERT ═══ -->
+<!-- ═══ CIRCULAR ALERT: SIX ═══ -->
 <div class="alert" id="alert-six">
+  <img class="alert-logo"
+       src="https://ppl2026-frontend.onrender.com/icons/icon-192.png" alt="">
   <div class="alert-word">SIX!</div>
   <div class="alert-sub">🚀 Maximum!</div>
-  <div class="alert-logo">PPL 2026</div>
   <div class="alert-player" id="six-player"></div>
+  <div class="alert-ppl">PPL 2026</div>
 </div>
 
-<!-- ═══ FOUR ALERT ═══ -->
+<!-- ═══ CIRCULAR ALERT: FOUR ═══ -->
 <div class="alert" id="alert-four">
+  <img class="alert-logo"
+       src="https://ppl2026-frontend.onrender.com/icons/icon-192.png" alt="">
   <div class="alert-word">FOUR!</div>
   <div class="alert-sub">⚡ Boundary!</div>
-  <div class="alert-logo">PPL 2026</div>
   <div class="alert-player" id="four-player"></div>
+  <div class="alert-ppl">PPL 2026</div>
 </div>
 
-<!-- ═══ WICKET ALERT ═══ -->
+<!-- ═══ CIRCULAR ALERT: WICKET ═══ -->
 <div class="alert" id="alert-wicket">
+  <img class="alert-logo"
+       src="https://ppl2026-frontend.onrender.com/icons/icon-192.png" alt="">
   <div class="alert-word">WICKET!</div>
   <div class="alert-sub">💀 OUT!</div>
-  <div class="alert-logo">PPL 2026</div>
   <div class="alert-player" id="wkt-player"></div>
+  <div class="alert-ppl">PPL 2026</div>
 </div>
 
-<!-- ═══════════════════════════════════
-     MAIN SCOREBAR — bottom of screen
-═══════════════════════════════════ -->
-<div id="bar" style="display:none;">
-
-  <!-- ROW 1: teams | score | overs | required | bowler -->
+<!-- ═══ SCOREBAR ═══ -->
+<div id="bar">
+  <!-- ROW 1 -->
   <div class="r1">
-
-    <!-- Gold logo -->
     <div class="logo-blk">
-      <img src="https://ppl2026-frontend.onrender.com/icons/icon-192.png" alt="PPL" onerror="this.style.background='#9333ea';this.style.display='flex'">
+      <img src="https://ppl2026-frontend.onrender.com/icons/icon-192.png" alt="PPL"
+           onerror="this.style.display='none'">
     </div>
-
-    <!-- Teams -->
     <div class="teams-blk">
-      <span class="t-bowl" id="t1">BAT</span>
+      <span class="t-bowl" id="t-field">FLD</span>
       <span class="t-vs">v</span>
-      <span class="t-bat" id="t2">FIELD</span>
+      <span class="t-bat"  id="t-bat">BAT</span>
     </div>
-
-    <!-- Lime green score -->
     <div class="score-blk">
       <span class="score-num" id="score">0-0</span>
     </div>
-
-    <!-- Overs -->
     <div class="overs-blk">
       <span class="ov-num" id="overs">0.0</span>
       <span class="ov-lbl">Overs</span>
     </div>
-
-    <!-- Innings dot -->
-    <div class="inn-dot" id="inn-dot">1</div>
-
+    <div class="inn-dot" id="inn">1</div>
     <div class="sep"></div>
-
-    <!-- RIGHT: required + bowler -->
     <div class="right-blk">
-
-      <!-- Required RR -->
       <div class="req-blk">
         <span class="req-lbl" id="req-lbl">CRR</span>
         <span class="req-num" id="req-num">0.00</span>
       </div>
-
-      <!-- Bowler -->
       <div class="bowl-blk">
         <div class="bowl-row">
-          <div class="ball-icon"></div>
-          <span class="bowl-name" id="bowl-name">—</span>
+          <div class="ball-ico"></div>
+          <span class="bowl-name" id="bowl-name">BOWLER</span>
         </div>
-        <span class="bowl-fig" id="bowl-fig">0-0-0-0</span>
+        <span class="bowl-fig" id="bowl-fig">0.0 · 0R · 0W</span>
       </div>
-
-      <!-- Bowler this spell score -->
       <div class="bowl-score-blk">
-        <span class="bs-runs" id="bowl-score">0-0</span>
-        <span class="bs-ov" id="bowl-ov">0.0</span>
+        <span class="bs-runs" id="b-spell">0-0</span>
+        <span class="bs-ov"   id="b-ov">0.0 ov</span>
       </div>
-
+      <div class="rt-logo-blk">
+        <img src="https://ppl2026-frontend.onrender.com/icons/icon-192.png" alt=""
+             onerror="this.style.display='none'">
+      </div>
     </div>
   </div>
 
-  <!-- ROW 2: batters | this over balls -->
+  <!-- ROW 2 -->
   <div class="r2">
-
     <div class="bat-area">
-      <!-- Striker -->
-      <div class="batter-item">
-        <span class="bat-name striker" id="striker-name">BATTER</span>
-        <span class="bat-runs" id="striker-runs">0</span>
-        <span class="bat-balls" id="striker-balls">(0)</span>
+      <div class="bat-item">
+        <span class="bat-n on" id="st-name">STRIKER</span>
+        <span class="bat-r"   id="st-runs">0</span>
+        <span class="bat-b"   id="st-balls">(0)</span>
       </div>
-
-      <span class="bat-sep">/</span>
-
-      <!-- Non striker -->
-      <div class="batter-item">
-        <span class="bat-name" id="ns-name">BATTER</span>
-        <span class="bat-runs" id="ns-runs">0</span>
-        <span class="bat-balls" id="ns-balls">(0)</span>
+      <span class="bat-slash">/</span>
+      <div class="bat-item">
+        <span class="bat-n"   id="ns-name">NON-STR</span>
+        <span class="bat-r"   id="ns-runs">0</span>
+        <span class="bat-b"   id="ns-balls">(0)</span>
       </div>
     </div>
-
     <div class="over-area">
       <span class="over-lbl">This Over</span>
-      <div class="over-balls" id="over-balls">
-        <!-- filled by JS -->
-      </div>
+      <div class="over-balls" id="over-balls"></div>
     </div>
-
   </div>
-
 </div>
 
 <script>
   const API = 'https://ppl2026-backend.onrender.com/api/live';
-  let prevLastBall = null;
-  let alertTimer   = null;
+  let prevLast = null;
+  let alertTimer = null;
 
-  /* ── Abbreviate team name ── */
-  function abbr(name) {
-    if (!name) return '???';
-    const words = name.trim().split(/\s+/);
-    if (words.length === 1) return name.substring(0, 3).toUpperCase();
-    return words.map(w => w[0]).join('').substring(0, 4).toUpperCase();
+  /* Abbreviate — first letters of each word, max 4 chars */
+  function abbr(n) {
+    if (!n) return '???';
+    const w = n.trim().split(/\s+/);
+    if (w.length === 1) return n.substring(0,4).toUpperCase();
+    return w.map(x => x[0]).join('').substring(0,4).toUpperCase();
   }
 
-  /* ── Ball class for THIS OVER dots ── */
-  function ballClass(b) {
-    if (b === 'W')  return 'wicket';
-    if (b === '6')  return 'six';
-    if (b === '4')  return 'four';
-    if (b === '3')  return 'three';
-    if (b === '2')  return 'two';
-    if (b === '1')  return 'single';
-    if (b === 'Wd') return 'wide';
-    if (b === 'NB') return 'noball';
-    if (b === '•' || b === '0') return 'dot';
-    return 'dot';
+  function ballCls(b) {
+    if (b === 'W')  return 'ob-wicket';
+    if (b === '6')  return 'ob-six';
+    if (b === '4')  return 'ob-four';
+    if (b === 'Wd') return 'ob-wide';
+    if (b === 'NB') return 'ob-nb';
+    if (b === '•' || b === '0') return 'ob-dot';
+    return 'ob-run';
   }
-
-  function ballLabel(b) {
+  function ballLbl(b) {
     if (b === '•') return '0';
     if (b === 'Wd') return 'Wd';
     if (b === 'NB') return 'NB';
     return b;
   }
 
-  /* ── Show fullscreen alert ── */
-  function showAlert(id, playerText) {
-    // Clear any previous
-    ['alert-six','alert-four','alert-wicket'].forEach(a => {
-      document.getElementById(a).style.display = 'none';
+  function showAlert(id, playerLine) {
+    /* hide all */
+    document.querySelectorAll('.alert').forEach(el => {
+      el.classList.remove('show');
     });
     if (alertTimer) clearTimeout(alertTimer);
 
     const el = document.getElementById(id);
-    el.style.display = 'flex';
+    /* force reflow */
+    void el.offsetWidth;
+    el.classList.add('show');
 
-    if (playerText) {
-      const pid = id === 'alert-six' ? 'six-player'
-                : id === 'alert-four' ? 'four-player'
-                : 'wkt-player';
-      document.getElementById(pid).textContent = playerText;
-    }
+    /* fill player text */
+    const pid = id === 'alert-six' ? 'six-player'
+              : id === 'alert-four' ? 'four-player' : 'wkt-player';
+    document.getElementById(pid).textContent = playerLine || '';
 
-    alertTimer = setTimeout(() => { el.style.display = 'none'; }, 3000);
+    alertTimer = setTimeout(() => el.classList.remove('show'), 3200);
   }
 
-  /* ── Main update loop ── */
   async function update() {
     try {
       const res  = await fetch(API, { cache: 'no-store' });
@@ -498,34 +523,27 @@
         document.getElementById('no-live').style.display = 'flex';
         return;
       }
-
       document.getElementById('bar').style.display     = 'flex';
       document.getElementById('no-live').style.display = 'none';
 
-      /* Teams — batting team is highlighted yellow */
-      const battingNow  = d.innings === 2 ? d.bowlingFirst : d.battingFirst;
-      const fieldingNow = d.innings === 2 ? d.battingFirst : d.bowlingFirst;
-      document.getElementById('t1').textContent = abbr(fieldingNow);
-      document.getElementById('t2').textContent = abbr(battingNow);
+      const batting  = d.innings === 2 ? d.bowlingFirst : d.battingFirst;
+      const fielding = d.innings === 2 ? d.battingFirst : d.bowlingFirst;
 
-      /* Score */
-      document.getElementById('score').textContent =
-        `${d.runs}-${d.wickets}`;
+      document.getElementById('t-bat').textContent   = abbr(batting);
+      document.getElementById('t-field').textContent = abbr(fielding);
+      document.getElementById('score').textContent   = `${d.runs}-${d.wickets}`;
+      document.getElementById('inn').textContent     = d.innings === 2 ? '2' : '1';
 
-      /* Overs */
       const ov = Math.floor(d.balls / 6);
       const bl = d.balls % 6;
       document.getElementById('overs').textContent = `${ov}.${bl}`;
 
-      /* Innings */
-      document.getElementById('inn-dot').textContent = d.innings === 2 ? '2' : '1';
-
-      /* CRR or Required */
+      /* CRR or RRR */
       const crr = d.balls > 0 ? (d.runs / (d.balls / 6)).toFixed(2) : '0.00';
       if (d.innings === 2 && d.target) {
-        const needed  = d.target - d.runs;
-        const remBalls = (10 - ov) * 6 - (bl || 0); // rough
-        const rrr = remBalls > 0 ? ((needed / (remBalls / 6))).toFixed(2) : '—';
+        const needed = d.target - d.runs;
+        const remB   = Math.max(0, (10 - ov) * 6 - bl);
+        const rrr    = remB > 0 ? (needed / (remB / 6)).toFixed(2) : '—';
         document.getElementById('req-lbl').textContent = 'REQUIRED';
         document.getElementById('req-num').textContent = rrr;
       } else {
@@ -533,77 +551,72 @@
         document.getElementById('req-num').textContent = crr;
       }
 
-      /* Bowler */
+      /* Bowler — FULL NAME */
       const b = d.currentBowler;
       if (b && b.name) {
         const bov = Math.floor((b.ballsBowled || 0) / 6);
         const bbl = (b.ballsBowled || 0) % 6;
-        document.getElementById('bowl-name').textContent  = b.name.split(' ').pop().toUpperCase();
-        document.getElementById('bowl-fig').textContent   =
-          `${bov}.${bbl} - ${b.runsConceded || 0} - ${b.wickets || 0}`;
-        document.getElementById('bowl-score').textContent =
+        document.getElementById('bowl-name').textContent =
+          b.name.toUpperCase();                          /* full name */
+        document.getElementById('bowl-fig').textContent  =
+          `${bov}.${bbl} ov · ${b.runsConceded || 0}R · ${b.wickets || 0}W`;
+        document.getElementById('b-spell').textContent   =
           `${b.runsConceded || 0}-${b.wickets || 0}`;
-        document.getElementById('bowl-ov').textContent    = `${bov}.${bbl}`;
+        document.getElementById('b-ov').textContent      = `${bov}.${bbl} ov`;
       }
 
       /* Striker */
       const st = d.striker;
       if (st && st.name) {
-        document.getElementById('striker-name').textContent = st.name.toUpperCase();
-        document.getElementById('striker-runs').textContent = st.runs || 0;
-        document.getElementById('striker-balls').textContent = `(${st.balls || 0})`;
+        document.getElementById('st-name').textContent  = st.name.toUpperCase();
+        document.getElementById('st-runs').textContent  = st.runs  || 0;
+        document.getElementById('st-balls').textContent = `(${st.balls || 0})`;
       }
 
-      /* Non striker */
+      /* Non-striker */
       const ns = d.nonstriker;
       if (ns && ns.name) {
         document.getElementById('ns-name').textContent  = ns.name.toUpperCase();
-        document.getElementById('ns-runs').textContent  = ns.runs || 0;
+        document.getElementById('ns-runs').textContent  = ns.runs  || 0;
         document.getElementById('ns-balls').textContent = `(${ns.balls || 0})`;
       }
 
-      /* This over balls — current over only */
-      const allBalls  = d.lastBalls || [];
-      const curOverStart = ov * 6;
-      const curBalls  = allBalls.slice(curOverStart);
-      const totalSlots = 7; // show 7 slots like PSL
-
-      const ballsDiv = document.getElementById('over-balls');
+      /* This over balls */
+      const allBalls    = d.lastBalls || [];
+      const curOvStart  = ov * 6;
+      const curBalls    = allBalls.slice(curOvStart);
+      const SLOTS       = 7;
+      const ballsDiv    = document.getElementById('over-balls');
       ballsDiv.innerHTML = '';
-
-      for (let i = 0; i < totalSlots; i++) {
+      for (let i = 0; i < SLOTS; i++) {
         const div = document.createElement('div');
         div.className = 'oball';
         if (i < curBalls.length) {
-          div.classList.add(ballClass(curBalls[i]));
-          div.textContent = ballLabel(curBalls[i]);
+          div.classList.add(ballCls(curBalls[i]));
+          div.textContent = ballLbl(curBalls[i]);
         } else {
-          div.classList.add('empty');
+          div.classList.add('ob-empty');
         }
         ballsDiv.appendChild(div);
       }
 
-      /* ── Event alerts ── */
-      const latestBall = allBalls[allBalls.length - 1];
-      if (latestBall !== prevLastBall && prevLastBall !== null) {
-        if (latestBall === '6') {
-          const p = st?.name ? `${st.name} — ${st.runs} (${st.balls})` : '';
-          showAlert('alert-six', p);
-        } else if (latestBall === '4') {
-          const p = st?.name ? `${st.name} — ${st.runs} (${st.balls})` : '';
-          showAlert('alert-four', p);
-        } else if (latestBall === 'W') {
-          showAlert('alert-wicket', '');
-        }
+      /* Events */
+      const latest = allBalls[allBalls.length - 1];
+      if (latest !== prevLast && prevLast !== null) {
+        const stLabel = st?.name
+          ? `${st.name}  ${st.runs}(${st.balls})`
+          : '';
+        if (latest === '6') showAlert('alert-six', stLabel);
+        else if (latest === '4') showAlert('alert-four', stLabel);
+        else if (latest === 'W') showAlert('alert-wicket', stLabel);
       }
-      prevLastBall = latestBall;
+      prevLast = latest;
 
     } catch (e) {
       console.error('[PPL Overlay]', e);
     }
   }
 
-  // Poll every second
   update();
   setInterval(update, 1000);
 </script>
