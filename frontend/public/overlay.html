@@ -14,395 +14,403 @@ html,body{
   -webkit-font-smoothing:antialiased;
 }
 
-/* ══════════ CSS VARIABLES — one place to tune sizes ══════════ */
+/* ════════════════════════════════════
+   CSS VARIABLES — single source of truth
+════════════════════════════════════ */
 :root{
-  --bar-h:   clamp(60px,10vh,88px);       /* total bar height */
-  --side-w:  clamp(40px,5.4vw,66px);      /* logo column width */
-  --bowl-w:  clamp(150px,19vw,250px);     /* bowler col = over col */
-  --rr-w:    clamp(66px,8vw,108px);       /* run-rate column */
-  --pill-pad:clamp(4px,0.6vh,8px) clamp(8px,1.1vw,16px);
-  --pill-gap:clamp(5px,0.8vw,13px);
+  --bh: clamp(58px,9.8vh,86px);   /* total bar height           */
+  --r1: 55%;                        /* top row %                  */
+  --sw: clamp(44px,5.8vw,72px);    /* logo column width          */
+  --rw: clamp(200px,26vw,320px);   /* right panel width          */
+  --rise: clamp(10px,1.8vh,16px);  /* pill protrusion above bar  */
 }
 @media (orientation:portrait){
   :root{
-    --bar-h:  clamp(72px,11vh,96px);
-    --side-w: clamp(32px,8vw,52px);
-    --bowl-w: clamp(110px,27vw,170px);
-    --rr-w:   clamp(56px,13vw,86px);
-    --pill-pad:clamp(3px,0.5vh,7px) clamp(5px,1.8vw,12px);
-    --pill-gap:clamp(4px,1.2vw,10px);
+    --bh: clamp(70px,10.5vh,96px);
+    --sw: clamp(34px,8.5vw,54px);
+    --rw: clamp(140px,38vw,210px);
+    --rise: clamp(8px,1.4vh,12px);
   }
 }
 
-/* ══════════ SPONSOR — top right ══════════ */
+/* ════════════════════
+   SPONSOR — top right
+════════════════════ */
 #sponsor{position:fixed;top:1.5vh;right:1.2vw;z-index:100}
 .sponsor-box{
   background:linear-gradient(135deg,rgba(0,50,110,0.92),rgba(0,25,70,0.95));
   border:1px solid rgba(135,206,250,0.38);
-  border-radius:0.4vw;padding:0.35vh 0.9vw 0.3vh;
+  border-radius:4px;padding:.35vh .9vw .3vh;
   text-align:center;position:relative;overflow:hidden;
-  box-shadow:0 2px 14px rgba(0,100,255,0.2);
-  animation:sPulse 4s ease-in-out infinite;
+  box-shadow:0 2px 14px rgba(0,100,255,.2);
+  animation:sP 4s ease-in-out infinite;
 }
-@keyframes sPulse{0%,100%{box-shadow:0 2px 14px rgba(0,100,255,0.2)}50%{box-shadow:0 2px 22px rgba(0,160,255,0.4)}}
-.sponsor-box::after{
-  content:'';position:absolute;top:0;left:-60%;width:35%;height:100%;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.07),transparent);
-  animation:shimmer 4.5s ease-in-out infinite;
-}
-@keyframes shimmer{0%{left:-60%}100%{left:140%}}
-.sname{font-family:'Arial Black',Arial,sans-serif;font-size:clamp(8px,1.1vw,14px);font-weight:900;color:#87CEFA;letter-spacing:0.1vw;text-transform:uppercase;position:relative;z-index:1}
-.stag{font-size:clamp(5px,0.5vw,7px);color:rgba(200,230,255,0.55);letter-spacing:0.18vw;text-transform:uppercase;margin-top:0.08vh;position:relative;z-index:1}
+@keyframes sP{0%,100%{box-shadow:0 2px 14px rgba(0,100,255,.2)}50%{box-shadow:0 2px 22px rgba(0,160,255,.4)}}
+.sponsor-box::after{content:'';position:absolute;top:0;left:-60%;width:35%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.07),transparent);animation:sh 4.5s ease-in-out infinite}
+@keyframes sh{0%{left:-60%}100%{left:140%}}
+.sname{font-family:'Arial Black',Arial,sans-serif;font-size:clamp(8px,1.1vw,14px);font-weight:900;color:#87CEFA;letter-spacing:.1vw;text-transform:uppercase;position:relative;z-index:1}
+.stag{font-size:clamp(5px,.5vw,7px);color:rgba(200,230,255,.55);letter-spacing:.18vw;text-transform:uppercase;margin-top:.08vh;position:relative;z-index:1}
 
-/* ══════════ WATERMARK — top left ══════════ */
-#watermark{position:fixed;top:1.4vh;left:1.2vw;display:flex;align-items:center;gap:0.55vw;z-index:50;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.8))}
-#watermark img{width:clamp(30px,4vw,52px);height:clamp(30px,4vw,52px);object-fit:contain;border-radius:0.4vw}
-.wm-tag{font-size:clamp(5px,0.55vw,8px);color:#87CEFA;font-weight:700;letter-spacing:0.2vw;text-transform:uppercase;line-height:1}
-.wm-name{font-family:'Arial Black',Arial,sans-serif;font-size:clamp(10px,1.45vw,20px);font-weight:900;color:#fff;line-height:1}
+/* ════════════════════
+   WATERMARK — top left
+════════════════════ */
+#watermark{position:fixed;top:1.4vh;left:1.2vw;display:flex;align-items:center;gap:.5vw;z-index:50;filter:drop-shadow(0 2px 8px rgba(0,0,0,.8))}
+#watermark img{width:clamp(28px,3.8vw,50px);height:clamp(28px,3.8vw,50px);object-fit:contain;border-radius:.4vw}
+.wm-tag{font-size:clamp(5px,.52vw,7px);color:#87CEFA;font-weight:700;letter-spacing:.2vw;text-transform:uppercase;line-height:1}
+.wm-name{font-family:'Arial Black',Arial,sans-serif;font-size:clamp(10px,1.4vw,19px);font-weight:900;color:#fff;line-height:1}
 
-/* ══════════ NO LIVE SCREEN ══════════ */
+/* ════════════════════
+   NO LIVE SCREEN
+════════════════════ */
 #no-live{
-  position:fixed;inset:0;background:rgba(0,8,25,0.93);
+  position:fixed;inset:0;background:rgba(0,8,25,.93);
   display:flex;align-items:center;justify-content:center;
   flex-direction:column;gap:1.6vh;z-index:200;
 }
-#no-live h2{font-size:clamp(12px,1.8vw,26px);color:rgba(135,206,250,0.42);font-weight:900;letter-spacing:0.35vw;text-transform:uppercase}
-#no-live p{font-size:clamp(7px,0.8vw,11px);color:rgba(135,206,250,0.22);letter-spacing:0.18vw}
+#no-live h2{font-size:clamp(12px,1.8vw,26px);color:rgba(135,206,250,.42);font-weight:900;letter-spacing:.35vw;text-transform:uppercase}
+#no-live p{font-size:clamp(7px,.8vw,11px);color:rgba(135,206,250,.22);letter-spacing:.18vw}
 
-/* ══════════ CIRCULAR ALERTS ══════════ */
+/* ════════════════════
+   CIRCULAR ALERTS
+════════════════════ */
 .alert{
   position:fixed;top:40%;left:50%;
   transform:translate(-50%,-50%) scale(0);
   width:clamp(150px,24vw,300px);height:clamp(150px,24vw,300px);
   border-radius:50%;display:flex;flex-direction:column;
   align-items:center;justify-content:center;
-  z-index:999;pointer-events:none;gap:0.18vw;backdrop-filter:blur(6px);
+  z-index:999;pointer-events:none;gap:.18vw;backdrop-filter:blur(6px);
 }
-.alert.show{animation:aSpring 3.8s cubic-bezier(.34,1.56,.64,1) forwards}
-@keyframes aSpring{
+.alert.show{animation:aS 3.8s cubic-bezier(.34,1.56,.64,1) forwards}
+@keyframes aS{
   0%  {transform:translate(-50%,-50%) scale(0);opacity:0}
   9%  {transform:translate(-50%,-50%) scale(1.1);opacity:1}
-  16% {transform:translate(-50%,-50%) scale(0.95)}
+  16% {transform:translate(-50%,-50%) scale(.95)}
   22% {transform:translate(-50%,-50%) scale(1.03)}
   28% {transform:translate(-50%,-50%) scale(1);opacity:1}
   76% {transform:translate(-50%,-50%) scale(1);opacity:1}
-  100%{transform:translate(-50%,-50%) scale(0.7);opacity:0}
+  100%{transform:translate(-50%,-50%) scale(.7);opacity:0}
 }
-#alert-six   {background:radial-gradient(circle at 40% 40%,rgba(0,70,15,0.93),rgba(0,25,5,0.97) 70%);border:clamp(2px,0.28vw,4px) solid rgba(0,220,65,0.8);box-shadow:0 0 clamp(18px,4vw,65px) rgba(0,200,55,0.45)}
-#alert-four  {background:radial-gradient(circle at 40% 40%,rgba(0,18,95,0.93),rgba(0,6,38,0.97) 70%);border:clamp(2px,0.28vw,4px) solid rgba(55,135,255,0.85);box-shadow:0 0 clamp(18px,4vw,65px) rgba(35,115,255,0.45)}
-#alert-wicket{background:radial-gradient(circle at 40% 40%,rgba(95,0,0,0.93),rgba(38,0,0,0.97) 70%);border:clamp(2px,0.28vw,4px) solid rgba(255,45,15,0.85);box-shadow:0 0 clamp(18px,4vw,65px) rgba(255,35,0,0.45)}
-.alert-logo  {width:clamp(24px,4vw,55px);height:clamp(24px,4vw,55px);object-fit:contain;border-radius:0.6vw;filter:drop-shadow(0 0 0.5vw rgba(255,255,255,0.4))}
-.alert-word  {font-family:'Arial Black',Arial,sans-serif;font-size:clamp(20px,4.4vw,62px);font-weight:900;text-transform:uppercase;line-height:1;animation:aGlow 0.5s ease infinite alternate}
-@keyframes aGlow{from{filter:brightness(1)}to{filter:brightness(1.55) drop-shadow(0 0 0.5vw currentColor)}}
+#alert-six   {background:radial-gradient(circle at 40% 40%,rgba(0,70,15,.93),rgba(0,25,5,.97) 70%);border:clamp(2px,.28vw,4px) solid rgba(0,220,65,.8);box-shadow:0 0 clamp(18px,4vw,65px) rgba(0,200,55,.45)}
+#alert-four  {background:radial-gradient(circle at 40% 40%,rgba(0,18,95,.93),rgba(0,6,38,.97) 70%);border:clamp(2px,.28vw,4px) solid rgba(55,135,255,.85);box-shadow:0 0 clamp(18px,4vw,65px) rgba(35,115,255,.45)}
+#alert-wicket{background:radial-gradient(circle at 40% 40%,rgba(95,0,0,.93),rgba(38,0,0,.97) 70%);border:clamp(2px,.28vw,4px) solid rgba(255,45,15,.85);box-shadow:0 0 clamp(18px,4vw,65px) rgba(255,35,0,.45)}
+.alert-logo  {width:clamp(24px,4vw,55px);height:clamp(24px,4vw,55px);object-fit:contain;border-radius:.6vw;filter:drop-shadow(0 0 .5vw rgba(255,255,255,.4))}
+.alert-word  {font-family:'Arial Black',Arial,sans-serif;font-size:clamp(20px,4.4vw,62px);font-weight:900;text-transform:uppercase;line-height:1;animation:aG .5s ease infinite alternate}
+@keyframes aG{from{filter:brightness(1)}to{filter:brightness(1.55) drop-shadow(0 0 .5vw currentColor)}}
 #alert-six    .alert-word{color:#00ff58}
 #alert-four   .alert-word{color:#4aabff}
 #alert-wicket .alert-word{color:#ff5533}
 .alert-emoji {font-size:clamp(13px,2.4vw,34px);line-height:1}
-.alert-player{font-size:clamp(6px,0.85vw,11px);color:rgba(220,240,255,0.82);font-weight:700;letter-spacing:0.08vw;text-align:center;max-width:86%;line-height:1.3}
-.alert-ppl   {font-family:'Arial Black',Arial,sans-serif;font-size:clamp(5px,0.65vw,9px);font-weight:900;letter-spacing:0.42vw;text-transform:uppercase;opacity:0.5;margin-top:0.1vw}
+.alert-player{font-size:clamp(6px,.85vw,11px);color:rgba(220,240,255,.82);font-weight:700;letter-spacing:.08vw;text-align:center;max-width:86%;line-height:1.3}
+.alert-ppl   {font-family:'Arial Black',Arial,sans-serif;font-size:clamp(5px,.65vw,9px);font-weight:900;letter-spacing:.42vw;text-transform:uppercase;opacity:.5;margin-top:.1vw}
 #alert-six    .alert-ppl{color:#88ffaa}
 #alert-four   .alert-ppl{color:#88ccff}
 #alert-wicket .alert-ppl{color:#ffaa88}
 
-/* ══════════════════════════════════════════════════════
-   SCOREBAR — professional 2-row bar, full-width, aligned
-══════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════
+   SCOREBAR — CSS Grid, full-width, 2-row, PSL style
+═══════════════════════════════════════════════════ */
 #bar{
   position:fixed;bottom:0;left:0;right:0;
-  height:var(--bar-h);
-  display:none;flex-direction:column;
+  height:var(--bh);
+  display:none;
+  /* CSS Grid: 4 columns, 2 rows */
+  grid-template-columns: var(--sw) 1fr var(--rw) var(--sw);
+  grid-template-rows: var(--r1) calc(100% - var(--r1));
+  /* NOTE: display:none overrides grid; JS switches to display:grid */
 }
 
-/* ─── Shared background layer ─── */
-#bar::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(180deg,rgba(0,28,80,0.97) 0%,rgba(0,16,55,0.99) 100%);
-  z-index:0;
-}
-
-/* ─── ROW 1 ─── */
-.r1{
-  position:relative;z-index:1;
-  flex:0 0 56%;
-  display:flex;align-items:stretch;
-  overflow:visible;
-}
-
-/* ── Left logo ── */
-.left-logo{
-  flex:0 0 var(--side-w);
-  background:linear-gradient(145deg,#004499,#002266);
+/* ── Left logo: spans both rows ── */
+.ll{
+  grid-column:1;grid-row:1/3;
+  background:linear-gradient(135deg,#003a88,#001f55);
+  clip-path:polygon(0 0,78% 0,100% 100%,0 100%);
   display:flex;align-items:center;justify-content:center;
-  clip-path:polygon(0 0,76% 0,100% 100%,0 100%);
-  padding-right:0.8vw;z-index:3;flex-shrink:0;
+  padding-right:clamp(4px,.6vw,8px);
+  z-index:3;
 }
-.left-logo img{width:clamp(22px,3vw,42px);height:clamp(22px,3vw,42px);object-fit:contain;border-radius:0.3vw}
+.ll img{width:clamp(22px,3.2vw,44px);height:clamp(22px,3.2vw,44px);object-fit:contain;border-radius:50%}
 
-/* ── GREEN PILL — rises above row 1 ── */
-.pill-wrap{flex:0 0 auto;display:flex;align-items:flex-end;z-index:10;position:relative}
+/* ── Green Pill — col 2 row 1, protrudes upward ── */
+.pill-wrap{
+  grid-column:2;grid-row:1;
+  display:flex;align-items:flex-end;
+  overflow:visible;
+  z-index:10;
+}
 .pill{
-  margin-top:clamp(-16px,-2.5vh,-6px);
-  background:linear-gradient(170deg,#caf200 0%,#aedd00 55%,#99cc00 100%);
-  border-radius:clamp(4px,0.55vw,9px) clamp(4px,0.55vw,9px) 0 0;
-  border:1.5px solid rgba(0,0,0,0.12);
+  margin-top:calc(-1 * var(--rise));
+  background:linear-gradient(170deg,#ccf200 0%,#b5e000 60%,#a2cc00 100%);
+  border-radius:clamp(4px,.6vw,10px) clamp(4px,.6vw,10px) 0 0;
+  border:1.5px solid rgba(0,0,0,.1);
   border-bottom:none;
+  width:100%;
   display:flex;align-items:center;
-  padding:var(--pill-pad);
-  gap:var(--pill-gap);
-  box-shadow:0 -4px 20px rgba(0,0,0,0.35),0 -1px 6px rgba(160,240,0,0.2),inset 0 1px 0 rgba(255,255,255,0.32);
+  padding:clamp(3px,.5vh,8px) clamp(8px,1.1vw,16px) clamp(2px,.35vh,6px);
+  gap:clamp(5px,.8vw,14px);
+  box-shadow:0 -4px 18px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.35);
 }
 
-/* Pill sections with styled separators */
-.teams-block{
-  display:flex;align-items:center;
-  gap:clamp(3px,0.45vw,7px);
-  flex-shrink:1;
-  min-width:0;
-}
-.t-name{
-  font-size:clamp(9px,1.2vw,17px);
-  font-weight:900;color:#0e1a00;
-  text-transform:uppercase;white-space:nowrap;
-  letter-spacing:0.02vw;line-height:1;
-  overflow:hidden;text-overflow:ellipsis;
-  max-width:clamp(60px,10vw,150px);
-}
-@media (orientation:portrait){
-  .t-name{max-width:clamp(45px,14vw,100px);font-size:clamp(8px,2.4vw,14px) !important}
-}
-.vs-badge{
-  flex-shrink:0;
-  background:rgba(0,0,0,0.16);
-  color:#3a5000;
-  font-size:clamp(6px,0.7vw,10px);
-  font-weight:700;
-  padding:0.1em 0.45em;
-  border-radius:3px;
-  letter-spacing:0.05vw;
+/* Team abbreviations */
+.t-abbr{
+  font-family:'Arial Black',Arial,sans-serif;
+  font-size:clamp(9px,1.35vw,18px);
+  font-weight:900;
+  color:#0a1800;
+  letter-spacing:.02vw;
   text-transform:uppercase;
-  line-height:1.4;
+  white-space:nowrap;
+  line-height:1;
+}
+.vs-txt{
+  font-size:clamp(6px,.75vw,10px);
+  color:#3a5200;
+  font-weight:600;
+  letter-spacing:.05vw;
+  line-height:1;
 }
 
-/* Vertical divider inside pill */
-.pill-sep{
-  width:1.5px;
-  height:clamp(18px,2.5vh,34px);
-  background:rgba(0,0,0,0.18);
-  border-radius:1px;
+/* Score — dominant element */
+.score-big{
+  font-family:'Arial Black',Arial,sans-serif;
+  font-size:clamp(20px,3.8vw,52px);
+  font-weight:900;
+  color:#000;
+  letter-spacing:-.03vw;
+  line-height:1;
+  white-space:nowrap;
+  flex-shrink:0;
+}
+
+/* Overs */
+.ov-num{
+  font-size:clamp(11px,1.55vw,21px);
+  font-weight:900;
+  color:#0a1800;
+  line-height:1;
+  white-space:nowrap;
+}
+
+/* Innings dot — small dark circle with number */
+.inn-dot{
+  width:clamp(14px,1.65vw,21px);
+  height:clamp(14px,1.65vw,21px);
+  border-radius:50%;
+  background:rgba(0,0,0,.28);
+  border:1.5px solid rgba(0,0,0,.35);
+  display:flex;align-items:center;justify-content:center;
+  font-size:clamp(6px,.78vw,10px);
+  font-weight:900;color:#fff;
+  flex-shrink:0;
+  letter-spacing:0;
+}
+
+/* ── Batter row — col 2 row 2 ── */
+.bat-row{
+  grid-column:2;grid-row:2;
+  background:linear-gradient(90deg,rgba(0,18,60,.98),rgba(0,12,45,.99));
+  display:flex;align-items:center;
+  padding:0 clamp(6px,.9vw,14px);
+  gap:clamp(4px,.55vw,9px);
+  border-top:1px solid rgba(135,206,250,.1);
+  overflow:hidden;
+}
+.bat-name{
+  font-size:clamp(9px,1.1vw,15px);
+  font-weight:900;
+  text-transform:uppercase;
+  white-space:nowrap;
+  letter-spacing:.03vw;
+  line-height:1;
+}
+.bat-name.sn{color:#FFE620}
+.bat-name.nn{color:rgba(210,230,255,.88)}
+.bat-runs{
+  font-family:'Arial Black',Arial,sans-serif;
+  font-size:clamp(12px,1.5vw,20px);
+  font-weight:900;
+  line-height:1;
+  white-space:nowrap;
+}
+.bat-runs.sr{color:#fff}
+.bat-runs.nr{color:rgba(190,215,255,.75)}
+.bat-balls{
+  font-size:clamp(7px,.82vw,11px);
+  line-height:1;
+  white-space:nowrap;
+}
+.bat-balls.sb{color:rgba(200,220,255,.45)}
+.bat-balls.nb{color:rgba(160,190,240,.38)}
+.bat-slash{
+  font-size:clamp(13px,1.65vw,22px);
+  color:rgba(135,206,250,.25);
+  font-weight:300;
+  padding:0 clamp(1px,.18vw,3px);
+  flex-shrink:0;
+}
+.bat-star{
+  font-size:clamp(9px,1.05vw,14px);
+  color:#FFE620;
+  font-weight:900;
+  margin-left:-2px;
+}
+
+/* ── Right panel — col 3, spans both rows ── */
+.right-panel{
+  grid-column:3;grid-row:1/3;
+  display:flex;flex-direction:column;
+  background:linear-gradient(180deg,rgba(0,22,68,.97) 0%,rgba(0,14,50,.99) 100%);
+  border-left:2px solid rgba(135,206,250,.1);
+  overflow:hidden;
+}
+
+/* Top half: RUN-RATE label | bowler info | figures */
+.rp-top{
+  flex:0 0 var(--r1);
+  display:flex;align-items:center;
+  padding:0 clamp(6px,.9vw,13px);
+  gap:clamp(4px,.6vw,10px);
+  border-bottom:1px solid rgba(135,206,250,.1);
+  overflow:hidden;
+}
+.rr-lbl{
+  font-size:clamp(5px,.58vw,8px);
+  font-weight:700;
+  color:rgba(175,210,255,.55);
+  text-transform:uppercase;
+  letter-spacing:.14vw;
+  white-space:nowrap;
+  line-height:1;
+  flex-shrink:0;
+}
+.rp-divider{
+  width:1px;
+  height:60%;
+  background:rgba(135,206,250,.15);
   flex-shrink:0;
   align-self:center;
 }
-
-/* Score block */
-.score-block{
-  display:flex;align-items:baseline;
-  gap:clamp(1px,0.15vw,3px);
-  flex-shrink:0;
-}
-.score-big{
-  font-family:'Arial Black',Arial,sans-serif;
-  font-size:clamp(18px,3.2vw,46px);
-  font-weight:900;color:#000;
-  letter-spacing:-0.03vw;line-height:1;white-space:nowrap;
-}
-
-/* Overs + innings */
-.overs-box{
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  line-height:1;flex-shrink:0;
-}
-.ov-num{font-size:clamp(10px,1.4vw,19px);font-weight:900;color:#0e1a00;line-height:1}
-.ov-lbl{font-size:clamp(4px,0.42vw,6px);color:#3a5000;text-transform:uppercase;letter-spacing:0.08vw}
-.inn-dot{
-  width:clamp(12px,1.45vw,19px);height:clamp(12px,1.45vw,19px);
-  border-radius:50%;background:rgba(0,0,0,0.22);border:1.5px solid rgba(0,0,0,0.32);
-  display:flex;align-items:center;justify-content:center;
-  font-size:clamp(6px,0.72vw,10px);font-weight:900;color:#fff;flex-shrink:0;
-}
-
-/* ── RIGHT BLOCK — RR + BOWLER ── */
-.right-blk{
+.bowl-info{
+  display:flex;align-items:center;
+  gap:clamp(3px,.42vw,6px);
   flex:1;
-  display:flex;align-items:stretch;
+  min-width:0;
   overflow:hidden;
-  border-left:1px solid rgba(135,206,250,0.08);
+}
+.ball-ico{
+  width:clamp(8px,1.1vw,14px);
+  height:clamp(8px,1.1vw,14px);
+  border-radius:50%;flex-shrink:0;
+  background:radial-gradient(circle at 33% 33%,#e82600,#8a0000);
+  border:1px solid rgba(255,70,40,.5);
+  box-shadow:0 0 4px rgba(220,40,0,.35);
+}
+.bowl-name{
+  font-size:clamp(9px,1.08vw,15px);
+  font-weight:900;
+  color:#fff;
+  text-transform:uppercase;
+  letter-spacing:.03vw;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.bowl-figs{
+  display:flex;align-items:center;
+  gap:clamp(3px,.4vw,6px);
+  flex-shrink:0;
+}
+.bowl-wk{
+  font-size:clamp(8px,1.02vw,14px);
+  font-weight:900;
+  color:rgba(200,225,255,.75);
+  white-space:nowrap;
+}
+.bowl-ov{
+  font-size:clamp(7px,.82vw,11px);
+  color:rgba(160,195,255,.5);
+  white-space:nowrap;
 }
 
-/* RUN RATE — distinct yellow-tinted pill */
-.rr-blk{
-  flex:0 0 var(--rr-w);
-  display:flex;flex-direction:column;
-  justify-content:center;align-items:center;
-  padding:0 clamp(6px,0.9vw,13px);
-  background:linear-gradient(135deg,rgba(255,200,0,0.14),rgba(255,170,0,0.08));
-  border-right:1px solid rgba(255,215,0,0.28);
-  border-left:1px solid rgba(255,215,0,0.15);
-  flex-shrink:0;
-  gap:clamp(1px,0.2vh,3px);
-}
-.rr-lbl{
-  font-size:clamp(5px,0.55vw,7.5px);
-  font-weight:700;
-  color:rgba(255,225,80,0.75);
-  text-transform:uppercase;
-  letter-spacing:0.14vw;
-  white-space:nowrap;
-  line-height:1;
+/* Bottom half: run rate number | THIS OVER | balls */
+.rp-bot{
+  flex:1;
+  display:flex;align-items:center;
+  padding:0 clamp(6px,.9vw,13px);
+  gap:clamp(6px,.9vw,13px);
+  overflow:hidden;
 }
 .rr-num{
   font-family:'Arial Black',Arial,sans-serif;
-  font-size:clamp(13px,1.7vw,22px);
-  font-weight:900;color:#FFD700;
+  font-size:clamp(14px,1.9vw,26px);
+  font-weight:900;
+  color:#FFD700;
   line-height:1;
-  text-shadow:0 0 12px rgba(255,215,0,0.5);
-}
-
-/* BOWLER — fixed width so over-section below aligns */
-.bowl-blk{
-  flex:0 0 var(--bowl-w);
-  display:flex;flex-direction:column;
-  justify-content:center;align-items:flex-start;
-  padding:clamp(2px,0.3vh,5px) clamp(7px,1vw,14px);
-  border-left:1px solid rgba(135,206,250,0.12);
-  gap:clamp(1px,0.15vh,3px);
-  overflow:hidden;
+  white-space:nowrap;
+  text-shadow:0 0 12px rgba(255,215,0,.5);
   flex-shrink:0;
 }
-.bowl-row{display:flex;align-items:center;gap:clamp(3px,0.4vw,6px)}
-.ball-ico{
-  width:clamp(8px,1.1vw,14px);height:clamp(8px,1.1vw,14px);
-  border-radius:50%;flex-shrink:0;
-  background:radial-gradient(circle at 33% 33%,#dd2200,#880000);
-  border:1px solid rgba(255,70,40,0.5);
-  box-shadow:0 0 4px rgba(220,40,0,0.35);
-}
-.bowl-name{font-size:clamp(9px,1.05vw,14px);font-weight:900;color:#fff;text-transform:uppercase;letter-spacing:0.03vw;white-space:nowrap}
-.bowl-fig{font-size:clamp(5px,0.58vw,8px);font-weight:600;color:rgba(190,220,255,0.6);white-space:nowrap}
-
-/* Flex spacer in right-blk to push bowl to right edge properly */
-.right-spacer{flex:1}
-
-/* ── Right logo ── */
-.rt-logo{
-  flex:0 0 var(--side-w);flex-shrink:0;
-  background:linear-gradient(135deg,#003c8a,#001f50);
-  display:flex;align-items:center;justify-content:center;
-  clip-path:polygon(18% 0,100% 0,100% 100%,0 100%);
-  padding-left:0.8vw;
-}
-.rt-logo img{width:clamp(22px,3vw,42px);height:clamp(22px,3vw,42px);object-fit:contain;border-radius:0.3vw}
-
-/* ─── ROW 2 — batters + THIS OVER aligned under bowler ─── */
-.r2{
-  position:relative;z-index:1;
-  flex:1;
-  display:flex;align-items:stretch;
-  border-top:1px solid rgba(135,206,250,0.1);
-}
-
-/* Spacer matching left-logo */
-.r2-left{
-  flex:0 0 var(--side-w);flex-shrink:0;
-  background:linear-gradient(180deg,rgba(0,28,90,0.9),rgba(0,18,65,0.95));
-}
-
-/* Batter area — flex:1, aligns with pill + rr */
-.bat-area{
-  flex:1;
+.over-block{
   display:flex;align-items:center;
-  padding:0 clamp(5px,0.7vw,11px);
-  gap:clamp(4px,0.55vw,10px);
-  background:rgba(0,18,58,0.55);
-  overflow:hidden;
-}
-
-/* Batter cards with strong contrast */
-.bat-card{
-  display:flex;align-items:center;
-  gap:clamp(3px,0.38vw,6px);
-  padding:clamp(2px,0.28vh,5px) clamp(6px,0.85vw,13px);
-  border-radius:clamp(3px,0.38vw,5px);
-  white-space:nowrap;flex-shrink:0;
-}
-.bat-card.striker-card{
-  background:linear-gradient(135deg,rgba(180,140,0,0.38),rgba(255,210,0,0.22));
-  border:1.5px solid rgba(255,205,0,0.65);
-  box-shadow:0 0 10px rgba(255,195,0,0.16);
-}
-.bat-card.nonstriker-card{
-  background:linear-gradient(135deg,rgba(0,55,150,0.52),rgba(0,38,110,0.42));
-  border:1.5px solid rgba(70,150,255,0.42);
-  box-shadow:0 0 8px rgba(25,100,255,0.13);
-}
-.bat-slash-icon{font-size:clamp(8px,0.95vw,13px);color:rgba(255,215,50,0.75);font-weight:700}
-.bat-icon{font-size:clamp(7px,0.8vw,11px);opacity:0.68;flex-shrink:0}
-.bat-n{font-size:clamp(8px,1vw,14px);font-weight:900;text-transform:uppercase;letter-spacing:0.02vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:clamp(50px,9vw,130px)}
-.bat-n.sn{color:#FFE000;text-shadow:0 0 5px rgba(255,220,0,0.45)}
-.bat-n.nn{color:rgba(175,210,255,0.82)}
-.bat-star{font-size:clamp(8px,1vw,14px);color:#FFE000;font-weight:900}
-.bat-r{font-family:'Arial Black',Arial,sans-serif;font-size:clamp(13px,1.55vw,21px);font-weight:900}
-.bat-r.sr{color:#fff}
-.bat-r.nr{color:rgba(175,210,255,0.72)}
-.bat-b{font-size:clamp(6px,0.72vw,10px)}
-.bat-b.sb{color:rgba(255,255,255,0.46)}
-.bat-b.nb{color:rgba(125,165,215,0.46)}
-.bat-divider{color:rgba(135,206,250,0.14);font-size:clamp(13px,1.6vw,22px);padding:0 clamp(1px,0.18vw,4px);align-self:center;flex-shrink:0}
-
-/* THIS OVER section — same fixed width as bowl-blk → sits directly under it */
-.over-section{
-  flex:0 0 var(--bowl-w);flex-shrink:0;
-  display:flex;align-items:center;
-  gap:clamp(4px,0.55vw,9px);
-  padding:0 clamp(7px,1vw,14px);
-  background:rgba(0,20,60,0.62);
-  border-left:1px solid rgba(135,206,250,0.12);
+  gap:clamp(3px,.45vw,8px);
+  min-width:0;
   overflow:hidden;
 }
 .over-lbl{
-  font-size:clamp(5px,0.52vw,7px);
+  font-size:clamp(5px,.55vw,7.5px);
   font-weight:700;
-  color:rgba(190,220,255,0.42);
+  color:rgba(175,210,255,.42);
   text-transform:uppercase;
-  letter-spacing:0.1vw;
+  letter-spacing:.1vw;
   white-space:nowrap;
   flex-shrink:0;
 }
-.over-balls{display:flex;gap:clamp(2px,0.35vw,5px);align-items:center;flex-wrap:nowrap}
-
-/* Spacer matching rt-logo in row 2 */
-.r2-right{
-  flex:0 0 var(--side-w);flex-shrink:0;
-  background:rgba(0,12,42,0.7);
+.over-balls{
+  display:flex;
+  gap:clamp(2px,.32vw,5px);
+  align-items:center;
+  flex-wrap:nowrap;
 }
+
+/* ── Right logo: spans both rows ── */
+.rl{
+  grid-column:4;grid-row:1/3;
+  background:linear-gradient(135deg,#003580,#001e4e);
+  clip-path:polygon(22% 0,100% 0,100% 100%,0 100%);
+  display:flex;align-items:center;justify-content:center;
+  padding-left:clamp(4px,.6vw,8px);
+}
+.rl img{width:clamp(22px,3.2vw,44px);height:clamp(22px,3.2vw,44px);object-fit:contain;border-radius:50%}
 
 /* ── Ball dots ── */
 .oball{
-  width:clamp(12px,1.7vw,22px);height:clamp(12px,1.7vw,22px);
+  width:clamp(12px,1.65vw,22px);
+  height:clamp(12px,1.65vw,22px);
   border-radius:50%;
   display:flex;align-items:center;justify-content:center;
-  font-size:clamp(5px,0.7vw,9.5px);font-weight:900;flex-shrink:0;
-  box-shadow:inset 0 1px 3px rgba(0,0,0,0.28),0 1px 2px rgba(0,0,0,0.18);
+  font-size:clamp(5px,.68vw,9px);
+  font-weight:900;flex-shrink:0;
+  box-shadow:inset 0 1px 3px rgba(0,0,0,.28),0 1px 2px rgba(0,0,0,.18);
 }
-.ob-empty{background:rgba(255,255,255,0.04);border:1.5px solid rgba(135,206,250,0.17)}
-.ob-dot  {background:rgba(85,95,115,0.65);border:1.5px solid rgba(135,145,170,0.36);color:rgba(255,255,255,0.65)}
+.ob-empty{background:rgba(255,255,255,.04);border:1.5px solid rgba(135,206,250,.18)}
+.ob-dot  {background:rgba(85,95,115,.65);border:1.5px solid rgba(135,145,170,.36);color:rgba(255,255,255,.65)}
 .ob-run  {background:#1a5810;border:1.5px solid #3a9828;color:#fff}
 .ob-four {background:#0035aa;border:1.5px solid #4080ff;color:#fff}
 .ob-six  {background:#aa3e00;border:1.5px solid #ff8022;color:#fff}
-.ob-wide {background:rgba(90,70,0,0.78);border:1.5px solid #886600;color:#ffe000;font-size:clamp(4px,0.46vw,6.5px)}
-.ob-nb   {background:rgba(90,70,0,0.78);border:1.5px solid #886600;color:#ffe000;font-size:clamp(4px,0.44vw,6px)}
-.ob-wkt  {background:#990000;border:1.5px solid #ff3322;color:#fff;box-shadow:inset 0 1px 3px rgba(0,0,0,0.3),0 0 5px rgba(255,35,0,0.3)}
+.ob-wide {background:rgba(90,70,0,.78);border:1.5px solid #886600;color:#ffe000;font-size:clamp(4px,.44vw,6px)}
+.ob-nb   {background:rgba(90,70,0,.78);border:1.5px solid #886600;color:#ffe000;font-size:clamp(4px,.43vw,6px)}
+.ob-wkt  {background:#990000;border:1.5px solid #ff3322;color:#fff;box-shadow:inset 0 1px 3px rgba(0,0,0,.3),0 0 5px rgba(255,35,0,.3)}
 
-/* ══════════ PORTRAIT FINE-TUNE ══════════ */
+/* ── Portrait fine-tune ── */
 @media (orientation:portrait){
-  .ov-num  {font-size:clamp(10px,2.2vw,17px) !important}
-  .score-big{font-size:clamp(16px,4.8vw,36px) !important}
-  .rr-num  {font-size:clamp(11px,2.6vw,19px) !important}
-  .bowl-name{font-size:clamp(8px,1.8vw,13px) !important}
-  .bat-r   {font-size:clamp(12px,2.8vw,19px) !important}
-  .bat-n   {font-size:clamp(8px,1.9vw,13px) !important}
-  .oball   {width:clamp(11px,2.8vw,18px) !important;height:clamp(11px,2.8vw,18px) !important}
-  .pill-sep{height:clamp(14px,2vh,26px) !important}
+  .score-big {font-size:clamp(17px,4.8vw,36px)!important}
+  .t-abbr   {font-size:clamp(8px,2.2vw,14px)!important}
+  .ov-num   {font-size:clamp(9px,2vw,15px)!important}
+  .rr-num   {font-size:clamp(12px,2.9vw,21px)!important}
+  .bowl-name{font-size:clamp(8px,1.9vw,13px)!important}
+  .bat-name {font-size:clamp(8px,1.9vw,13px)!important}
+  .bat-runs {font-size:clamp(10px,2.5vw,17px)!important}
+  .oball    {width:clamp(10px,2.7vw,17px)!important;height:clamp(10px,2.7vw,17px)!important}
 }
 </style>
 </head>
@@ -419,7 +427,7 @@ html,body{
 <!-- Watermark -->
 <div id="watermark">
   <img src="https://ppl2026-frontend.onrender.com/icons/icon-192.png" alt="PPL" onerror="this.style.display='none'">
-  <div class="wm-text">
+  <div>
     <div class="wm-tag">Official</div>
     <div class="wm-name">PPL 2026</div>
   </div>
@@ -454,99 +462,75 @@ html,body{
   <div class="alert-ppl">PPL 2026</div>
 </div>
 
-<!-- ═══════════════ SCOREBAR ═══════════════ -->
+<!-- ═══════════════════ SCOREBAR ═══════════════════
+  Grid layout:
+  col1=left-logo  col2=center(pill/bats)  col3=right-panel  col4=right-logo
+  row1=top        row2=bottom
+  Right panel spans row1+row2
+══════════════════════════════════════════════════ -->
 <div id="bar">
 
-  <!-- ── ROW 1: logo | pill | RR | BOWLER | rt-logo ── -->
-  <div class="r1">
+  <!-- Left logo (spans both rows) -->
+  <div class="ll">
+    <img src="https://ppl2026-frontend.onrender.com/icons/icon-192.png" alt="" onerror="this.style.display='none'">
+  </div>
 
-    <div class="left-logo">
-      <img src="https://ppl2026-frontend.onrender.com/icons/icon-192.png" alt="" onerror="this.style.display='none'">
+  <!-- GREEN PILL (row 1 center) -->
+  <div class="pill-wrap">
+    <div class="pill">
+      <span class="t-abbr" id="t-field">FLD</span>
+      <span class="vs-txt">v</span>
+      <span class="t-abbr" id="t-bat">BAT</span>
+      <span class="score-big" id="score">0-0</span>
+      <span class="ov-num" id="overs">0.0</span>
+      <div class="inn-dot" id="inn">1</div>
     </div>
+  </div>
 
-    <!-- PILL: team names ◆ score ◆ overs -->
-    <div class="pill-wrap">
-      <div class="pill">
-        <div class="teams-block">
-          <span class="t-name" id="t-field">FLD</span>
-          <span class="vs-badge">v</span>
-          <span class="t-name" id="t-bat">BAT</span>
-        </div>
-        <div class="pill-sep"></div>
-        <div class="score-block">
-          <span class="score-big" id="score">0-0</span>
-        </div>
-        <div class="pill-sep"></div>
-        <div class="overs-box">
-          <span class="ov-num" id="overs">0.0</span>
-          <span class="ov-lbl">Overs</span>
-        </div>
-        <div class="inn-dot" id="inn">1</div>
+  <!-- BATTER ROW (row 2 center) -->
+  <div class="bat-row">
+    <span class="bat-name sn" id="st-name">STRIKER</span>
+    <span class="bat-star">*</span>
+    <span class="bat-runs sr" id="st-runs">0</span>
+    <span class="bat-balls sb" id="st-balls">0</span>
+    <span class="bat-slash">/</span>
+    <span class="bat-name nn" id="ns-name">NON-STR</span>
+    <span class="bat-runs nr" id="ns-runs">0</span>
+    <span class="bat-balls nb" id="ns-balls">0</span>
+  </div>
+
+  <!-- RIGHT PANEL (spans both rows) -->
+  <div class="right-panel">
+
+    <!-- Top: RUN-RATE label | bowler name | figures -->
+    <div class="rp-top">
+      <span class="rr-lbl" id="rr-lbl">RUN-RATE</span>
+      <div class="rp-divider"></div>
+      <div class="bowl-info">
+        <div class="ball-ico"></div>
+        <span class="bowl-name" id="bowl-name">BOWLER</span>
+      </div>
+      <div class="bowl-figs">
+        <span class="bowl-wk" id="bowl-wk">0-0</span>
+        <span class="bowl-ov" id="bowl-ov">0.0</span>
       </div>
     </div>
 
-    <!-- RIGHT: run rate | bowler -->
-    <div class="right-blk">
-      <div class="right-spacer"></div>
-
-      <!-- RUN RATE — yellow-tinted, spaced, distinct -->
-      <div class="rr-blk">
-        <span class="rr-lbl" id="rr-lbl">RUN RATE</span>
-        <span class="rr-num" id="rr-num">0.00</span>
-      </div>
-
-      <!-- BOWLER — fixed width matching over-section below -->
-      <div class="bowl-blk">
-        <div class="bowl-row">
-          <div class="ball-ico"></div>
-          <span class="bowl-name" id="bowl-name">BOWLER</span>
-        </div>
-        <span class="bowl-fig" id="bowl-fig">0.0 · 0R · 0W</span>
-      </div>
-
-    </div><!-- /.right-blk -->
-
-    <div class="rt-logo">
-      <img src="https://ppl2026-frontend.onrender.com/icons/icon-192.png" alt="" onerror="this.style.display='none'">
-    </div>
-
-  </div><!-- /.r1 -->
-
-  <!-- ── ROW 2: r2-left | batters | THIS OVER (under bowler) | r2-right ── -->
-  <div class="r2">
-
-    <div class="r2-left"></div>
-
-    <!-- BATTERS -->
-    <div class="bat-area">
-      <div class="bat-card striker-card">
-        <span class="bat-slash-icon">/</span>
-        <span class="bat-icon">🏏</span>
-        <span class="bat-n sn" id="st-name">STRIKER</span>
-        <span class="bat-star">*</span>
-        <span class="bat-r sr" id="st-runs">0</span>
-        <span class="bat-b sb" id="st-balls">(0)</span>
-      </div>
-
-      <span class="bat-divider">|</span>
-
-      <div class="bat-card nonstriker-card">
-        <span class="bat-icon">🏏</span>
-        <span class="bat-n nn" id="ns-name">NON-STR</span>
-        <span class="bat-r nr" id="ns-runs">0</span>
-        <span class="bat-b nb" id="ns-balls">(0)</span>
+    <!-- Bottom: run rate number | THIS OVER | balls -->
+    <div class="rp-bot">
+      <span class="rr-num" id="rr-num">0.00</span>
+      <div class="over-block">
+        <span class="over-lbl">THIS OVER</span>
+        <div class="over-balls" id="over-balls"></div>
       </div>
     </div>
 
-    <!-- THIS OVER — same width as bowl-blk → visually under bowler -->
-    <div class="over-section">
-      <span class="over-lbl">THIS OVER</span>
-      <div class="over-balls" id="over-balls"></div>
-    </div>
+  </div><!-- /.right-panel -->
 
-    <div class="r2-right"></div>
-
-  </div><!-- /.r2 -->
+  <!-- Right logo (spans both rows) -->
+  <div class="rl">
+    <img src="https://ppl2026-frontend.onrender.com/icons/icon-192.png" alt="" onerror="this.style.display='none'">
+  </div>
 
 </div><!-- /#bar -->
 
@@ -554,13 +538,22 @@ html,body{
 const API='https://ppl2026-backend.onrender.com/api/live';
 let prevLast=null,alertTimer=null,lastMatchId=null;
 
-function firstName(n){if(!n)return'—';return n.trim().split(/\s+/)[0].toUpperCase()}
-function fullName(n){if(!n)return'???';return n.trim().toUpperCase()}
+/* Abbreviation: first letter of each word (max 3 chars) */
+function abbr(n){
+  if(!n)return'???';
+  const w=n.trim().split(/\s+/);
+  if(w.length>=2) return w.map(x=>x[0]).join('').toUpperCase().slice(0,3);
+  return n.trim().toUpperCase().slice(0,3);
+}
+function firstName(n){
+  if(!n)return'—';
+  return n.trim().split(/\s+/)[0].toUpperCase();
+}
 
 function ballCls(b){
-  if(b==='W')return'ob-wkt';
-  if(b==='6')return'ob-six';
-  if(b==='4')return'ob-four';
+  if(b==='W') return'ob-wkt';
+  if(b==='6') return'ob-six';
+  if(b==='4') return'ob-four';
   if(b==='Wd')return'ob-wide';
   if(b==='NB')return'ob-nb';
   if(b==='•'||b==='0')return'ob-dot';
@@ -585,57 +578,66 @@ async function update(){
     const json=await res.json();
     const d=json.data??json;
 
+    const bar=document.getElementById('bar');
     if(!d||!d.matchId){
-      document.getElementById('bar').style.display='none';
+      bar.style.display='none';
       document.getElementById('no-live').style.display='flex';
       lastMatchId=null;prevLast=null;return;
     }
-    document.getElementById('bar').style.display='flex';
+    bar.style.display='grid';   /* ← CSS Grid, not flex */
     document.getElementById('no-live').style.display='none';
     if(d.matchId!==lastMatchId){lastMatchId=d.matchId;prevLast=null}
 
     const batting =d.innings===2?d.bowlingFirst:d.battingFirst;
     const fielding=d.innings===2?d.battingFirst:d.bowlingFirst;
-    document.getElementById('t-bat').textContent=fullName(batting);
-    document.getElementById('t-field').textContent=fullName(fielding);
+
+    /* Team abbreviations in pill (like PSL: PZ, RP) */
+    document.getElementById('t-bat').textContent=abbr(batting);
+    document.getElementById('t-field').textContent=abbr(fielding);
+
     document.getElementById('score').textContent=`${d.runs}-${d.wickets}`;
     document.getElementById('inn').textContent=d.innings===2?'2':'1';
 
     const ov=Math.floor(d.balls/6),bl=d.balls%6;
     document.getElementById('overs').textContent=`${ov}.${bl}`;
 
+    /* Run rate */
     const crr=d.balls>0?(d.runs/(d.balls/6)).toFixed(2):'0.00';
     if(d.innings===2&&d.target){
       const needed=d.target-d.runs;
       const remB=Math.max(0,(10-ov)*6-bl);
       const rrr=remB>0?(needed/(remB/6)).toFixed(2):'—';
-      document.getElementById('rr-lbl').textContent='REQUIRED';
+      document.getElementById('rr-lbl').textContent='REQ RATE';
       document.getElementById('rr-num').textContent=rrr;
     }else{
-      document.getElementById('rr-lbl').textContent='RUN RATE';
+      document.getElementById('rr-lbl').textContent='RUN-RATE';
       document.getElementById('rr-num').textContent=crr;
     }
 
+    /* Bowler */
     const b=d.currentBowler;
     if(b&&b.name){
       const bov=Math.floor((b.ballsBowled||0)/6),bbl=(b.ballsBowled||0)%6;
       document.getElementById('bowl-name').textContent=firstName(b.name);
-      document.getElementById('bowl-fig').textContent=`${bov}.${bbl} · ${b.runsConceded||0}R · ${b.wickets||0}W`;
+      document.getElementById('bowl-wk').textContent=`${b.runsConceded||0}-${b.wickets||0}`;
+      document.getElementById('bowl-ov').textContent=`${bov}.${bbl}`;
     }
 
+    /* Batters */
     const st=d.striker;
     if(st&&st.name){
-      document.getElementById('st-name').textContent=st.name.toUpperCase();
+      document.getElementById('st-name').textContent=firstName(st.name);
       document.getElementById('st-runs').textContent=st.runs||0;
-      document.getElementById('st-balls').textContent=`(${st.balls||0})`;
+      document.getElementById('st-balls').textContent=st.balls||0;
     }
     const ns=d.nonstriker;
     if(ns&&ns.name){
-      document.getElementById('ns-name').textContent=ns.name.toUpperCase();
+      document.getElementById('ns-name').textContent=firstName(ns.name);
       document.getElementById('ns-runs').textContent=ns.runs||0;
-      document.getElementById('ns-balls').textContent=`(${ns.balls||0})`;
+      document.getElementById('ns-balls').textContent=ns.balls||0;
     }
 
+    /* Over balls */
     const allBalls=d.lastBalls||[];
     const curBalls=allBalls.slice(ov*6);
     const ballsDiv=document.getElementById('over-balls');
@@ -652,6 +654,7 @@ async function update(){
       ballsDiv.appendChild(div);
     }
 
+    /* Alerts */
     const latest=allBalls[allBalls.length-1];
     if(latest!==prevLast&&prevLast!==null){
       const stLine=st?.name?`${st.name}  ${st.runs}(${st.balls})`:'';
@@ -660,7 +663,7 @@ async function update(){
       else if(latest==='W')showAlert('alert-wicket',stLine);
     }
     prevLast=latest;
-  }catch(e){console.error('[PPL Overlay]',e)}
+  }catch(e){console.error('[PPL]',e)}
 }
 update();
 setInterval(update,1000);
