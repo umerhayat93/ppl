@@ -227,7 +227,6 @@ html,body{
   flex:0 0 auto;
   display:flex;flex-direction:column;
   justify-content:center;align-items:flex-start;
-  padding:0 clamp(6px,1vw,14px);
   border-left:none;
   background:transparent;
   min-width:0;
@@ -251,7 +250,7 @@ html,body{
   overflow:hidden;
 }
 .over-lbl{font-size:clamp(5px,0.6vw,8px);font-weight:700;color:rgba(200,230,255,0.5);text-transform:uppercase;letter-spacing:0.12vw;white-space:nowrap}
-.over-balls{display:flex;gap:clamp(2px,0.38vw,6px);align-items:center}
+.over-balls{display:flex;gap:clamp(2px,0.4vw,6px);align-items:center}
 
 /* Right logo */
 .rt-logo{flex:0 0 clamp(44px,5.8vw,76px);background:linear-gradient(135deg,#003c8a,#001f50);display:flex;align-items:center;justify-content:center;clip-path:polygon(15% 0,100% 0,100% 100%,0 100%);padding-left:1vw}
@@ -393,11 +392,17 @@ html,body{
       </div>
     </div>
 
-    <!-- RIGHT: RR | bowler | spell | THIS OVER (fills rest) -->
+    <!-- RIGHT: RR | THIS OVER | BOWLER -->
     <div class="right-blk">
       <div class="rr-blk">
         <span class="rr-lbl" id="rr-lbl">RUN-RATE</span>
         <span class="rr-num" id="rr-num">0.00</span>
+      </div>
+
+      <!-- THIS OVER fills remaining space in top row -->
+      <div class="over-blk">
+        <span class="over-lbl">THIS OVER</span>
+        <div class="over-balls" id="over-balls"></div>
       </div>
 
       <div class="bowl-blk">
@@ -406,12 +411,6 @@ html,body{
           <span class="bowl-name" id="bowl-name">BOWLER</span>
         </div>
         <span class="bowl-fig" id="bowl-fig">0.0 · 0R · 0W</span>
-      </div>
-
-      <!-- THIS OVER fills remaining space in top row -->
-      <div class="over-blk">
-        <span class="over-lbl">THIS OVER</span>
-        <div class="over-balls" id="over-balls"></div>
       </div>
     </div><!-- /.right-blk -->
 
