@@ -143,13 +143,28 @@ html,body{
 ══════════════════════════════════════════ */
 #bar{
   position:fixed;bottom:0;left:0;right:0;
-  height:clamp(70px,12.5vh,100px);
+  /* Professional height: 10-11% of viewport in landscape, max 96px */
+  height:clamp(64px,10.5vh,96px);
   display:none;flex-direction:column;
 }
+/* Portrait: slightly taller since screen is tall */
+@media (orientation:portrait){
+  #bar{ height:clamp(56px,8.5vh,80px); }
+  .pill{ margin-top:clamp(-10px,-1.5vh,-4px) !important; }
+  .score-big{ font-size:clamp(16px,5vw,36px) !important; }
+  .teams-txt{ font-size:clamp(9px,2.5vw,15px) !important; }
+  .ov-num{ font-size:clamp(10px,2vw,16px) !important; }
+  .rr-num{ font-size:clamp(10px,2.2vw,16px) !important; }
+  .bowl-name{ font-size:clamp(8px,1.6vw,13px) !important; }
+  .bat-n{ font-size:clamp(8px,1.8vw,13px) !important; }
+  .bat-r{ font-size:clamp(11px,2.4vw,17px) !important; }
+  .over-lbl{ font-size:clamp(5px,1vw,8px) !important; }
+  .oball{ width:clamp(13px,3.2vw,22px) !important; height:clamp(13px,3.2vw,22px) !important; }
+}
 
-/* ─── ROW 1: LOGO | PILL | RR | BOWLER | SPELL | RIGHT-LOGO ─── */
+/* ─── ROW 1: LOGO | PILL | RR | THIS OVER | BOWLER | RIGHT-LOGO ─── */
 .r1{
-  flex:0 0 52%;
+  flex:0 0 55%;
   display:flex;align-items:stretch;
   position:relative;overflow:visible;
 }
@@ -173,7 +188,7 @@ html,body{
   border:1.5px solid rgba(0,0,0,0.1);
   border-bottom:none;
   display:flex;align-items:center;
-  padding:clamp(4px,0.7vh,9px) clamp(8px,1.1vw,16px) clamp(3px,0.5vh,7px);
+  padding:clamp(3px,0.55vh,8px) clamp(7px,1vw,14px) clamp(2px,0.4vh,6px);
   gap:clamp(4px,0.7vw,12px);
   box-shadow:0 -4px 18px rgba(0,0,0,0.32),0 -1px 6px rgba(150,230,0,0.25),inset 0 1px 0 rgba(255,255,255,0.3);
 }
@@ -190,9 +205,10 @@ html,body{
   flex:1;
   background:linear-gradient(90deg,rgba(0,35,95,0.96),rgba(0,20,65,0.97));
   display:flex;
-  align-items:center; /* key: everything vertically centered */
+  align-items:center;
   overflow:hidden;
-  padding:0 0.3vw;
+  padding:0 0.15vw;
+  gap:clamp(2px,0.3vw,5px);
 }
 
 /* RR — compact */
@@ -200,11 +216,11 @@ html,body{
   flex:0 0 auto;
   display:flex;flex-direction:column;
   justify-content:center;align-items:flex-start;
-  padding:0 clamp(6px,1vw,14px);
+  padding:0 clamp(5px,0.85vw,12px);
   border-left:1px solid rgba(135,206,250,0.12);
 }
 .rr-lbl{font-size:clamp(5px,0.6vw,8px);font-weight:700;color:rgba(200,230,255,0.6);text-transform:uppercase;letter-spacing:0.12vw;white-space:nowrap;line-height:1}
-.rr-num{font-size:clamp(13px,1.85vw,24px);font-weight:900;color:#FFD700;line-height:1;font-family:'Arial Black',Arial,sans-serif;text-shadow:0 0 10px rgba(255,215,0,0.35)}
+.rr-num{font-size:clamp(11px,1.5vw,18px);font-weight:900;color:#FFD700;line-height:1;font-family:'Arial Black',Arial,sans-serif;text-shadow:0 0 8px rgba(255,215,0,0.3)}
 
 /* BOWLER — compact, no flex:1 */
 .bowl-blk{
@@ -212,33 +228,26 @@ html,body{
   display:flex;flex-direction:column;
   justify-content:center;align-items:flex-start;
   padding:0 clamp(6px,1vw,14px);
-  border-left:1px solid rgba(135,206,250,0.1);
-  background:rgba(255,255,255,0.025);
+  border-left:none;
+  background:transparent;
   min-width:0;
+  padding:0 clamp(4px,0.6vw,8px);
 }
 .bowl-row{display:flex;align-items:center;gap:clamp(3px,0.4vw,7px)}
 .ball-ico{width:clamp(9px,1.2vw,15px);height:clamp(9px,1.2vw,15px);border-radius:50%;flex-shrink:0;background:radial-gradient(circle at 33% 33%,#dd2200,#880000);border:1px solid rgba(255,70,40,0.55);box-shadow:0 0 5px rgba(220,40,0,0.35)}
-.bowl-name{font-size:clamp(10px,1.28vw,17px);font-weight:900;color:#fff;text-transform:uppercase;letter-spacing:0.03vw;white-space:nowrap}
-.bowl-fig{font-size:clamp(6px,0.75vw,11px);font-weight:600;color:rgba(200,230,255,0.65);margin-top:0.15vw;white-space:nowrap}
+.bowl-name{font-size:clamp(9px,1vw,14px);font-weight:900;color:#fff;text-transform:uppercase;letter-spacing:0.03vw;white-space:nowrap;opacity:0.9}
+.bowl-fig{font-size:clamp(5px,0.6vw,9px);font-weight:600;color:rgba(200,230,255,0.65);margin-top:0.12vw;white-space:nowrap;opacity:0.6}
 
-/* SPELL — compact */
-.spell-blk{
-  flex:0 0 auto;
-  display:flex;flex-direction:column;
-  justify-content:center;align-items:center;
-  padding:0 clamp(5px,0.85vw,12px);
-  border-left:1px solid rgba(135,206,250,0.1);
-}
-.spell-fig{font-size:clamp(12px,1.6vw,20px);font-weight:900;color:#fff;line-height:1;white-space:nowrap}
-.spell-ov{font-size:clamp(6px,0.65vw,9px);color:rgba(200,230,255,0.5);margin-top:0.08vw;white-space:nowrap}
+
+
 
 /* THIS OVER — in top row, fills remaining space */
 .over-blk{
-  flex:1;  /* fills all remaining space to right */
+  flex:1.5;  /* dominant - takes most space */
   display:flex;align-items:center;
-  padding:0 clamp(6px,0.9vw,13px);
+  padding:0 clamp(5px,0.75vw,11px);
   border-left:1px solid rgba(135,206,250,0.1);
-  gap:clamp(3px,0.55vw,9px);
+  gap:clamp(4px,0.6vw,10px);
   overflow:hidden;
 }
 .over-lbl{font-size:clamp(5px,0.6vw,8px);font-weight:700;color:rgba(200,230,255,0.5);text-transform:uppercase;letter-spacing:0.12vw;white-space:nowrap}
@@ -399,11 +408,6 @@ html,body{
         <span class="bowl-fig" id="bowl-fig">0.0 · 0R · 0W</span>
       </div>
 
-      <div class="spell-blk">
-        <span class="spell-fig" id="spell-fig">0-0</span>
-        <span class="spell-ov" id="spell-ov">0.0</span>
-      </div>
-
       <!-- THIS OVER fills remaining space in top row -->
       <div class="over-blk">
         <span class="over-lbl">THIS OVER</span>
@@ -516,8 +520,6 @@ async function update(){
       const bov=Math.floor((b.ballsBowled||0)/6),bbl=(b.ballsBowled||0)%6;
       document.getElementById('bowl-name').textContent=firstName(b.name);
       document.getElementById('bowl-fig').textContent=`${bov}.${bbl} · ${b.runsConceded||0}R · ${b.wickets||0}W`;
-      document.getElementById('spell-fig').textContent=`${b.runsConceded||0}-${b.wickets||0}`;
-      document.getElementById('spell-ov').textContent=`${bov}.${bbl}`;
     }
 
     const st=d.striker;
