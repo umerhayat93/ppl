@@ -48,7 +48,7 @@ html,body{
 @keyframes sP{0%,100%{box-shadow:0 2px 14px rgba(0,100,255,.2)}50%{box-shadow:0 2px 22px rgba(0,160,255,.4)}}
 .sponsor-box::after{content:'';position:absolute;top:0;left:-60%;width:35%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.07),transparent);animation:sh 4.5s ease-in-out infinite}
 @keyframes sh{0%{left:-60%}100%{left:140%}}
-.sname{font-family:'Arial Black',Arial,sans-serif;font-size:clamp(8px,1.1vw,14px);font-weight:900;color:#87CEFA;letter-spacing:.1vw;text-transform:uppercase;position:relative;z-index:1}
+.sname{font-family:'Arial Black',Arial,sans-serif;font-size:clamp(8px,1.1vw,14px);font-weight:900;color:#fff;letter-spacing:.1vw;text-transform:uppercase;position:relative;z-index:1;text-shadow:0 1px 4px rgba(0,0,0,.5)}
 .stag{font-size:clamp(5px,.5vw,7px);color:rgba(200,230,255,.55);letter-spacing:.18vw;text-transform:uppercase;margin-top:.08vh;position:relative;z-index:1}
 
 /* ════════════════════
@@ -144,10 +144,11 @@ html,body{
   border-radius:clamp(4px,.6vw,10px) clamp(4px,.6vw,10px) 0 0;
   border:1.5px solid rgba(0,0,0,.1);
   border-bottom:none;
-  width:100%;
+  /* FIT content — do NOT stretch to full column width */
+  width:auto;
   display:flex;align-items:center;
-  padding:clamp(3px,.5vh,8px) clamp(8px,1.1vw,16px) clamp(2px,.35vh,6px);
-  gap:clamp(5px,.8vw,14px);
+  padding:clamp(3px,.5vh,8px) clamp(10px,1.3vw,18px) clamp(2px,.35vh,6px);
+  gap:clamp(6px,.95vw,16px);
   box-shadow:0 -4px 18px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.35);
 }
 
@@ -208,15 +209,36 @@ html,body{
 /* ── Batter row — col 2 row 2 ── */
 .bat-row{
   grid-column:2;grid-row:2;
-  background:linear-gradient(90deg,rgba(0,18,60,.98),rgba(0,12,45,.99));
+  background:linear-gradient(90deg,rgba(0,16,52,.99),rgba(0,10,40,1));
   display:flex;align-items:center;
-  padding:0 clamp(6px,.9vw,14px);
-  gap:clamp(4px,.55vw,9px);
-  border-top:1px solid rgba(135,206,250,.1);
+  padding:0 clamp(5px,.7vw,10px);
+  gap:clamp(4px,.55vw,8px);
+  border-top:1px solid rgba(135,206,250,.12);
   overflow:hidden;
 }
+
+/* Batter cards — distinct coloured blocks */
+.bat-card{
+  display:flex;align-items:center;
+  gap:clamp(3px,.38vw,6px);
+  padding:clamp(2px,.28vh,4px) clamp(5px,.75vw,11px);
+  border-radius:clamp(3px,.38vw,5px);
+  white-space:nowrap;
+  flex-shrink:0;
+}
+.bat-card.striker-card{
+  background:linear-gradient(135deg,rgba(180,140,0,.3),rgba(255,200,0,.16));
+  border:1.5px solid rgba(255,205,0,.55);
+  box-shadow:0 0 8px rgba(255,190,0,.14);
+}
+.bat-card.nonstriker-card{
+  background:linear-gradient(135deg,rgba(0,50,150,.48),rgba(0,35,110,.36));
+  border:1.5px solid rgba(65,145,255,.4);
+  box-shadow:0 0 7px rgba(30,100,255,.12);
+}
+
 .bat-name{
-  font-size:clamp(9px,1.1vw,15px);
+  font-size:clamp(8px,1.05vw,14px);
   font-weight:900;
   text-transform:uppercase;
   white-space:nowrap;
@@ -224,28 +246,28 @@ html,body{
   line-height:1;
 }
 .bat-name.sn{color:#FFE620}
-.bat-name.nn{color:rgba(210,230,255,.88)}
+.bat-name.nn{color:rgba(200,225,255,.88)}
 .bat-runs{
   font-family:'Arial Black',Arial,sans-serif;
-  font-size:clamp(12px,1.5vw,20px);
+  font-size:clamp(12px,1.48vw,20px);
   font-weight:900;
   line-height:1;
   white-space:nowrap;
 }
 .bat-runs.sr{color:#fff}
-.bat-runs.nr{color:rgba(190,215,255,.75)}
+.bat-runs.nr{color:rgba(185,215,255,.75)}
 .bat-balls{
-  font-size:clamp(7px,.82vw,11px);
+  font-size:clamp(6px,.78vw,10px);
   line-height:1;
   white-space:nowrap;
 }
 .bat-balls.sb{color:rgba(200,220,255,.45)}
-.bat-balls.nb{color:rgba(160,190,240,.38)}
+.bat-balls.nb{color:rgba(155,185,240,.4)}
 .bat-slash{
-  font-size:clamp(13px,1.65vw,22px);
-  color:rgba(135,206,250,.25);
+  font-size:clamp(14px,1.7vw,24px);
+  color:rgba(135,206,250,.22);
   font-weight:300;
-  padding:0 clamp(1px,.18vw,3px);
+  padding:0 clamp(1px,.15vw,3px);
   flex-shrink:0;
 }
 .bat-star{
@@ -336,19 +358,37 @@ html,body{
 .rp-bot{
   flex:1;
   display:flex;align-items:center;
-  padding:0 clamp(6px,.9vw,13px);
-  gap:clamp(6px,.9vw,13px);
+  padding:0 clamp(4px,.6vw,9px);
+  gap:clamp(5px,.8vw,11px);
   overflow:hidden;
+}
+/* Run rate — own tinted block for clear separation */
+.rr-box{
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  background:rgba(255,200,0,.1);
+  border:1px solid rgba(255,215,0,.35);
+  border-radius:clamp(3px,.35vw,5px);
+  padding:clamp(1px,.18vh,3px) clamp(5px,.75vw,10px);
+  flex-shrink:0;
+  gap:0;
 }
 .rr-num{
   font-family:'Arial Black',Arial,sans-serif;
-  font-size:clamp(14px,1.9vw,26px);
+  font-size:clamp(13px,1.8vw,24px);
   font-weight:900;
   color:#FFD700;
   line-height:1;
   white-space:nowrap;
-  text-shadow:0 0 12px rgba(255,215,0,.5);
-  flex-shrink:0;
+  text-shadow:0 0 10px rgba(255,215,0,.45);
+}
+.rr-box-lbl{
+  font-size:clamp(4px,.45vw,6.5px);
+  color:rgba(255,220,80,.6);
+  text-transform:uppercase;
+  letter-spacing:.1vw;
+  line-height:1;
+  white-space:nowrap;
 }
 .over-block{
   display:flex;align-items:center;
@@ -403,14 +443,16 @@ html,body{
 
 /* ── Portrait fine-tune ── */
 @media (orientation:portrait){
-  .score-big {font-size:clamp(17px,4.8vw,36px)!important}
-  .t-abbr   {font-size:clamp(8px,2.2vw,14px)!important}
-  .ov-num   {font-size:clamp(9px,2vw,15px)!important}
-  .rr-num   {font-size:clamp(12px,2.9vw,21px)!important}
-  .bowl-name{font-size:clamp(8px,1.9vw,13px)!important}
-  .bat-name {font-size:clamp(8px,1.9vw,13px)!important}
-  .bat-runs {font-size:clamp(10px,2.5vw,17px)!important}
-  .oball    {width:clamp(10px,2.7vw,17px)!important;height:clamp(10px,2.7vw,17px)!important}
+  .score-big  {font-size:clamp(17px,4.8vw,36px)!important}
+  .t-abbr     {font-size:clamp(8px,2.2vw,14px)!important}
+  .ov-num     {font-size:clamp(9px,2vw,15px)!important}
+  .rr-num     {font-size:clamp(12px,2.9vw,21px)!important}
+  .bowl-name  {font-size:clamp(8px,1.9vw,13px)!important}
+  .bat-name   {font-size:clamp(7px,1.8vw,12px)!important}
+  .bat-runs   {font-size:clamp(10px,2.4vw,16px)!important}
+  .bat-balls  {font-size:clamp(6px,1.5vw,10px)!important}
+  .oball      {width:clamp(10px,2.7vw,17px)!important;height:clamp(10px,2.7vw,17px)!important}
+  .bat-card   {padding:clamp(2px,.3vh,4px) clamp(4px,1.5vw,8px)!important}
 }
 </style>
 </head>
@@ -489,14 +531,20 @@ html,body{
 
   <!-- BATTER ROW (row 2 center) -->
   <div class="bat-row">
-    <span class="bat-name sn" id="st-name">STRIKER</span>
-    <span class="bat-star">*</span>
-    <span class="bat-runs sr" id="st-runs">0</span>
-    <span class="bat-balls sb" id="st-balls">0</span>
+    <!-- Striker — gold card -->
+    <div class="bat-card striker-card">
+      <span class="bat-name sn" id="st-name">STRIKER</span>
+      <span class="bat-star">*</span>
+      <span class="bat-runs sr" id="st-runs">0</span>
+      <span class="bat-balls sb" id="st-balls">0</span>
+    </div>
     <span class="bat-slash">/</span>
-    <span class="bat-name nn" id="ns-name">NON-STR</span>
-    <span class="bat-runs nr" id="ns-runs">0</span>
-    <span class="bat-balls nb" id="ns-balls">0</span>
+    <!-- Non-striker — blue card -->
+    <div class="bat-card nonstriker-card">
+      <span class="bat-name nn" id="ns-name">NON-STR</span>
+      <span class="bat-runs nr" id="ns-runs">0</span>
+      <span class="bat-balls nb" id="ns-balls">0</span>
+    </div>
   </div>
 
   <!-- RIGHT PANEL (spans both rows) -->
@@ -516,9 +564,11 @@ html,body{
       </div>
     </div>
 
-    <!-- Bottom: run rate number | THIS OVER | balls -->
+    <!-- Bottom: run rate block | THIS OVER | balls -->
     <div class="rp-bot">
-      <span class="rr-num" id="rr-num">0.00</span>
+      <div class="rr-box">
+        <span class="rr-num" id="rr-num">0.00</span>
+      </div>
       <div class="over-block">
         <span class="over-lbl">THIS OVER</span>
         <div class="over-balls" id="over-balls"></div>
