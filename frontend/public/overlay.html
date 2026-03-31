@@ -92,6 +92,7 @@ html, body {
   position: fixed; bottom: 0; left: 0; right: 0;
   height: clamp(64px, 10.5vh, 96px);
   display: none; flex-direction: column;
+  overflow: visible;
 }
 
 /* Portrait */
@@ -126,7 +127,14 @@ html, body {
 .left-logo img { width: clamp(26px,3.4vw,46px); height: clamp(26px,3.4vw,46px); object-fit: contain; border-radius: 0.35vw; }
 
 /* GREEN SCORE PILL — bulges upward */
-.pill-wrap { flex: 0 0 auto; display: flex; align-items: flex-end; z-index: 10; position: relative; }
+.pill-wrap {
+  flex: 0 0 auto;
+  display: flex; align-items: flex-end;
+  z-index: 10; position: relative;
+  /* Cap width so pill never overflows */
+  max-width: clamp(240px, 36vw, 480px);
+  min-width: 0;
+}
 .pill {
   margin-top: clamp(-18px,-2.8vh,-8px);
   background: linear-gradient(175deg, #c4f000 0%, #aad800 100%);
@@ -136,24 +144,30 @@ html, body {
   padding: clamp(3px,0.55vh,8px) clamp(7px,1vw,14px) clamp(2px,0.4vh,6px);
   gap: clamp(4px,0.7vw,12px);
   box-shadow: 0 -4px 18px rgba(0,0,0,0.32), 0 -1px 6px rgba(150,230,0,0.25), inset 0 1px 0 rgba(255,255,255,0.3);
+  width: 100%;
 }
 .teams-txt {
   font-size: clamp(8px,1.05vw,14px); font-weight: 900; color: #1a1a00;
   letter-spacing: 0.02vw; text-transform: uppercase;
   white-space: nowrap; line-height: 1;
-  max-width: clamp(90px,16vw,220px); overflow: hidden; text-overflow: ellipsis;
+  /* Constrain so it never pushes out of the overlay */
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden; text-overflow: ellipsis;
 }
 .teams-txt .vs { color: #4a5c00; font-weight: 400; font-size: 0.78em; margin: 0 0.2vw; }
 .score-big {
   font-family: 'Arial Black', Arial, sans-serif;
   font-size: clamp(18px,3.5vw,48px); font-weight: 900; color: #000;
   letter-spacing: -0.04vw; line-height: 1; white-space: nowrap;
+  flex-shrink: 0;
 }
 .overs-box {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 0; line-height: 1;
   border-left: 1.5px solid rgba(0,0,0,0.16);
   padding-left: clamp(5px,0.7vw,11px);
+  flex-shrink: 0;
 }
 .ov-num { font-size: clamp(11px,1.5vw,20px); font-weight: 900; color: #1a1a00; line-height: 1; }
 .ov-lbl { font-size: clamp(4px,0.48vw,7px); color: #3a4a00; text-transform: uppercase; letter-spacing: 0.08vw; }
@@ -164,21 +178,24 @@ html, body {
   font-size: clamp(6px,0.78vw,11px); font-weight: 900; color: #fff; flex-shrink: 0;
 }
 
-/* RIGHT section of row 1: RR pill | BOWLER pill | rt-logo */
+/* RIGHT section of row 1: RR pill | BOWLER pill | rt-logo
+   Uses space-between so all three elements are spread evenly */
 .right-blk {
   flex: 1;
   background: linear-gradient(90deg, rgba(0,35,95,0.96), rgba(0,20,65,0.97));
   display: flex; align-items: center;
+  justify-content: space-between;
   overflow: hidden;
-  padding: 0 clamp(5px,0.7vw,10px);
+  padding: 0 0 0 clamp(6px,0.8vw,14px);
   gap: clamp(4px,0.55vw,9px);
+  min-width: 0;
 }
 
 /* ── RR PILL — orange bordered ── */
 .rr-pill {
   display: flex; flex-direction: column;
   justify-content: center; align-items: center;
-  padding: clamp(2px,0.4vh,5px) clamp(7px,1vw,14px);
+  padding: clamp(2px,0.4vh,5px) clamp(10px,1.3vw,18px);
   border-radius: clamp(3px,0.45vw,7px);
   background: linear-gradient(135deg, rgba(180,60,0,0.55), rgba(120,30,0,0.65));
   border: 1.5px solid rgba(255,120,30,0.7);
@@ -188,21 +205,22 @@ html, body {
 .rr-lbl { font-size: clamp(5px,0.58vw,8px); font-weight: 700; color: rgba(255,200,150,0.8); text-transform: uppercase; letter-spacing: 0.1vw; line-height: 1; }
 .rr-num { font-size: clamp(11px,1.5vw,19px); font-weight: 900; color: #FFD700; line-height: 1; font-family: 'Arial Black', Arial, sans-serif; text-shadow: 0 0 8px rgba(255,215,0,0.4); }
 
-/* ── BOWLER PILL — blue/purple bordered ── */
+/* ── BOWLER PILL — blue/purple bordered, slightly larger, pushed to right edge ── */
 .bowl-pill {
   display: flex; flex-direction: column;
   justify-content: center; align-items: flex-start;
-  padding: clamp(2px,0.4vh,5px) clamp(7px,1vw,14px);
+  /* Slightly larger padding than before */
+  padding: clamp(3px,0.55vh,7px) clamp(10px,1.3vw,18px);
   border-radius: clamp(3px,0.45vw,7px);
-  background: linear-gradient(135deg, rgba(40,0,120,0.55), rgba(20,0,80,0.65));
-  border: 1.5px solid rgba(140,80,255,0.65);
-  box-shadow: 0 0 10px rgba(120,60,255,0.2), inset 0 1px 0 rgba(180,140,255,0.1);
+  background: linear-gradient(135deg, rgba(40,0,120,0.6), rgba(20,0,80,0.7));
+  border: 1.5px solid rgba(140,80,255,0.75);
+  box-shadow: 0 0 12px rgba(120,60,255,0.25), inset 0 1px 0 rgba(180,140,255,0.15);
   flex-shrink: 0; white-space: nowrap; min-width: 0;
 }
 .bowl-row { display: flex; align-items: center; gap: clamp(3px,0.4vw,7px); }
 /* White cricket ball icon */
 .ball-ico {
-  width: clamp(9px,1.1vw,14px); height: clamp(9px,1.1vw,14px);
+  width: clamp(10px,1.2vw,16px); height: clamp(10px,1.2vw,16px);
   border-radius: 50%; flex-shrink: 0;
   background: radial-gradient(circle at 35% 35%, #ffffff 0%, #cccccc 100%);
   border: 1px solid rgba(200,200,200,0.6);
@@ -216,16 +234,19 @@ html, body {
   border-radius: 50%;
   background: linear-gradient(135deg, transparent 40%, rgba(200,0,0,0.35) 40%, rgba(200,0,0,0.35) 45%, transparent 45%);
 }
-.bowl-name { font-size: clamp(9px,1vw,14px); font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 0.03vw; white-space: nowrap; opacity: 0.95; }
-.bowl-fig  { font-size: clamp(5px,0.58vw,8px); font-weight: 600; color: rgba(200,180,255,0.7); margin-top: 0.1vw; white-space: nowrap; }
+/* Slightly larger text for bowler name */
+.bowl-name { font-size: clamp(10px,1.15vw,16px); font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 0.03vw; white-space: nowrap; opacity: 0.95; }
+.bowl-fig  { font-size: clamp(5px,0.6vw,9px); font-weight: 600; color: rgba(200,180,255,0.75); margin-top: 0.15vw; white-space: nowrap; }
 
-/* Right team logo */
+/* Right team logo — flush right edge, no margin-left: auto (space-between handles it) */
 .rt-logo {
   flex: 0 0 clamp(44px,5.8vw,76px);
+  height: 100%;
   background: linear-gradient(135deg, #003c8a, #001f50);
   display: flex; align-items: center; justify-content: center;
   clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%);
-  padding-left: 1vw; margin-left: auto;
+  padding-left: 1vw;
+  flex-shrink: 0;
 }
 .rt-logo img { width: clamp(24px,3.2vw,44px); height: clamp(24px,3.2vw,44px); object-fit: contain; border-radius: 0.35vw; }
 
@@ -241,15 +262,17 @@ html, body {
   flex-shrink: 0;
 }
 
-/* Batter + over area — fills rest of row 2 */
+/* Batter + over area — aligns with the right-blk (same flex-1 behaviour) */
 .bat-area {
   flex: 1;
   background: linear-gradient(90deg, rgba(0,28,80,0.97), rgba(0,18,58,0.97));
   display: flex; align-items: center;
   border-top: 1px solid rgba(135,206,250,0.1);
-  padding: 0 clamp(4px,0.55vw,9px);
+  /* Match right-blk padding exactly so content aligns with RR pill */
+  padding: 0 0 0 clamp(6px,0.8vw,14px);
   gap: clamp(3px,0.45vw,8px);
   overflow: hidden;
+  min-width: 0;
 }
 
 /* ── BATTER PILLS — golden bordered ── */
@@ -259,7 +282,6 @@ html, body {
   padding: clamp(1px,0.28vh,4px) clamp(6px,0.9vw,13px);
   border-radius: clamp(3px,0.4vw,6px);
   white-space: nowrap; flex-shrink: 0;
-  /* Golden pill */
   background: linear-gradient(135deg, rgba(120,80,0,0.5), rgba(80,50,0,0.6));
   border: 1.5px solid rgba(255,200,50,0.6);
   box-shadow: 0 0 8px rgba(220,160,0,0.18), inset 0 1px 0 rgba(255,220,100,0.1);
@@ -300,7 +322,13 @@ html, body {
   align-items: center;
 }
 
-.r2-right { flex: 0 0 clamp(44px,5.8vw,76px); background: rgba(0,15,48,0.97); border-top: 1px solid rgba(135,206,250,0.07); }
+/* Row 2 right panel — mirrors rt-logo width */
+.r2-right {
+  flex: 0 0 clamp(44px,5.8vw,76px);
+  background: rgba(0,15,48,0.97);
+  border-top: 1px solid rgba(135,206,250,0.07);
+  flex-shrink: 0;
+}
 
 /* Ball dots */
 .oball {
@@ -404,7 +432,7 @@ html, body {
         <span class="rr-num" id="rr-num">0.00</span>
       </div>
 
-      <!-- BOWLER — purple bordered pill with white ball icon -->
+      <!-- BOWLER — purple bordered pill, slightly larger -->
       <div class="bowl-pill">
         <div class="bowl-row">
           <div class="ball-ico"></div>
@@ -413,7 +441,7 @@ html, body {
         <span class="bowl-fig" id="bowl-fig">0.0 · 0R · 0W</span>
       </div>
 
-      <!-- Right logo — far right -->
+      <!-- Right logo — pushed to right edge via space-between -->
       <div class="rt-logo">
         <img src="https://ppl2026-frontend.onrender.com/icons/icon-192.png" alt="" onerror="this.style.display='none'">
       </div>
@@ -425,6 +453,7 @@ html, body {
   <div class="r2">
     <div class="r2-left"></div>
 
+    <!-- bat-area starts right after r2-left, exactly below the right-blk content -->
     <div class="bat-area">
 
       <!-- Striker golden pill -->
