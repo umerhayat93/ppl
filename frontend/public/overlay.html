@@ -231,19 +231,14 @@ html, body {
 /* Batter pills row — visually separate from team area */
 .batsmen-row {
   display: flex;
-  align-items: center;                 /* vertical center */
-  justify-content: space-between;      /* striker left, non-striker right */
+  align-items: center;          /* vertical center */
+  justify-content: center;      /* center the pills horizontally */
+  gap: clamp(12px,1vw,16px);    /* space between striker & non-striker */
 
-  gap: clamp(6px,0.8vw,12px);
   overflow: hidden;
-
   margin-top: clamp(1px,0.15vh,2px);
   padding: clamp(6px,0.6vh,10px) clamp(10px,1vw,16px);
 
-  border-top: 1px solid rgba(0,0,0,0.13);
-  position: relative;
-
-  /* NEW ORANGE BACKGROUND */
   background: linear-gradient(135deg, #ff8c00, #ff6a00);
   border-radius: clamp(8px,1vw,14px);
   box-shadow: 0 4px 14px rgba(255,140,0,0.35);
