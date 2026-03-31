@@ -352,33 +352,60 @@ html, body {
 }
 
 /* ── BOWLER PILL — independent premium purple pill ── */
+<!-- ── BOWLER PILL ── -->
+<div class="bowl-pill">
+  <div class="bowl-top-row">
+    <div class="bowl-name-wrap">
+      <div class="bowl-dot"></div>
+      <div class="bowl-name">Saim</div>
+    </div>
+    <div class="bowl-fig"><small>4-25</small></div>
+  </div>
+
+  <div class="bowl-over-row">
+    <div class="over-lbl">THIS OVER</div>
+    <div class="balls-row">
+      <div class="ball b-run">1</div>
+      <div class="ball b-four">4</div>
+      <div class="ball b-dot">•</div>
+      <div class="ball b-six">6</div>
+    </div>
+  </div>
+</div>
+
+<style>
+/* ── BOWLER PILL — deep groovy sky-blue style ── */
 .bowl-pill {
   flex: 1; min-width: 0;
   display: flex; flex-direction: column; justify-content: center;
   gap: clamp(2px,0.32vh,5px);
   padding: clamp(4px,0.5vh,7px) clamp(9px,1.1vw,16px);
   border-radius: clamp(5px,0.55vw,9px);
-  background:
-    linear-gradient(145deg, rgba(38,0,105,0.78), rgba(16,0,58,0.90));
-  border: 1.5px solid rgba(145,72,255,0.50);
+
+  /* Sky-blue groovy gradient */
+  background: linear-gradient(145deg, #4aa8f0, #2176c7);
+  border: 1.5px solid rgba(50,150,250,0.6);
+
   box-shadow:
-    0 0 18px rgba(110,45,240,0.18),
-    inset 0 1px 0 rgba(195,155,255,0.14),
-    inset 0 -1px 0 rgba(0,0,0,0.25),
-    inset 1px 0 8px rgba(100,40,200,0.06);
+    0 0 18px rgba(50,150,250,0.3),          /* outer glow */
+    inset 0 1px 0 rgba(255,255,255,0.15),    /* light top highlight */
+    inset 0 -1px 0 rgba(0,0,0,0.25),         /* subtle bottom shadow */
+    inset 1px 0 8px rgba(30,100,200,0.06);   /* inner left depth */
   overflow: hidden;
 }
 
-/* Bowler top row: dot + name + figures */
+/* ── BOWLER TOP ROW ── */
 .bowl-top-row {
   display: flex; align-items: center; justify-content: space-between;
   gap: clamp(4px,0.5vw,8px);
   min-width: 0;
 }
+
 .bowl-name-wrap {
   display: flex; align-items: center; gap: clamp(4px,0.45vw,6px);
   min-width: 0; overflow: hidden; flex: 1;
 }
+
 .bowl-dot {
   width: clamp(7px,0.9vw,12px); height: clamp(7px,0.9vw,12px);
   border-radius: 50%; flex-shrink: 0;
@@ -387,76 +414,86 @@ html, body {
   box-shadow: 0 0 4px rgba(255,255,255,0.25);
   position: relative;
 }
+
 .bowl-dot::after {
   content: '';
   position: absolute; inset: 0; border-radius: 50%;
   background: linear-gradient(135deg, transparent 42%, rgba(200,0,0,0.35) 42%, rgba(200,0,0,0.35) 48%, transparent 48%);
 }
-/* Bowler name — primary, bright, dominant */
+
 .bowl-name {
   font-family: 'Arial Black', Arial, sans-serif;
   font-size: clamp(10px,1.2vw,17px); font-weight: 900;
   color: #fff;
   text-transform: uppercase; white-space: nowrap;
   overflow: hidden; text-overflow: ellipsis; line-height: 1;
-  text-shadow: 0 0 10px rgba(200,160,255,0.35), 0 1px 3px rgba(0,0,0,0.5);
+  text-shadow: 0 0 10px rgba(80,200,255,0.35), 0 1px 3px rgba(0,0,0,0.5);
   letter-spacing: 0.03vw;
 }
-/* Bowler figures — secondary, muted lavender */
+
 .bowl-fig {
   font-size: clamp(10px,1.15vw,15px); font-weight: 700;
-  color: rgba(210,185,255,0.82); white-space: nowrap; flex-shrink: 0;
+  color: rgba(210,230,255,0.82); white-space: nowrap; flex-shrink: 0;
   line-height: 1; letter-spacing: 0.02vw;
 }
+
 .bowl-fig small {
   font-size: 0.66em; opacity: 0.62; font-weight: 400;
-  margin-left: 0.12vw; color: rgba(190,165,255,0.7);
+  margin-left: 0.12vw; color: rgba(190,220,255,0.7);
 }
 
-/* THIS OVER row — tertiary, inside pill */
+/* ── THIS OVER ROW ── */
 .bowl-over-row {
   display: flex; align-items: center;
   gap: clamp(5px,0.6vw,9px);
   overflow: hidden;
   padding-top: clamp(1px,0.15vh,2px);
-  border-top: 1px solid rgba(160,120,255,0.15);
+  border-top: 1px solid rgba(50,150,250,0.15);
 }
-/* THIS OVER label — tertiary */
+
 .over-lbl {
   font-size: clamp(5px,0.5vw,7px); font-weight: 700;
-  color: rgba(190,165,255,0.55); text-transform: uppercase;
+  color: #ffffff;                 /* pure white */
+  text-transform: uppercase;
   letter-spacing: 0.14vw; white-space: nowrap; flex-shrink: 0;
 }
-/* Balls row — slightly more spacing for clarity */
+
+/* ── BALLS ROW ── */
 .balls-row {
   display: flex; gap: clamp(3px,0.38vw,5px); align-items: center;
   overflow: hidden; flex-wrap: nowrap;
 }
+
 .ball {
   width: clamp(14px,1.85vw,24px); height: clamp(14px,1.85vw,24px);
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   font-size: clamp(6px,0.72vw,10px); font-weight: 900;
   flex-shrink: 0;
+
   box-shadow:
     inset 0 1px 3px rgba(0,0,0,0.35),
     inset 0 -1px 2px rgba(255,255,255,0.06),
     0 1px 3px rgba(0,0,0,0.3);
+
+  color: #ffffff;                   /* pure white text */
 }
+
 .b-empty { background: rgba(255,255,255,0.05); border: 1.5px solid rgba(255,255,255,0.16); }
-.b-dot   { background: rgba(65,75,100,0.75); border: 1.5px solid rgba(120,135,165,0.45); color: rgba(255,255,255,0.65); }
-.b-run   { background: linear-gradient(145deg,#1e6613,#145a0a); border: 1.5px solid #42a82a; color: #fff; }
-.b-four  { background: linear-gradient(145deg,#0038c8,#0025a0); border: 1.5px solid #4480ff; color: #fff; }
-.b-six   { background: linear-gradient(145deg,#c04000,#8c2800); border: 1.5px solid #ff8525; color: #fff; }
-.b-wide  { background: rgba(75,55,0,0.85); border: 1.5px solid rgba(165,140,0,0.8); color: #ffe000; font-size: clamp(4px,0.44vw,6px); }
-.b-nb    { background: rgba(75,55,0,0.85); border: 1.5px solid rgba(165,140,0,0.8); color: #ffe000; font-size: clamp(4px,0.42vw,6px); }
+.b-dot   { background: rgba(65,75,100,0.75); border: 1.5px solid rgba(120,135,165,0.45); color: #ffffff; }
+.b-run   { background: linear-gradient(145deg,#1e6613,#145a0a); border: 1.5px solid #42a82a; color: #ffffff; }
+.b-four  { background: linear-gradient(145deg,#0038c8,#0025a0); border: 1.5px solid #4480ff; color: #ffffff; }
+.b-six   { background: linear-gradient(145deg,#c04000,#8c2800); border: 1.5px solid #ff8525; color: #ffffff; }
+.b-wide  { background: rgba(75,55,0,0.85); border: 1.5px solid rgba(165,140,0,0.8); color: #ffffff; font-size: clamp(4px,0.44vw,6px); }
+.b-nb    { background: rgba(75,55,0,0.85); border: 1.5px solid rgba(165,140,0,0.8); color: #ffffff; font-size: clamp(4px,0.42vw,6px); }
 .b-wkt   {
   background: linear-gradient(145deg,#b80000,#7a0000);
-  border: 1.5px solid #ff4433; color: #fff;
+  border: 1.5px solid #ff4433; color: #ffffff;
   box-shadow:
     inset 0 1px 3px rgba(0,0,0,0.35),
     0 0 8px rgba(255,40,0,0.45);
 }
+</style>
 
 /* ── 4. RIGHT PPL LOGO ── */
 .right-logo {
