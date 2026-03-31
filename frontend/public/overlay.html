@@ -18,11 +18,11 @@ html, body {
    DESIGN TOKENS
 ═══════════════════════════════════════════════ */
 :root {
-  --jazz-top:  #d9e021;
-  --jazz-bot:  #76b82a;
-  --navy:      #00004d;
-  --text-dark: #002300;
-  --highlight: #fef200;
+  --jazz-top:  #ff4500;
+  --jazz-bot:  #ffcc00;
+  --navy:      #8b0000;
+  --text-dark: #1a0000;
+  --highlight: #a0ff00;
   --bar-h:       clamp(64px, 9.5vh, 90px);
   --logo-w:      clamp(58px, 7.2vw, 90px);
   --score-w:     clamp(260px, 35vw, 460px);
@@ -154,7 +154,7 @@ html, body {
   flex: 1 1 0;
   min-width: clamp(200px, 28vw, 420px);
   height: 100%;
-  background: linear-gradient(to bottom, var(--jazz-top) 0%, var(--jazz-bot) 100%);
+  background: linear-gradient(to bottom, #ff0000 0%, #ff4500 40%, #ffcc00 100%);
   border-radius: 0 clamp(14px,2vw,28px) clamp(14px,2vw,28px) 0;
   box-shadow: clamp(4px,0.5vw,8px) 0 clamp(10px,1.5vw,20px) rgba(0,0,0,0.35);
   display: flex; flex-direction: column; justify-content: center;
@@ -189,16 +189,16 @@ html, body {
 }
 #t-bat {
   position: relative;
-  color: #001a00;
-  text-shadow: 0 0 10px rgba(254,242,0,0.25);
-  border-bottom: 2px solid rgba(254,242,0,0.88);
+  color: #fff;
+  text-shadow: 0 0 10px rgba(160,255,0,0.35);
+  border-bottom: 2px solid rgba(160,255,0,0.88);
   padding-bottom: 1px;
 }
 #t-bat::after {
   content: 'BAT';
   font-size: 0.52em; font-weight: 900;
-  color: rgba(0,18,0,0.75);
-  background: rgba(254,242,0,0.82);
+  color: rgba(0,30,0,0.9);
+  background: rgba(160,255,0,0.88);
   padding: 1px 3.5px;
   border-radius: 3px;
   margin-left: 5px;
@@ -281,17 +281,17 @@ html, body {
 /* Striker — deep navy glass with strong gold glow */
 .bat-pill.striker {
   background: linear-gradient(145deg, rgba(12,28,70,0.96), rgba(6,14,46,0.98));
-  border: 1.5px solid rgba(255,215,0,0.92);
+  border: 1.5px solid rgba(160,255,0,0.92);
   box-shadow:
-    0 0 14px rgba(255,210,0,0.35),
-    0 0  5px rgba(255,215,0,0.18) inset,
-    inset 0 1px 0 rgba(255,240,130,0.18);
+    0 0 14px rgba(140,255,0,0.35),
+    0 0  5px rgba(160,255,0,0.18) inset,
+    inset 0 1px 0 rgba(200,255,130,0.18);
   backdrop-filter: blur(8px);
 }
 /* Non-striker — same navy, no glow, muted border */
 .bat-pill.nstriker {
   background: linear-gradient(145deg, rgba(10,22,60,0.72), rgba(5,12,40,0.78));
-  border: 1.5px solid rgba(255,215,0,0.28);
+  border: 1.5px solid rgba(160,255,0,0.28);
   opacity: 0.80;
   backdrop-filter: blur(5px);
 }
@@ -299,7 +299,7 @@ html, body {
 .bat-star  {
   color: var(--highlight); font-weight: 900; font-size: 1.15em;
   margin-left: 1px;
-  text-shadow: 0 0 6px rgba(254,242,0,0.6);
+  text-shadow: 0 0 6px rgba(160,255,0,0.7);
 }
 .bat-score {
   font-family: 'Arial Black', Arial, sans-serif;
@@ -331,24 +331,24 @@ html, body {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   padding: clamp(4px,0.5vh,7px) clamp(9px,1.1vw,16px);
   border-radius: clamp(5px,0.55vw,9px);
-  background: linear-gradient(145deg, rgba(130,42,0,0.62), rgba(75,18,0,0.75));
-  border: 1.5px solid rgba(255,125,35,0.65);
+  background: linear-gradient(145deg, rgba(0,80,0,0.72), rgba(0,50,0,0.85));
+  border: 1.5px solid rgba(160,255,0,0.65);
   box-shadow:
-    0 0 14px rgba(255,100,0,0.16),
-    inset 0 1px 0 rgba(255,190,100,0.12),
+    0 0 14px rgba(100,255,0,0.18),
+    inset 0 1px 0 rgba(180,255,80,0.12),
     inset 0 -1px 0 rgba(0,0,0,0.2);
   flex-shrink: 0; white-space: nowrap;
 }
 .rr-lbl {
   font-size: clamp(5px,0.52vw,8px); font-weight: 700;
-  color: rgba(255,200,140,0.82); text-transform: uppercase;
+  color: rgba(180,255,120,0.85); text-transform: uppercase;
   letter-spacing: 0.12vw; line-height: 1;
 }
 .rr-val {
   font-family: 'Arial Black', Arial, sans-serif;
   font-size: clamp(12px,1.6vw,22px); font-weight: 900;
   color: var(--highlight); line-height: 1.1;
-  text-shadow: 0 0 10px rgba(254,242,0,0.55), 0 1px 3px rgba(0,0,0,0.4);
+  text-shadow: 0 0 10px rgba(160,255,0,0.55), 0 1px 3px rgba(0,0,0,0.4);
 }
 
 /* ── BOWLER PILL — independent premium purple pill ── */
@@ -359,14 +359,14 @@ html, body {
   padding: clamp(4px,0.5vh,7px) clamp(9px,1.1vw,16px);
   border-radius: clamp(5px,0.55vw,9px);
 
-  /* NEW: Sky blue deep groovy style */
-  background: linear-gradient(145deg, #4aa8f0, #2176c7);
-  border: 1.5px solid rgba(50,150,250,0.6);
+  /* NEW: Halftone orange-red deep style */
+  background: linear-gradient(145deg, #ff4500, #cc2200);
+  border: 1.5px solid rgba(255,100,30,0.7);
   box-shadow:
-    0 0 18px rgba(50,150,250,0.3),
+    0 0 18px rgba(255,80,0,0.35),
     inset 0 1px 0 rgba(255,255,255,0.15),
     inset 0 -1px 0 rgba(0,0,0,0.25),
-    inset 1px 0 8px rgba(30,100,200,0.06);
+    inset 1px 0 8px rgba(200,50,0,0.08);
   overflow: hidden;
 }
 
