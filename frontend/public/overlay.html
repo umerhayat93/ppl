@@ -231,36 +231,46 @@ html, body {
 /* Batter pills row — visually separate from team area */
 .batsmen-row {
   display: flex;
-  gap: clamp(4px,0.55vw,8px);
+  align-items: center;                 /* vertical center */
+  justify-content: space-between;      /* striker left, non-striker right */
+
+  gap: clamp(6px,0.8vw,12px);
   overflow: hidden;
+
   margin-top: clamp(1px,0.15vh,2px);
-  padding-top: clamp(3px,0.35vh,5px);
+  padding: clamp(6px,0.6vh,10px) clamp(10px,1vw,16px);
+
   border-top: 1px solid rgba(0,0,0,0.13);
   position: relative;
 
-  /* NEW */
+  /* NEW ORANGE BACKGROUND */
   background: linear-gradient(135deg, #ff8c00, #ff6a00);
-  padding: clamp(6px,0.6vh,10px);
   border-radius: clamp(8px,1vw,14px);
-}
-/* Soft glass backing behind the pills row */
-.batsmen-row::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: rgba(0,0,0,0.07);
-  border-radius: clamp(3px,0.4vw,6px);
-  backdrop-filter: blur(2px);
-  pointer-events: none;
+  box-shadow: 0 4px 14px rgba(255,140,0,0.35);
 }
 .bat-pill {
-  display: flex; align-items: center;
-  padding: clamp(4px,0.55vh,7px) clamp(8px,1vw,15px);
-  border-radius: clamp(8px,1.55vw,14px);
-  font-size: clamp(10px,1vw,14px); font-weight: 700;
-  text-transform: uppercase; white-space: nowrap;
-  color: #fff; flex-shrink: 0;
+  display: flex;
+  align-items: center;
+
+  /* +2 increase */
+  padding: clamp(4px,0.45vh,7px) clamp(9px,1.05vw,16px);
+
+  border-radius: clamp(6px,0.65vw,10px);
+
+  /* +2 font increase */
+  font-size: clamp(10px,1.05vw,15px);
+
+  font-weight: 700;
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  color: #fff;
+  flex-shrink: 0;
+
   overflow: hidden;
-  position: relative; z-index: 1;
+  position: relative;
+  z-index: 1;
+
   transition: box-shadow 0.4s ease;
 }
 /* Striker — deep navy glass with strong gold glow */
