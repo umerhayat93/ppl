@@ -233,40 +233,50 @@ html, body {
   display: flex;
   align-items: center;          /* vertical center */
   justify-content: center;      /* center the pills horizontally */
-  gap: clamp(12px,1vw,16px);    /* space between striker & non-striker */
+  gap: clamp(12px,1vw,16px);    /* small gap between striker & non-striker */
 
   overflow: hidden;
   margin-top: clamp(1px,0.15vh,2px);
   padding: clamp(6px,0.6vh,10px) clamp(10px,1vw,16px);
 
-  background: linear-gradient(135deg, #ff8c00, #ff6a00);
-  border-radius: clamp(8px,1vw,14px);
-  box-shadow: 0 4px 14px rgba(255,140,0,0.35);
+  /* Glassmorphism + Neumorphism combination */
+  background: rgba(255, 255, 255, 0.08);   /* soft semi-transparent glass */
+  backdrop-filter: blur(10px) saturate(180%); /* blur + subtle saturation */
+  border-radius: clamp(12px,1vw,20px);
+
+  /* Neumorphism subtle shadows */
+  box-shadow:
+    6px 6px 15px rgba(0,0,0,0.2),        /* dark shadow */
+    -6px -6px 15px rgba(255,255,255,0.3); /* light highlight */
+
+  border: 1px solid rgba(255,255,255,0.2); /* subtle border for depth */
+  transition: all 0.3s ease;
 }
 .bat-pill {
   display: flex;
   align-items: center;
+  justify-content: center;
 
-  /* +2 increase */
   padding: clamp(4px,0.45vh,7px) clamp(9px,1.05vw,16px);
-
   border-radius: clamp(6px,0.65vw,10px);
 
-  /* +2 font increase */
   font-size: clamp(10px,1.05vw,15px);
-
   font-weight: 700;
   text-transform: uppercase;
   white-space: nowrap;
-
   color: #fff;
-  flex-shrink: 0;
 
+  flex-shrink: 0;
   overflow: hidden;
   position: relative;
   z-index: 1;
 
-  transition: box-shadow 0.4s ease;
+  background: rgba(255, 255, 255, 0.15); /* soft glass for pills */
+  backdrop-filter: blur(4px);
+  box-shadow:
+    2px 2px 6px rgba(0,0,0,0.2),
+    -2px -2px 6px rgba(255,255,255,0.2);
+  transition: box-shadow 0.4s ease, transform 0.3s ease;
 }
 /* Striker — deep navy glass with strong gold glow */
 .bat-pill.striker {
